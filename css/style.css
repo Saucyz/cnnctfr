@@ -1,0 +1,16 @@
+body {
+	background-color: #00254E;
+}
+
+#board {
+	margin: 10% auto 0 auto;
+	border-spacing: 5px;
+}
+
+td.slot {
+	border-radius: 15px;
+	border: 2px solid #F0314C;
+	width: 70px;
+	height: 70px;
+	cursor: pointer;
+}
