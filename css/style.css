@@ -1,5 +1,6 @@
 body {
 	background-color: #00254E;
+	font-family: 'Futura', 'Menlo', 'Monaco', 'Helvetica', 'Arial';
 }
 
 #board {
@@ -12,4 +13,25 @@ body {
 	border: 2px solid #F0314C;
 	width: 80px;
 	height: 80px;
+}
+
+#wins {
+	width: 442px;
+	padding-top: 100px;
+	height: 551px;
+	text-align: center;
+	font-size: 250px;
+	font-weight: bold;
+	margin: 6% auto 0 auto;
+	display: none;
+}
+
+#wins .human {
+	color: #F0314C;
+	float: left;
+}
+
+#wins .computer {
+	color: #4091F4;
+	float: right;
 }

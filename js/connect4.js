@@ -5,6 +5,7 @@ $(window).load(function() {
 var abc = ['a', 'b', 'c', 'd', 'e', 'f'];
 var winning = [];
 var myTurn = null;
+var wins = [0, 0];
 
 // Start new game
 connect4.newGame = function() {
@@ -208,12 +209,7 @@ function nextMove(human) {
 	if (human) {
 		if (checkWin(1, 0)) {
 			console.log('COMPUTER: LOSE');
-			window.setTimeout(function() {
-				$('#board').fadeOut(function() {
-					connect4.newGame();
-					$('#board').fadeIn();
-				});
-			}, 5000);
+			resetGame(human);
 		}
 		else {
 			window.setTimeout(function() {
@@ -224,18 +220,37 @@ function nextMove(human) {
 	else {
 		if (checkWin(0, 0)) {
 			console.log('COMPUTER: WIN');
-			window.setTimeout(function() {
-				$('#board').fadeOut(function() {
-					connect4.newGame();
-					$('#board').fadeIn();
-				});
-			}, 5000);
+			resetGame(human);
 		}
 		else {
 			myTurn = 1;
 			$('.slot').css('cursor', 'pointer');
 		}
 	}
+}
+
+// Reset game, increase scoreboard
+// 0 is computer winner, 1 if human winner
+function resetGame(winner) {
+	window.setTimeout(function() {
+		$('#board').fadeOut(function() {
+			$('.computer').text(wins[0]);
+			$('.human').text(wins[1]);
+			$('#wins').fadeIn(function() {
+				window.setTimeout(function() {
+					wins[winner]++;
+					$('.computer').text(wins[0]);
+					$('.human').text(wins[1]);
+				}, 1000);
+				window.setTimeout(function() {
+					$('#wins').fadeOut(function() {
+						connect4.newGame();
+						$('#board').fadeIn();
+					});
+				}, 2500);
+			});
+		});
+	}, 2500);
 }
 
 // If slot is clicked
