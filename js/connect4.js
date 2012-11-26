@@ -78,8 +78,9 @@ function winningCombinations() {
 // Check for game win
 // 0 for computer, 1 for human
 // Can also check for near-wins (wins with 1 disc missing)
-// If near-win mode, will return missing disc location
-function checkWin(human, nearWin) {
+// Can also check for distant wins (with 2 discs missing)
+// If near-win or distant win mode, will return missing disc location(s)
+function checkWin(human, nearWin, distantWin) {
 	if (human) {
 		var criteria = 'human';
 	}
@@ -88,19 +89,24 @@ function checkWin(human, nearWin) {
 	}
 	for (var i in winning) {
 		var m = 0;
-		var near = 0;
+		var near = [];
 		for (var r in winning[i]) {
 			if ($('#' + winning[i][r]).attr('status') === criteria) {
 				m++;
 			}
 			else if ($('#' + winning[i][r]).attr('status') === 'empty') {
-				near = winning[i][r];
+				near.push(winning[i][r]);
 			}
 		}
-		if (nearWin && near && (m === 3)) {
-			return near;
+		if (nearWin && near.length && (m === 3)) {
+			return near[0];
 		}
-		if (m === 4) {
+		else if (distantWin && near.length && (m === 2)) {
+			if (near.length === 2) {
+				return near;
+			}
+		}
+		else if (m === 4) {
 			for (var r in winning[i]) {
 				$('#' + winning[i][r]).css('border-color', '#FFF'); 
 			}
@@ -231,10 +237,10 @@ $('.slot').click(function() {
 function computerPlay() {
 	/* 
 	Computer Strategy
-		1. Check if human is in danger of winning. If yes, block winning move. [DONE]
-		2. Check if I can win. If yes, play winning move. [DONE]
-		3. Check if it's possible to build to a winning move. If yes, play accordingly. [NOT DONE]
-		4. Place disc randomly. [DONE]
+		1. Check if human is in danger of winning. If yes, block winning move,
+		2. Check if I can win. If yes, play winning move.
+		3. Check if it's possible to build to a winning move. If yes, play accordingly.
+		4. Place disc randomly.
 	*/
 	if ((nearWin = checkWin(1, 1)) && (testDrop(nearWin[1]) === nearWin)) {
 		console.log('COMPUTER: BLOCKING NEAR WIN AT ' + nearWin.toUpperCase());
@@ -243,6 +249,16 @@ function computerPlay() {
 	else if ((nearWin = checkWin(0, 1)) && (testDrop(nearWin[1]) === nearWin)) {
 		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin.toUpperCase());
 		dropDisc(nearWin[1], 0);
+	}
+	else if (distantWin = checkWin(0, 0, 1)) {
+		if (testDrop(distantWin[0][1]) === distantWin[0]) {
+			console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[0].toUpperCase());
+			dropDisc(distantWin[0][1], 0);
+		}
+		else if (testDrop(distantWin[1][1]) === distantWin[1]) {
+			console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[1].toUpperCase());
+			dropDisc(distantWin[1][1], 0);
+		}
 	}
 	else {
 		var free = freeColumns();
