@@ -4,12 +4,22 @@ $(window).load(function() {
 
 var abc = ['a', 'b', 'c', 'd', 'e', 'f'];
 var winning = [];
-var myTurn = 1;
+var myTurn = null;
 
 // Start new game
 connect4.newGame = function() {
 	clearSlot('all');
-	console.log(winning);
+	var firstPlayer = (Math.floor(Math.random()*2));
+	if (firstPlayer === 1) {
+		myTurn = 1;
+	}
+	else {
+		myTurn = 0;
+		$('.slot').css('cursor', 'auto');
+		window.setTimeout(function() {
+			computerPlay();
+		}, 800);
+	}
 }
 
 // Calculate array of winning combinations
@@ -36,6 +46,12 @@ function winningCombinations() {
 				w++;
 			}
 		}
+	}
+	function leftDiagonal() {
+		
+	}
+	function rightDiagonal() {
+		
 	}
 	horizontal();
 	vertical();
@@ -86,7 +102,21 @@ function emptySlots(column) {
 			empty.push(abc[i] + column);
 		}
 	}
+	if (empty.length === 0) {
+		return false;
+	}
 	return empty;
+}
+
+// Return columns with free slots
+function freeColumns() {
+	var free = [];
+	for (var i = 1; i < 7; i++) {
+		if (emptySlots(i)) {
+			free.push(i);
+		}
+	}
+	return free;
 }
 
 // Insert disc into slot.
@@ -143,7 +173,7 @@ function dropDisc(column, human) {
 function nextMove(human) {
 	if (human) {
 		if (checkWin(1, 0)) {
-			console.log('human win');
+			console.log('COMPUTER: LOSE');
 		}
 		else {
 			window.setTimeout(function() {
@@ -153,10 +183,11 @@ function nextMove(human) {
 	}
 	else {
 		if (checkWin(0, 0)) {
-			console.log('computer win')
+			console.log('COMPUTER: WIN')
 		}
 		else {
 			myTurn = 1;
+			$('.slot').css('cursor', 'pointer');
 		}
 	}
 }
@@ -167,6 +198,7 @@ $('.slot').click(function() {
 	var column = $(this).attr('id')[1];
 	if (myTurn && ($(this).attr('status') === 'empty')) {
 		myTurn = 0;
+		$('.slot').css('cursor', 'auto');
 		dropDisc(column, 1);
 	}
 });
@@ -174,17 +206,22 @@ $('.slot').click(function() {
 function computerPlay() {
 	/* 
 	Computer Strategy
-		1. Check if human is in danger of winning. If yes, block winning move.
-		2. Check if I can win. If yes, play winning move.
-		3. Check if it's possible to build to a winning move. If yes, play accordingly.
-		4. Place disc randomly.
+		1. Check if human is in danger of winning. If yes, block winning move. [DONE]
+		2. Check if I can win. If yes, play winning move. [DONE]
+		3. Check if it's possible to build to a winning move. If yes, play accordingly. [NOT DONE]
+		4. Place disc randomly. [DONE]
 	*/
 	if (nearWin = checkWin(1, 1)) {
 		console.log('COMPUTER: BLOCKING NEAR WIN AT ' + nearWin.toUpperCase());
 		dropDisc(nearWin[1], 0);
 	}
+	else if (nearWin = checkWin(0, 1)) {
+		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin.toUpperCase());
+		dropDisc(nearWin[1], 0);
+	}
 	else {
-		dropDisc((Math.ceil(Math.random()*7)), 0);
+		var free = freeColumns();
+		dropDisc(free[Math.floor(Math.random()*free.length)], 0);
 	}
 }
 
