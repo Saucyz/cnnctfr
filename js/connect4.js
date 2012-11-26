@@ -260,13 +260,13 @@ function resetGame(winner) {
 					wins[winner]++;
 					$('.computer').text(wins[0]);
 					$('.human').text(wins[1]);
-				}, 1000);
+				}, 800);
 				window.setTimeout(function() {
 					$('#wins').fadeOut(function() {
 						connect4.newGame();
 						$('#board').fadeIn();
 					});
-				}, 2500);
+				}, 2300);
 			});
 		});
 	}, 2500);
