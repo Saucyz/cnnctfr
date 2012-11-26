@@ -85,6 +85,7 @@ function winningCombinations() {
 // Can also check for distant wins (with 2 discs missing)
 // If near-win or distant win mode, will return missing disc location(s)
 function checkWin(human, nearWin, distantWin) {
+	var nearWins = [];
 	if (human) {
 		var criteria = 'human';
 	}
@@ -103,7 +104,7 @@ function checkWin(human, nearWin, distantWin) {
 			}
 		}
 		if (nearWin && (near.length === 1) && (m === 3)) {
-			return near[0];
+			nearWins.push(near[0]);
 		}
 		else if (distantWin && (near.length === 2) && (m === 2)) {
 			return near;
@@ -115,6 +116,9 @@ function checkWin(human, nearWin, distantWin) {
 			$('.slot').css('cursor', 'auto');
 			return true;
 		}
+	}
+	if (nearWins.length > 0) {
+		return nearWins;
 	}
 	// Detect draw
 	var draw = 1;
@@ -215,7 +219,7 @@ function dropDisc(column, human) {
 // 0 for computer, 1 for human
 function nextMove(human) {
 	if (human) {
-		if (checkWin(1, 0)) {
+		if (checkWin(1, 0, 0)) {
 			console.log('COMPUTER: LOSE');
 			resetGame(human);
 		}
@@ -226,7 +230,7 @@ function nextMove(human) {
 		}
 	}
 	else {
-		if (checkWin(0, 0)) {
+		if (checkWin(0, 0, 0)) {
 			console.log('COMPUTER: WIN');
 			resetGame(human);
 		}
@@ -280,37 +284,41 @@ $('.slot').click(function() {
 function computerPlay() {
 	var free = freeColumns();
 	var r = free[Math.floor(Math.random()*free.length)];
-	var badMove = null;
-	if ((nearWin = checkWin(0, 1, 0)) && (testDrop(nearWin[1]) === nearWin)) {
-		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin.toUpperCase());
-		dropDisc(nearWin[1], 0);
+	var badMoves = [];
+	if ((nearWin = checkWin(0, 1, 0)) && (testDrop(nearWin[0][1]) === nearWin[0])) {
+		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[0].toUpperCase());
+		dropDisc(nearWin[0][1], 0);
 		return true;
 	}
-	if (nearWin = checkWin(1, 1)) {
-		if (testDrop(nearWin[1]) === nearWin) {
-			console.log('COMPUTER: BLOCKING NEAR WIN AT ' + nearWin.toUpperCase());
-			dropDisc(nearWin[1], 0);
+	if (nearWin = checkWin(1, 1, 0)) {
+		if (testDrop(nearWin[0][1]) === nearWin[0]) {
+			console.log('COMPUTER: PLAYING BLOCKING MOVE AT ' + nearWin[0].toUpperCase());
+			dropDisc(nearWin[0][1], 0);
 			return true;
 		}
-		else if (testDrop(nearWin[1]) === (abc[abc.indexOf(nearWin[0]) + 1] + nearWin[1])) {
-			badMove = abc[abc.indexOf(nearWin[0]) + 1] + nearWin[1];
-			console.log('COMPUTER: AVERTING BAD MOVE AT ' + badMove.toUpperCase());
-			if (r === badMove[1]) {
-				if (free.length > 1) {
-					free.splice(abc.indexOf(r), 1);
-					r = free[Math.floor(Math.random()*free.length)];
-				}
-				else {
-					console.log('COMPUTER: BAD MOVE POTENTIALLY INEVITABLE AT ' + badMove.toUpperCase());
+		else {
+			for (var i in nearWin) {
+				var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
+				if (testDrop(nearWin[i][1]) === p) {
+					badMoves.push(p);
+					console.log('COMPUTER: DISASTROUS MOVE DETECTED AT ' + p.toUpperCase());
+					if (r === nearWin[i][1]) {
+						if (free.length > 1) {
+							free.splice(abc.indexOf(r), 1);
+							r = free[Math.floor(Math.random()*free.length)];
+						}
+					}
 				}
 			}
 		}
 	}
 	if (distantWin = checkWin(0, 0, 1)) {
-		if ((testDrop(distantWin[0][1]) === distantWin[0]) && (distantWin[0] !== badMove)) {
+		if ((testDrop(distantWin[0][1]) === distantWin[0])
+		&& (badMoves.indexOf(distantWin[0]) < 0)) {
 			var move = distantWin[0];
 		}
-		else if ((testDrop(distantWin[1][1]) === distantWin[1]) && (distantWin[1] !== badMove)) {
+		else if ((testDrop(distantWin[1][1]) === distantWin[1])
+		&& (badMoves.indexOf(distantWin[1]) < 0)) {
 			var move = distantWin[1];
 		}
 		if (typeof(move) !== 'undefined') {
@@ -320,10 +328,12 @@ function computerPlay() {
 		}
 	}
 	if (distantWin = checkWin(1, 0, 1)) {
-		if ((testDrop(distantWin[0][1]) === distantWin[0]) && (distantWin[0] !== badMove)) {
+		if ((testDrop(distantWin[0][1]) === distantWin[0])
+		&& (badMoves.indexOf(distantWin[0]) < 0)) {
 			var move = distantWin[0];
 		}
-		else if ((testDrop(distantWin[1][1]) === distantWin[1]) && (distantWin[1] !== badMove)) {
+		else if ((testDrop(distantWin[1][1]) === distantWin[1])
+		&& (badMoves.indexOf(distantWin[1]) < 0)) {
 			var move = distantWin[1];
 		}
 		if (typeof(move) !== 'undefined') {
