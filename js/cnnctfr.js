@@ -23,7 +23,7 @@ cnnctfr.newGame = function() {
 		myTurn = 0;
 		$('.slot').css('cursor', 'auto');
 		window.setTimeout(function() {
-			computerPlay();
+			computerPlay(1);
 		}, 800);
 	}
 }
@@ -72,9 +72,11 @@ function winningCombinations() {
 // Check for game win
 // 0 for computer, 1 for human
 // Can also check for near-wins (wins with 1 disc missing)
-// Can also check for distant wins (with 2 discs missing)
+// Can also check for possible wins (with 2 discs missing)
+// Can also check for distant wins (with 3 discs missing)
 // If near-win or distant win mode, will return missing disc location(s)
-function checkWin(human, nearWin, distantWin) {
+// Distant win mode will return moves arranged from more to less critical
+function checkWin(human, nearWin, possibleWin, distantWin) {
 	var nearWins = [];
 	if (human) {
 		var criteria = 'human';
@@ -102,7 +104,10 @@ function checkWin(human, nearWin, distantWin) {
 		if (nearWin && (near.length === 1) && (m === 3)) {
 			nearWins.push(near[0]);
 		}
-		else if (distantWin && (near.length === 2) && (m === 2)) {
+		else if (possibleWin && (near.length === 2) && (m === 2)) {
+			return near;
+		}
+		else if (distantWin && (near.length === 3) && (m === 1)) {
 			return near;
 		}
 		else if (m === 4) {
@@ -215,7 +220,7 @@ function dropDisc(column, human) {
 // 0 for computer, 1 for human
 function nextMove(human) {
 	if (human) {
-		if (checkWin(1, 0, 0)) {
+		if (checkWin(1, 0, 0, 0)) {
 			console.log('COMPUTER: LOSE');
 			resetGame(human);
 		}
@@ -226,7 +231,7 @@ function nextMove(human) {
 		}
 	}
 	else {
-		if (checkWin(0, 0, 0)) {
+		if (checkWin(0, 0, 0, 0)) {
 			console.log('COMPUTER: WIN');
 			resetGame(human);
 		}
@@ -273,13 +278,20 @@ $('.slot').click(function() {
 	if (myTurn && ($(this).attr('status') === 'empty')) {
 		myTurn = 0;
 		$('.slot').css('cursor', 'auto');
+		console.log('HUMAN: PLAYING MOVE AT ' + testDrop(column).toUpperCase());
 		dropDisc(column, 1);
 	}
 });
 
 // Computer AI
-function computerPlay() {
-	if (nearWin = checkWin(0, 1, 0)) {
+// Set first to 1 if first move of the game
+function computerPlay(first) {
+	if (first) {
+		var firstMoves = [2, 3, 4, 5, 6];
+		dropDisc(firstMoves[Math.floor(Math.random()*firstMoves.length)], 0);
+		return true;
+	}
+	if (nearWin = checkWin(0, 1, 0, 0)) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
 				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[i].toUpperCase());
@@ -288,7 +300,7 @@ function computerPlay() {
 			}
 		}
 	}
-	if (nearWin = checkWin(1, 1, 0)) {
+	if (nearWin = checkWin(1, 1, 0, 0)) {
 		for (var i in nearWin) {
 			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
 			if (testDrop(nearWin[i][1]) === p) {
@@ -304,21 +316,31 @@ function computerPlay() {
 			}
 		}
 	}
-	if (distantWin = checkWin(1, 0, 1)) {
-		for (var i in distantWin) {
-			if ((testDrop(distantWin[i][1]) === distantWin[i])
-			&& (badMoves.indexOf(distantWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + distantWin[i].toUpperCase());
-				dropDisc(distantWin[i][1], 0);
+	if (possibleWin = checkWin(1, 0, 1, 0)) {
+		for (var i in possibleWin) {
+			if ((testDrop(possibleWin[i][1]) === possibleWin[i])
+			&& (badMoves.indexOf(possibleWin[i]) < 0)) {
+				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + possibleWin[i].toUpperCase());
+				dropDisc(possibleWin[i][1], 0);
 				return true;
 			}
 		}
 	}
-	if (distantWin = checkWin(0, 0, 1)) {
+	if (possibleWin = checkWin(0, 0, 1, 0)) {
+		for (var i in possibleWin) {
+			if ((testDrop(possibleWin[i][1]) === possibleWin[i])
+			&& (badMoves.indexOf(possibleWin[i]) < 0)) {
+				console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + possibleWin[i].toUpperCase());
+				dropDisc(possibleWin[i][1], 0);
+				return true;
+			}
+		}
+	}
+	if (distantWin = checkWin(0, 0, 0, 1)) {
 		for (var i in distantWin) {
 			if ((testDrop(distantWin[i][1]) === distantWin[i])
 			&& (badMoves.indexOf(distantWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[i].toUpperCase());
+				console.log('COMPUTER: PLAYING DISTANTLY RELEVANT MOVE AT ' + distantWin[i].toUpperCase());
 				dropDisc(distantWin[i][1], 0);
 				return true;
 			}
