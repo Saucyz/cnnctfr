@@ -6,12 +6,14 @@ var abc = ['a', 'b', 'c', 'd', 'e', 'f'];
 var winning = [];
 var myTurn = null;
 var wins = [0, 0, 0];
+var badMoves = [];
 
 // Start new game
 connect4.newGame = function() {
 	if (!winning.length) {
 		winningCombinations();
 	}
+	badMoves = [];
 	clearSlot('all');
 	var firstPlayer = Math.floor(Math.random()*2);
 	if (firstPlayer === 1) {
@@ -284,28 +286,27 @@ $('.slot').click(function() {
 function computerPlay() {
 	var free = freeColumns();
 	var r = free[Math.floor(Math.random()*free.length)];
-	var badMoves = [];
 	if ((nearWin = checkWin(0, 1, 0)) && (testDrop(nearWin[0][1]) === nearWin[0])) {
 		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[0].toUpperCase());
 		dropDisc(nearWin[0][1], 0);
 		return true;
 	}
 	if (nearWin = checkWin(1, 1, 0)) {
-		if (testDrop(nearWin[0][1]) === nearWin[0]) {
-			console.log('COMPUTER: PLAYING BLOCKING MOVE AT ' + nearWin[0].toUpperCase());
-			dropDisc(nearWin[0][1], 0);
-			return true;
-		}
-		else {
-			for (var i in nearWin) {
-				var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
-				if (testDrop(nearWin[i][1]) === p) {
+		for (var i in nearWin) {
+			if (testDrop(nearWin[i][1]) === nearWin[i]) {
+				console.log('COMPUTER: PLAYING BLOCKING MOVE AT ' + nearWin[i].toUpperCase());
+				dropDisc(nearWin[i][1], 0);
+				return true;
+			}
+			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
+			if (testDrop(nearWin[i][1]) === p) {
+				if (badMoves.indexOf(p) < 0) {
 					console.log('COMPUTER: DISASTROUS MOVE DETECTED AT ' + p.toUpperCase());
 					badMoves.push(p);
-					if ((r === nearWin[i][1]) && (free.length > 1)) {
-						free.splice(abc.indexOf(r), 1);
-						r = free[Math.floor(Math.random()*free.length)];
-					}
+				}
+				if ((r === nearWin[i][1]) && (free.length > 1)) {
+					free.splice(abc.indexOf(r), 1);
+					r = free[Math.floor(Math.random()*free.length)];
 				}
 			}
 		}
