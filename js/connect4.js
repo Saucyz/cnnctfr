@@ -31,54 +31,42 @@ connect4.newGame = function() {
 // Calculate array of winning combinations
 function winningCombinations() {
 	var w = 0;
-	function horizontal() {
-		for (var i in abc) {
-			for (var r = 1; r < 5; r++) {
-				winning[w] = [];
-				for (var d = 0; d < 4; d++) {
-					winning[w].push(abc[i] + (r + d));
-				}
-				w++;
+	for (var i in abc) {
+		for (var r = 1; r < 5; r++) {
+			winning[w] = [];
+			for (var d = 0; d < 4; d++) {
+				winning[w].push(abc[i] + (r + d));
 			}
+			w++;
 		}
 	}
-	function vertical() {
-		for (var i = 7; i > 0; i--) {
-			for (var r = 6; r !== 3; r--) {
-				winning[w] = [];
-				for (var d = 4; d > 0; d--) {
-					winning[w].push(abc[r - d] + i);
-				}
-				w++;
+	for (var i = 7; i > 0; i--) {
+		for (var r = 6; r !== 3; r--) {
+			winning[w] = [];
+			for (var d = 4; d > 0; d--) {
+				winning[w].push(abc[r - d] + i);
 			}
+			w++;
 		}
 	}
-	function leftDiagonal() {
-		for (var i = 3; i < abc.length; i++) {
-			for (var r = 4; r < 8; r++) {
-				winning[w] = [];
-				for (var d = 0; d < 4; d++) {
-					winning[w].push(abc[i - d] + (r - d));
-				}
-				w++;
+	for (var i = 3; i < abc.length; i++) {
+		for (var r = 4; r < 8; r++) {
+			winning[w] = [];
+			for (var d = 0; d < 4; d++) {
+				winning[w].push(abc[i - d] + (r - d));
 			}
+			w++;
 		}
 	}
-	function rightDiagonal() {
-		for (var i = 3; i < abc.length; i++) {
-			for (var r = 4; r > 0; r--) {
-				winning[w] = [];
-				for (var d = 0; d < 4; d++) {
-					winning[w].push(abc[i - d] + (r + d));
-				}
-				w++;
+	for (var i = 3; i < abc.length; i++) {
+		for (var r = 4; r > 0; r--) {
+			winning[w] = [];
+			for (var d = 0; d < 4; d++) {
+				winning[w].push(abc[i - d] + (r + d));
 			}
+			w++;
 		}
 	}
-	horizontal();
-	vertical();
-	leftDiagonal();
-	rightDiagonal();
 }
 
 // Check for game win
