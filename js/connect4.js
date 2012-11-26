@@ -266,9 +266,11 @@ function computerPlay() {
 		else if ((testDrop(distantWin[1][1]) === distantWin[1]) && (distantWin[1] !== badMove)) {
 			var move = distantWin[1];
 		}
-		console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + move.toUpperCase());
-		dropDisc(move[1], 0);
-		return true;
+		if (typeof(move) !== 'undefined') {
+			console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + move.toUpperCase());
+			dropDisc(move[1], 0);
+			return true;
+		}
 	}
 	if (distantWin = checkWin(1, 0, 1)) {
 		if ((testDrop(distantWin[0][1]) === distantWin[0]) && (distantWin[0] !== badMove)) {
