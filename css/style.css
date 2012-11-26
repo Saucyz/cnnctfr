@@ -16,10 +16,9 @@ body {
 }
 
 #wins {
-	width: 442px;
+	width: 642px;
 	padding-top: 100px;
-	height: 551px;
-	text-align: center;
+	height: 451px;
 	font-size: 250px;
 	font-weight: bold;
 	margin: 6% auto 0 auto;
@@ -29,9 +28,11 @@ body {
 #wins .human {
 	color: #F0314C;
 	float: left;
+	text-align: left;
 }
 
 #wins .computer {
 	color: #4091F4;
 	float: right;
+	text-align: right;
 }
