@@ -237,6 +237,7 @@ $('.slot').click(function() {
 function computerPlay() {
 	var free = freeColumns();
 	var r = free[Math.floor(Math.random()*free.length)];
+	var badMove = null;
 	/* 
 	Computer Strategy
 		1. Check if I can win. If yes, play winning move.
@@ -255,25 +256,22 @@ function computerPlay() {
 			dropDisc(nearWin[1], 0);
 			return true;
 		}
-		else {
-			var badMove = abc[abc.indexOf(nearWin[0]) + 1] + nearWin[1];
-			if (testDrop(nearWin[1]) === badMove) {
-				console.log('COMPUTER: AVERTING POTENTIAL BAD MOVE AT ' + badMove.toUpperCase());
-			}
+		else if (testDrop(nearWin[1]) === (abc[abc.indexOf(nearWin[0]) + 1] + nearWin[1])) {
+			badMove = abc[abc.indexOf(nearWin[0]) + 1] + nearWin[1];
+			console.log('COMPUTER: AVERTING BAD MOVE AT ' + badMove.toUpperCase());
 			if (r === badMove[1]) {
 				free.splice(abc.indexOf(r), 1);
 				r = free[Math.floor(Math.random()*free.length)];
 			}
-			console.log(r);
 		}
 	}
 	if (distantWin = checkWin(0, 0, 1)) {
-		if (testDrop(distantWin[0][1]) === distantWin[0]) {
+		if ((testDrop(distantWin[0][1]) === distantWin[0]) && (distantWin[0] !== badMove)) {
 			console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[0].toUpperCase());
 			dropDisc(distantWin[0][1], 0);
 			return true;
 		}
-		else if (testDrop(distantWin[1][1]) === distantWin[1]) {
+		else if ((testDrop(distantWin[1][1]) === distantWin[1]) && (distantWin[1] !== badMove)) {
 			console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[1].toUpperCase());
 			dropDisc(distantWin[1][1], 0);
 			return true;
