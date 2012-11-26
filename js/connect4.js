@@ -279,10 +279,8 @@ function computerPlay() {
 			return true;
 		}
 	}
-	if {
-		dropDisc(r, 0);
-		return true;
-	}
+	dropDisc(r, 0);
+	return true;
 }
 
 connect4.newGame();
