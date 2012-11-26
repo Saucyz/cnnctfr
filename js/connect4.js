@@ -48,13 +48,31 @@ function winningCombinations() {
 		}
 	}
 	function leftDiagonal() {
-		
+		for (var i = 3; i < abc.length; i++) {
+			for (var r = 4; r < 8; r++) {
+				winning[w] = [];
+				for (var d = 0; d < 4; d++) {
+					winning[w].push(abc[i - d] + (r - d));
+				}
+				w++;
+			}
+		}
 	}
 	function rightDiagonal() {
-		
+		for (var i = 3; i < abc.length; i++) {
+			for (var r = 4; r > 0; r--) {
+				winning[w] = [];
+				for (var d = 0; d < 4; d++) {
+					winning[w].push(abc[i - d] + (r + d));
+				}
+				w++;
+			}
+		}
 	}
 	horizontal();
 	vertical();
+	leftDiagonal();
+	rightDiagonal();
 }
 
 // Check for game win
@@ -80,7 +98,6 @@ function checkWin(human, nearWin) {
 			}
 		}
 		if (nearWin && near && (m === 3)) {
-			console.log(winning[i]);
 			return near;
 		}
 		if (m === 4) {
@@ -150,6 +167,14 @@ function clearSlot(slot) {
 	$(slot).css('border-color', '#F0314C');
 }
 
+// See which slot a disc will end up at if dropped in column
+function testDrop(column) {
+	if (empty = emptySlots(column)) {
+		return empty[empty.length - 1];
+	}
+	return false;
+}
+
 // Drop a disc with animation through column
 // 0 if computer, 1 if human
 function dropDisc(column, human) {
@@ -211,11 +236,11 @@ function computerPlay() {
 		3. Check if it's possible to build to a winning move. If yes, play accordingly. [NOT DONE]
 		4. Place disc randomly. [DONE]
 	*/
-	if (nearWin = checkWin(1, 1)) {
+	if ((nearWin = checkWin(1, 1)) && (testDrop(nearWin[1]) === nearWin)) {
 		console.log('COMPUTER: BLOCKING NEAR WIN AT ' + nearWin.toUpperCase());
 		dropDisc(nearWin[1], 0);
 	}
-	else if (nearWin = checkWin(0, 1)) {
+	else if ((nearWin = checkWin(0, 1)) && (testDrop(nearWin[1]) === nearWin)) {
 		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin.toUpperCase());
 		dropDisc(nearWin[1], 0);
 	}
@@ -225,7 +250,7 @@ function computerPlay() {
 	}
 }
 
-winningCombinations();
 connect4.newGame();
+winningCombinations();
 	
 });
