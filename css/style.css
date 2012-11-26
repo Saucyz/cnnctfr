@@ -3,13 +3,13 @@ body {
 }
 
 #board {
-	margin: 10% auto 0 auto;
+	margin: 7% auto 0 auto;
 	border-spacing: 5px;
 }
 
 .slot {
 	border-radius: 15px;
 	border: 2px solid #F0314C;
-	width: 70px;
-	height: 70px;
+	width: 80px;
+	height: 80px;
 }

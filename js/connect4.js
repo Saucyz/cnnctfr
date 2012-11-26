@@ -43,7 +43,9 @@ function winningCombinations() {
 
 // Check for game win
 // 0 for computer, 1 for human
-function checkWin(human) {
+// Can also check for near-wins (wins with 1 disc missing)
+// If near-win mode, will return missing disc location
+function checkWin(human, nearWin) {
 	if (human) {
 		var criteria = 'human';
 	}
@@ -52,10 +54,18 @@ function checkWin(human) {
 	}
 	for (var i in winning) {
 		var m = 0;
+		var near = 0;
 		for (var r in winning[i]) {
 			if ($('#' + winning[i][r]).attr('status') === criteria) {
 				m++;
 			}
+			else if ($('#' + winning[i][r]).attr('status') === 'empty') {
+				near = winning[i][r];
+			}
+		}
+		if (nearWin && near && (m === 3)) {
+			console.log(winning[i]);
+			return near;
 		}
 		if (m === 4) {
 			for (var r in winning[i]) {
@@ -132,7 +142,7 @@ function dropDisc(column, human) {
 // 0 for computer, 1 for human
 function nextMove(human) {
 	if (human) {
-		if (checkWin(1)) {
+		if (checkWin(1, 0)) {
 			console.log('human win');
 		}
 		else {
@@ -142,7 +152,7 @@ function nextMove(human) {
 		}
 	}
 	else {
-		if (checkWin(0)) {
+		if (checkWin(0, 0)) {
 			console.log('computer win')
 		}
 		else {
@@ -169,7 +179,13 @@ function computerPlay() {
 		3. Check if it's possible to build to a winning move. If yes, play accordingly.
 		4. Place disc randomly.
 	*/
-	dropDisc((Math.ceil(Math.random()*7)), 0);
+	if (nearWin = checkWin(1, 1)) {
+		console.log('COMPUTER: BLOCKING NEAR WIN AT ' + nearWin.toUpperCase());
+		dropDisc(nearWin[1], 0);
+	}
+	else {
+		dropDisc((Math.ceil(Math.random()*7)), 0);
+	}
 }
 
 winningCombinations();
