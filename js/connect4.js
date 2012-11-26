@@ -289,8 +289,8 @@ function computerPlay() {
 	if (nearWin = checkWin(0, 1, 0)) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
-				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[0].toUpperCase());
-				dropDisc(nearWin[0][1], 0);
+				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[i].toUpperCase());
+				dropDisc(nearWin[i][1], 0);
 				return true;
 			}
 		}
