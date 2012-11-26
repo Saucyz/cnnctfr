@@ -116,14 +116,14 @@ function checkWin(human, nearWin, distantWin) {
 			return true;
 		}
 	}
-	// Detect tie
-	var tie = 1;
+	// Detect draw
+	var draw = 1;
 	$('.slot').each(function(index) {
 		if ($(this).attr('status') === 'empty') {
-			tie = 0;
+			draw = 0;
 		}
 	});
-	if (tie) {
+	if (draw) {
 		resetGame(2);
 	}
 	return false;
@@ -243,7 +243,7 @@ function nextMove(human) {
 
 // Reset game, increase scoreboard
 // 0 is computer winner, 1 if human winner
-// 2 if tie
+// 2 if draw
 function resetGame(winner) {
 	window.setTimeout(function() {
 		$('#board').fadeOut(function() {
