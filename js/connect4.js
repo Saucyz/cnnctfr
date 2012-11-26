@@ -8,6 +8,7 @@ var myTurn = null;
 
 // Start new game
 connect4.newGame = function() {
+	winningCombinations();
 	clearSlot('all');
 	var firstPlayer = (Math.floor(Math.random()*2));
 	if (firstPlayer === 1) {
@@ -283,6 +284,5 @@ function computerPlay() {
 }
 
 connect4.newGame();
-winningCombinations();
 	
 });
