@@ -262,7 +262,6 @@ function computerPlay() {
 	if (distantWin = checkWin(0, 0, 1)) {
 		if ((testDrop(distantWin[0][1]) === distantWin[0]) && (distantWin[0] !== badMove)) {
 			var move = distantWin[0];
-			
 		}
 		else if ((testDrop(distantWin[1][1]) === distantWin[1]) && (distantWin[1] !== badMove)) {
 			var move = distantWin[1];
@@ -274,7 +273,6 @@ function computerPlay() {
 	if (distantWin = checkWin(1, 0, 1)) {
 		if ((testDrop(distantWin[0][1]) === distantWin[0]) && (distantWin[0] !== badMove)) {
 			var move = distantWin[0];
-			
 		}
 		else if ((testDrop(distantWin[1][1]) === distantWin[1]) && (distantWin[1] !== badMove)) {
 			var move = distantWin[1];
