@@ -90,7 +90,13 @@ function checkWin(human, nearWin, distantWin) {
 				m++;
 			}
 			else if ($('#' + winning[i][r]).attr('status') === 'empty') {
-				near.push(winning[i][r]);
+				if (($('#' + winning[i][r - 1]).attr('status') === criteria)
+				|| ($('#' + winning[i][r + 1]).attr('status') === criteria)) {
+					near.unshift(winning[i][r]);
+				}
+				else {
+					near.push(winning[i][r]);
+				}
 			}
 		}
 		if (nearWin && (near.length === 1) && (m === 3)) {
@@ -298,21 +304,21 @@ function computerPlay() {
 			}
 		}
 	}
-	if (distantWin = checkWin(0, 0, 1)) {
-		for (var i in distantWin) {
-			if ((testDrop(distantWin[i][1]) === distantWin[i])
-			&& (badMoves.indexOf(distantWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[i].toUpperCase());
-				dropDisc(distantWin[i][1], 0);
-				return true;
-			}
-		}
-	}
 	if (distantWin = checkWin(1, 0, 1)) {
 		for (var i in distantWin) {
 			if ((testDrop(distantWin[i][1]) === distantWin[i])
 			&& (badMoves.indexOf(distantWin[i]) < 0)) {
 				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + distantWin[i].toUpperCase());
+				dropDisc(distantWin[i][1], 0);
+				return true;
+			}
+		}
+	}
+	if (distantWin = checkWin(0, 0, 1)) {
+		for (var i in distantWin) {
+			if ((testDrop(distantWin[i][1]) === distantWin[i])
+			&& (badMoves.indexOf(distantWin[i]) < 0)) {
+				console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[i].toUpperCase());
 				dropDisc(distantWin[i][1], 0);
 				return true;
 			}
