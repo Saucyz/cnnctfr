@@ -300,49 +300,37 @@ function computerPlay() {
 			for (var i in nearWin) {
 				var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
 				if (testDrop(nearWin[i][1]) === p) {
-					badMoves.push(p);
 					console.log('COMPUTER: DISASTROUS MOVE DETECTED AT ' + p.toUpperCase());
-					if (r === nearWin[i][1]) {
-						if (free.length > 1) {
-							free.splice(abc.indexOf(r), 1);
-							r = free[Math.floor(Math.random()*free.length)];
-						}
+					badMoves.push(p);
+					if ((r === nearWin[i][1]) && (free.length > 1)) {
+						free.splice(abc.indexOf(r), 1);
+						r = free[Math.floor(Math.random()*free.length)];
 					}
 				}
 			}
 		}
 	}
-	if (distantWin = checkWin(0, 0, 1)) {
-		if ((testDrop(distantWin[0][1]) === distantWin[0])
-		&& (badMoves.indexOf(distantWin[0]) < 0)) {
-			var move = distantWin[0];
-		}
-		else if ((testDrop(distantWin[1][1]) === distantWin[1])
-		&& (badMoves.indexOf(distantWin[1]) < 0)) {
-			var move = distantWin[1];
-		}
-		if (typeof(move) !== 'undefined') {
-			console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + move.toUpperCase());
-			dropDisc(move[1], 0);
-			return true;
-		}
-	}
 	if (distantWin = checkWin(1, 0, 1)) {
-		if ((testDrop(distantWin[0][1]) === distantWin[0])
-		&& (badMoves.indexOf(distantWin[0]) < 0)) {
-			var move = distantWin[0];
-		}
-		else if ((testDrop(distantWin[1][1]) === distantWin[1])
-		&& (badMoves.indexOf(distantWin[1]) < 0)) {
-			var move = distantWin[1];
-		}
-		if (typeof(move) !== 'undefined') {
-			console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + move.toUpperCase());
-			dropDisc(move[1], 0);
-			return true;
+		for (var i in distantWin) {
+			if ((testDrop(distantWin[i][1]) === distantWin[i])
+			&& (badMoves.indexOf(distantWin[i]) < 0)) {
+				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + distantWin[i].toUpperCase());
+				dropDisc(distantWin[i][1], 0);
+				return true;
+			}
 		}
 	}
-	console.log('COMPUTER: PLAYING ARBITRARY MOVE AT ' + testDrop(r).toUpperCase());
+	if (distantWin = checkWin(0, 0, 1)) {
+		for (var i in distantWin) {
+			if ((testDrop(distantWin[i][1]) === distantWin[i])
+			&& (badMoves.indexOf(distantWin[i]) < 0)) {
+				console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[i].toUpperCase());
+				dropDisc(distantWin[i][1], 0);
+				return true;
+			}
+		}
+	}
+	console.log('COMPUTER: PLAYING RANDOM MOVE AT ' + testDrop(r).toUpperCase());
 	dropDisc(r, 0);
 	return true;
 }
