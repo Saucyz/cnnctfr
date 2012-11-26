@@ -1,4 +1,4 @@
-var connect4 = function() {};
+var cnnctfr = function() {};
 
 $(window).load(function() {
 
@@ -9,7 +9,7 @@ var wins = [0, 0, 0];
 var badMoves = [];
 
 // Start new game
-connect4.newGame = function() {
+cnnctfr.newGame = function() {
 	if (!winning.length) {
 		winningCombinations();
 	}
@@ -251,7 +251,7 @@ function resetGame(winner) {
 				}, 800);
 				window.setTimeout(function() {
 					$('#wins').fadeOut(function() {
-						connect4.newGame();
+						cnnctfr.newGame();
 						$('#board').fadeIn();
 					});
 				}, 2300);
@@ -330,6 +330,6 @@ function computerPlay() {
 	return true;
 }
 
-connect4.newGame();
+cnnctfr.newGame();
 	
 });
