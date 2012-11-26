@@ -5,7 +5,7 @@ $(window).load(function() {
 var abc = ['a', 'b', 'c', 'd', 'e', 'f'];
 var winning = [];
 var myTurn = null;
-var wins = [0, 0];
+var wins = [0, 0, 0];
 
 // Start new game
 connect4.newGame = function() {
@@ -102,13 +102,11 @@ function checkWin(human, nearWin, distantWin) {
 				near.push(winning[i][r]);
 			}
 		}
-		if (nearWin && near.length && (m === 3)) {
+		if (nearWin && (near.length === 1) && (m === 3)) {
 			return near[0];
 		}
-		else if (distantWin && near.length && (m === 2)) {
-			if (near.length === 2) {
-				return near;
-			}
+		else if (distantWin && (near.length === 2) && (m === 2)) {
+			return near;
 		}
 		else if (m === 4) {
 			for (var r in winning[i]) {
@@ -117,6 +115,16 @@ function checkWin(human, nearWin, distantWin) {
 			$('.slot').css('cursor', 'auto');
 			return true;
 		}
+	}
+	// Detect tie
+	var tie = 1;
+	$('.slot').each(function(index) {
+		if ($(this).attr('status') === 'empty') {
+			tie = 0;
+		}
+	});
+	if (tie) {
+		resetGame(2);
 	}
 	return false;
 }
@@ -224,13 +232,18 @@ function nextMove(human) {
 		}
 		else {
 			myTurn = 1;
-			$('.slot').css('cursor', 'pointer');
+			$('.slot').each(function(index) {
+				if ($(this).attr('status') === 'empty') {
+					$(this).css('cursor', 'pointer');
+				}
+			});
 		}
 	}
 }
 
 // Reset game, increase scoreboard
 // 0 is computer winner, 1 if human winner
+// 2 if tie
 function resetGame(winner) {
 	window.setTimeout(function() {
 		$('#board').fadeOut(function() {
@@ -283,8 +296,13 @@ function computerPlay() {
 			badMove = abc[abc.indexOf(nearWin[0]) + 1] + nearWin[1];
 			console.log('COMPUTER: AVERTING BAD MOVE AT ' + badMove.toUpperCase());
 			if (r === badMove[1]) {
-				free.splice(abc.indexOf(r), 1);
-				r = free[Math.floor(Math.random()*free.length)];
+				if (free.length > 1) {
+					free.splice(abc.indexOf(r), 1);
+					r = free[Math.floor(Math.random()*free.length)];
+				}
+				else {
+					console.log('COMPUTER: BAD MOVE POTENTIALLY INEVITABLE AT ' + badMove.toUpperCase());
+				}
 			}
 		}
 	}
