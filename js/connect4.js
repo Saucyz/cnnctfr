@@ -277,9 +277,11 @@ function computerPlay() {
 		else if ((testDrop(distantWin[1][1]) === distantWin[1]) && (distantWin[1] !== badMove)) {
 			var move = distantWin[1];
 		}
-		console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + move.toUpperCase());
-		dropDisc(move[1], 0);
-		return true;
+		if (typeof(move) !== 'undefined') {
+			console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + move.toUpperCase());
+			dropDisc(move[1], 0);
+			return true;
+		}
 	}
 	console.log('COMPUTER: PLAYING ARBITRARY MOVE AT ' + testDrop(r).toUpperCase());
 	dropDisc(r, 0);
