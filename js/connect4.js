@@ -293,11 +293,6 @@ function computerPlay() {
 	}
 	if (nearWin = checkWin(1, 1, 0)) {
 		for (var i in nearWin) {
-			if (testDrop(nearWin[i][1]) === nearWin[i]) {
-				console.log('COMPUTER: PLAYING BLOCKING MOVE AT ' + nearWin[i].toUpperCase());
-				dropDisc(nearWin[i][1], 0);
-				return true;
-			}
 			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
 			if (testDrop(nearWin[i][1]) === p) {
 				if (badMoves.indexOf(p) < 0) {
@@ -308,6 +303,11 @@ function computerPlay() {
 					free.splice(abc.indexOf(r), 1);
 					r = free[Math.floor(Math.random()*free.length)];
 				}
+			}
+			if (testDrop(nearWin[i][1]) === nearWin[i]) {
+				console.log('COMPUTER: PLAYING BLOCKING MOVE AT ' + nearWin[i].toUpperCase());
+				dropDisc(nearWin[i][1], 0);
+				return true;
 			}
 		}
 	}
