@@ -77,12 +77,11 @@ function dropDisc(column, human) {
 	}, 60);
 }
 
-
 // If slot is clicked
 $('.slot').click(function() {
 	var row = $(this).attr('id')[0];
 	var column = $(this).attr('id')[1];
-	if (myTurn && ($(this).css('cursor') === 'pointer')) {
+	if (myTurn && ($(this).attr('status') === 'empty')) {
 		myTurn = 0;
 		dropDisc(column, 1);
 	}
