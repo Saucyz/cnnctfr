@@ -7,7 +7,7 @@ var myTurn = 1;
 
 // Start new game
 connect4.newGame = function() {
-	$('.slot').attr('status', 'empty');
+	clearSlot('all');
 }
 
 // Return empty slots in a column
@@ -32,38 +32,66 @@ function disc(slot, human) {
 		var playerColor = '#4091F4';
 		$('#' + slot).attr('status', 'computer');
 	}
+	$('#' + slot).css('cursor', 'auto');
 	$('#' + slot).css('background', playerColor);
 	$('#' + slot).css('border-color', playerColor);
 }
 
 // Clear slot
+// 'all' to clear all slots
 function clearSlot(slot) {
-	$('#' + slot).attr('status', 'empty');
-	$('#' + slot).css('background', '');
-	$('#' + slot).css('border-color', '#F0314C');
+	if (slot === 'all') {
+		slot = '.slot';
+	}
+	else {
+		slot = '#' + slot;
+	}
+	$(slot).attr('status', 'empty');
+	$(slot).css('cursor', 'pointer');
+	$(slot).css('background', '');
+	$(slot).css('border-color', '#F0314C');
 }
+
+// Drop a disc with animation through column
+// 0 if computer, 1 if human
+function dropDisc(column, human) {
+	var empty = emptyCells(column);
+	var i = 0;
+	var drop = window.setInterval(function() {
+		console.log(i);
+		if (i > 0) {
+			clearSlot(empty[i - 1]);
+		}
+		disc(empty[i], human);
+		i++;
+		if (i === empty.length) {
+			window.clearInterval(drop);
+			if (human) {
+				window.setTimeout(function() {
+					computerPlay();
+				}, 800);
+			}
+			else {
+				myTurn = 1;
+			}
+		}
+	}, 60);
+}
+
 
 // If slot is clicked
 $('.slot').click(function() {
 	var row = $(this).attr('id')[0];
 	var column = $(this).attr('id')[1];
-	if (myTurn) {
-		// myTurn = 0;
-		var empty = emptyCells(column);
-		var i = 0;
-		var dropDisc = window.setInterval(function() {
-			console.log(i);
-			if (i > 0) {
-				clearSlot(empty[i - 1]);
-			}
-			disc(empty[i], 1);
-			i++;
-			if (i === empty.length) {
-				window.clearInterval(dropDisc);
-			}
-		}, 100);
+	if (myTurn && ($(this).css('cursor') === 'pointer')) {
+		myTurn = 0;
+		dropDisc(column, 1);
 	}
 });
+
+function computerPlay() {
+	dropDisc((Math.ceil(Math.random()*7)), 0);
+}
 
 connect4.newGame();
 	
