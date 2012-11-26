@@ -23,7 +23,7 @@ cnnctfr.newGame = function() {
 		myTurn = 0;
 		$('.slot').css('cursor', 'auto');
 		window.setTimeout(function() {
-			computerPlay(1);
+			computerPlay();
 		}, 800);
 	}
 }
@@ -284,13 +284,7 @@ $('.slot').click(function() {
 });
 
 // Computer AI
-// Set first to 1 if first move of the game
-function computerPlay(first) {
-	if (first) {
-		var firstMoves = [2, 3, 4, 5, 6];
-		dropDisc(firstMoves[Math.floor(Math.random()*firstMoves.length)], 0);
-		return true;
-	}
+function computerPlay() {
 	if (nearWin = checkWin(0, 1, 0, 0)) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
@@ -351,6 +345,12 @@ function computerPlay(first) {
 		if ((free.indexOf(badMoves[i][1]) > -1) && (free.length > 1)) {
 			free.splice(free.indexOf(badMoves[i][1]), 1);
 		}
+	}
+	if ((free.indexOf('1') > -1) && (free.length > 1)) {
+		free.splice(free.indexOf('1'), 1);
+	}
+	if ((free.indexOf('7') > -1) && (free.length > 1)) {
+		free.splice(free.indexOf('7'), 1);
 	}
 	r = free[Math.floor(Math.random()*free.length)];
 	console.log('COMPUTER: PLAYING RANDOM MOVE AT ' + testDrop(r).toUpperCase());
