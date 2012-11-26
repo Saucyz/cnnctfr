@@ -237,17 +237,17 @@ $('.slot').click(function() {
 function computerPlay() {
 	/* 
 	Computer Strategy
-		1. Check if human is in danger of winning. If yes, block winning move,
-		2. Check if I can win. If yes, play winning move.
+		1. Check if I can win. If yes, play winning move.
+		2. Check if human is in danger of winning. If yes, block winning move,
 		3. Check if it's possible to build to a winning move. If yes, play accordingly.
 		4. Place disc randomly.
 	*/
-	if ((nearWin = checkWin(1, 1)) && (testDrop(nearWin[1]) === nearWin)) {
-		console.log('COMPUTER: BLOCKING NEAR WIN AT ' + nearWin.toUpperCase());
+	if ((nearWin = checkWin(0, 1)) && (testDrop(nearWin[1]) === nearWin)) {
+		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin.toUpperCase());
 		dropDisc(nearWin[1], 0);
 	}
-	else if ((nearWin = checkWin(0, 1)) && (testDrop(nearWin[1]) === nearWin)) {
-		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin.toUpperCase());
+	else if ((nearWin = checkWin(1, 1)) && (testDrop(nearWin[1]) === nearWin)) {
+		console.log('COMPUTER: BLOCKING NEAR WIN AT ' + nearWin.toUpperCase());
 		dropDisc(nearWin[1], 0);
 	}
 	else if (distantWin = checkWin(0, 0, 1)) {
