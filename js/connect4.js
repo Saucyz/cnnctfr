@@ -271,6 +271,7 @@ $('.slot').click(function() {
 	}
 });
 
+// Computer AI
 function computerPlay() {
 	if (nearWin = checkWin(0, 1, 0)) {
 		for (var i in nearWin) {
