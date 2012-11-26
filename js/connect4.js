@@ -23,7 +23,7 @@ function emptyCells(column) {
 
 // Insert disc into slot.
 // 0 if computer, 1 if human
-function disc(slot, human) {
+function insertDisc(slot, human) {
 	if (human) {
 		var playerColor = '#F0314C'
 		$('#' + slot).attr('status', 'human');
@@ -58,11 +58,10 @@ function dropDisc(column, human) {
 	var empty = emptyCells(column);
 	var i = 0;
 	var drop = window.setInterval(function() {
-		console.log(i);
 		if (i > 0) {
 			clearSlot(empty[i - 1]);
 		}
-		disc(empty[i], human);
+		insertDisc(empty[i], human);
 		i++;
 		if (i === empty.length) {
 			window.clearInterval(drop);
@@ -90,6 +89,13 @@ $('.slot').click(function() {
 });
 
 function computerPlay() {
+	/* 
+	Computer Strategy
+		1. Check if human is in danger of winning. If yes, block winning move.
+		2. Check if I can win. If yes, play winning move.
+		3. Check if it's possible to build to a winning move. If yes, play accordingly.
+		4. Place disc randomly.
+	*/
 	dropDisc((Math.ceil(Math.random()*7)), 0);
 }
 

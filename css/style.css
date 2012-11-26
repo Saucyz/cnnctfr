@@ -7,7 +7,7 @@ body {
 	border-spacing: 5px;
 }
 
-td.slot {
+.slot {
 	border-radius: 15px;
 	border: 2px solid #F0314C;
 	width: 70px;
