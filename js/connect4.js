@@ -134,7 +134,7 @@ function emptySlots(column) {
 // Return columns with free slots
 function freeColumns() {
 	var free = [];
-	for (var i = 1; i < 7; i++) {
+	for (var i = 1; i < 8; i++) {
 		if (emptySlots(i)) {
 			free.push(i);
 		}
