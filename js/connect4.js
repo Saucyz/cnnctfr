@@ -154,7 +154,7 @@ function freeColumns() {
 	var free = [];
 	for (var i = 1; i < 8; i++) {
 		if (emptySlots(i)) {
-			free.push(i);
+			free.push(i.toString());
 		}
 	}
 	return free;
@@ -284,8 +284,6 @@ $('.slot').click(function() {
 });
 
 function computerPlay() {
-	var free = freeColumns();
-	var r = free[Math.floor(Math.random()*free.length)];
 	if (nearWin = checkWin(0, 1, 0)) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
@@ -302,10 +300,6 @@ function computerPlay() {
 				if (badMoves.indexOf(p) < 0) {
 					console.log('COMPUTER: DISASTROUS MOVE DETECTED AT ' + p.toUpperCase());
 					badMoves.push(p);
-				}
-				if ((r === nearWin[i][1]) && (free.length > 1)) {
-					free.splice(abc.indexOf(r), 1);
-					r = free[Math.floor(Math.random()*free.length)];
 				}
 			}
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
@@ -335,6 +329,13 @@ function computerPlay() {
 			}
 		}
 	}
+	var free = freeColumns();
+	for (var i in badMoves) {
+		if ((free.indexOf(badMoves[i][1]) > -1) && (free.length > 1)) {
+			free.splice(free.indexOf(badMoves[i][1]), 1);
+		}
+	}
+	r = free[Math.floor(Math.random()*free.length)];
 	console.log('COMPUTER: PLAYING RANDOM MOVE AT ' + testDrop(r).toUpperCase());
 	dropDisc(r, 0);
 	return true;
