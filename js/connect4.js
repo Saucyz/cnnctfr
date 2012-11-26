@@ -259,6 +259,10 @@ function computerPlay() {
 			console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[1].toUpperCase());
 			dropDisc(distantWin[1][1], 0);
 		}
+		else {
+			var free = freeColumns();
+			dropDisc(free[Math.floor(Math.random()*free.length)], 0);
+		}
 	}
 	else {
 		var free = freeColumns();
