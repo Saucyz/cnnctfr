@@ -277,6 +277,7 @@ function computerPlay() {
 			return true;
 		}
 	}
+	console.log('COMPUTER: PLAYING ARBITRARY MOVE AT ' + testDrop(r).toUpperCase());
 	dropDisc(r, 0);
 	return true;
 }
