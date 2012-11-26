@@ -286,10 +286,14 @@ $('.slot').click(function() {
 function computerPlay() {
 	var free = freeColumns();
 	var r = free[Math.floor(Math.random()*free.length)];
-	if ((nearWin = checkWin(0, 1, 0)) && (testDrop(nearWin[0][1]) === nearWin[0])) {
-		console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[0].toUpperCase());
-		dropDisc(nearWin[0][1], 0);
-		return true;
+	if (nearWin = checkWin(0, 1, 0)) {
+		for (var i in nearWin) {
+			if (testDrop(nearWin[i][1]) === nearWin[i]) {
+				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[0].toUpperCase());
+				dropDisc(nearWin[0][1], 0);
+				return true;
+			}
+		}
 	}
 	if (nearWin = checkWin(1, 1, 0)) {
 		for (var i in nearWin) {
