@@ -8,7 +8,9 @@ var myTurn = null;
 
 // Start new game
 connect4.newGame = function() {
-	winningCombinations();
+	if (!winning.length) {
+		winningCombinations();
+	}
 	clearSlot('all');
 	var firstPlayer = (Math.floor(Math.random()*2));
 	if (firstPlayer === 1) {
@@ -206,6 +208,12 @@ function nextMove(human) {
 	if (human) {
 		if (checkWin(1, 0)) {
 			console.log('COMPUTER: LOSE');
+			window.setTimeout(function() {
+				$('#board').fadeOut(function() {
+					connect4.newGame();
+					$('#board').fadeIn();
+				});
+			}, 5000);
 		}
 		else {
 			window.setTimeout(function() {
@@ -215,7 +223,13 @@ function nextMove(human) {
 	}
 	else {
 		if (checkWin(0, 0)) {
-			console.log('COMPUTER: WIN')
+			console.log('COMPUTER: WIN');
+			window.setTimeout(function() {
+				$('#board').fadeOut(function() {
+					connect4.newGame();
+					$('#board').fadeIn();
+				});
+			}, 5000);
 		}
 		else {
 			myTurn = 1;
