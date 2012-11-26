@@ -12,7 +12,7 @@ connect4.newGame = function() {
 		winningCombinations();
 	}
 	clearSlot('all');
-	var firstPlayer = (Math.floor(Math.random()*2));
+	var firstPlayer = Math.floor(Math.random()*2);
 	if (firstPlayer === 1) {
 		myTurn = 1;
 	}
