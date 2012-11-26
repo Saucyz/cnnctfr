@@ -11,7 +11,7 @@ connect4.newGame = function() {
 }
 
 // Return empty slots in a column
-function emptyCells(column) {
+function emptySlots(column) {
 	var empty = [];
 	for (var i in abc) {
 		if ($('#' + abc[i] + column).attr('status') === 'empty') {
@@ -55,7 +55,7 @@ function clearSlot(slot) {
 // Drop a disc with animation through column
 // 0 if computer, 1 if human
 function dropDisc(column, human) {
-	var empty = emptyCells(column);
+	var empty = emptySlots(column);
 	var i = 0;
 	var drop = window.setInterval(function() {
 		if (i > 0) {
