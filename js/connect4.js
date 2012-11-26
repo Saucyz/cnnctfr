@@ -3,11 +3,69 @@ var connect4 = function() {};
 $(window).load(function() {
 
 var abc = ['a', 'b', 'c', 'd', 'e', 'f'];
+var winning = [];
 var myTurn = 1;
 
 // Start new game
 connect4.newGame = function() {
 	clearSlot('all');
+	console.log(winning);
+}
+
+// Calculate array of winning combinations
+function winningCombinations() {
+	var w = 0;
+	function horizontal() {
+		for (var i in abc) {
+			for (var r = 1; r < 5; r++) {
+				winning[w] = [];
+				for (var d = 0; d < 4; d++) {
+					winning[w].push(abc[i] + (r + d));
+				}
+				w++;
+			}
+		}
+	}
+	function vertical() {
+		for (var i = 7; i > 0; i--) {
+			for (var r = 6; r !== 3; r--) {
+				winning[w] = [];
+				for (var d = 4; d > 0; d--) {
+					winning[w].push(abc[r - d] + i);
+				}
+				w++;
+			}
+		}
+	}
+	horizontal();
+	vertical();
+}
+
+// Check for game win
+// 0 for computer, 1 for human
+function checkWin(human) {
+	if (human) {
+		var criteria = 'human';
+	}
+	else {
+		var criteria = 'computer';
+	}
+	for (var i in winning) {
+		var m = 0;
+		for (var r in winning[i]) {
+			if ($('#' + winning[i][r]).attr('status') === criteria) {
+				m++;
+			}
+		}
+		if (m === 4) {
+			for (var r in winning[i]) {
+				$('#' + winning[i][r]).css('border-color', '#FFF'); 
+			}
+			$('.slot').css('cursor', 'auto');
+			return true;
+		}
+	}
+	return false;
 }
 
 // Return empty slots in a column
@@ -65,16 +123,32 @@ function dropDisc(column, human) {
 		i++;
 		if (i === empty.length) {
 			window.clearInterval(drop);
-			if (human) {
-				window.setTimeout(function() {
-					computerPlay();
-				}, 800);
-			}
-			else {
-				myTurn = 1;
-			}
+			nextMove(human);
 		}
 	}, 60);
+}
+
+// Move the game along after a disc is dropped
+// 0 for computer, 1 for human
+function nextMove(human) {
+	if (human) {
+		if (checkWin(1)) {
+			console.log('human win');
+		}
+		else {
+			window.setTimeout(function() {
+				computerPlay();
+			}, 800);
+		}
+	}
+	else {
+		if (checkWin(0)) {
+			console.log('computer win')
+		}
+		else {
+			myTurn = 1;
+		}
+	}
 }
 
 // If slot is clicked
@@ -98,6 +172,7 @@ function computerPlay() {
 	dropDisc((Math.ceil(Math.random()*7)), 0);
 }
 
+winningCombinations();
 connect4.newGame();
 	
 });
