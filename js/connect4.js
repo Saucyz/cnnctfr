@@ -315,21 +315,21 @@ function computerPlay() {
 			}
 		}
 	}
-	if (distantWin = checkWin(1, 0, 1)) {
-		for (var i in distantWin) {
-			if ((testDrop(distantWin[i][1]) === distantWin[i])
-			&& (badMoves.indexOf(distantWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + distantWin[i].toUpperCase());
-				dropDisc(distantWin[i][1], 0);
-				return true;
-			}
-		}
-	}
 	if (distantWin = checkWin(0, 0, 1)) {
 		for (var i in distantWin) {
 			if ((testDrop(distantWin[i][1]) === distantWin[i])
 			&& (badMoves.indexOf(distantWin[i]) < 0)) {
 				console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + distantWin[i].toUpperCase());
+				dropDisc(distantWin[i][1], 0);
+				return true;
+			}
+		}
+	}
+	if (distantWin = checkWin(1, 0, 1)) {
+		for (var i in distantWin) {
+			if ((testDrop(distantWin[i][1]) === distantWin[i])
+			&& (badMoves.indexOf(distantWin[i]) < 0)) {
+				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + distantWin[i].toUpperCase());
 				dropDisc(distantWin[i][1], 0);
 				return true;
 			}
