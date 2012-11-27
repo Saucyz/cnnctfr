@@ -15,7 +15,8 @@ cnnctfr.newGame = function() {
 	}
 	badMoves = [];
 	clearSlot('all');
-	var firstPlayer = Math.floor(Math.random()*2);
+	//var firstPlayer = Math.floor(Math.random()*2);
+	var firstPlayer = 1;
 	if (firstPlayer === 1) {
 		myTurn = 1;
 	}
@@ -71,13 +72,18 @@ function winningCombinations() {
 
 // Analyze board looking for winning combinations
 // 0 for computer, 1 for human
-// By default, checks for wins
-// Can check for near-wins (wins with 1 disc missing)
-// Can check for possible wins (with 2 discs missing)
-// Can check for distant wins (with 3 discs missing)
-// Returns missing disc location(s) arranged from more to less critical
-function analyzeBoard(human, nearWin, possibleWin, distantWin) {
+// By default, just handles wins and draws
+// Also returns an object containing:
+// win: Winning combination, if any
+// nearWins: With 1 disc missing if any
+// possibleWins: With 2 discs missing, if any
+// distantWins: With 3 discs missing, if any
+// Missing disc location(s) arranged from more to less critical
+function analyzeBoard(human) {
+	var win = [];
 	var nearWins = [];
+	var possibleWins = [];
+	var distantWins = [];
 	if (human) {
 		var criteria = 'human';
 	}
@@ -103,23 +109,20 @@ function analyzeBoard(human, nearWin, possibleWin, distantWin) {
 		}
 		if (m === 4) {
 			for (var r in winning[i]) {
-				$('#' + winning[i][r]).css('border-color', '#FFF'); 
+				$('#' + winning[i][r]).css('border-color', '#FFF');
+				win.push(winning[i][r]);
 			}
 			$('.slot').css('cursor', 'auto');
-			return true;
 		}
-		else if (nearWin && (near.length === 1) && (m === 3)) {
+		else if ((near.length === 1) && (m === 3)) {
 			nearWins.push(near[0]);
 		}
-		else if (possibleWin && (near.length === 2) && (m === 2)) {
-			return near;
+		else if ((near.length === 2) && (m === 2)) {
+			possibleWins.push(near);
 		}
-		else if (distantWin && (near.length === 3) && (m === 1)) {
-			return near;
+		else if ((near.length === 3) && (m === 1)) {
+			distantWins.push(near);
 		}
-	}
-	if (nearWins.length > 0) {
-		return nearWins;
 	}
 	// Detect draw
 	var draw = 1;
@@ -131,7 +134,12 @@ function analyzeBoard(human, nearWin, possibleWin, distantWin) {
 	if (draw) {
 		resetGame(2);
 	}
-	return false;
+	return {
+		'win': win, 
+		'nearWins': nearWins, 
+		'possibleWins': possibleWins, 
+		'distantWins': distantWins
+	};
 }
 
 // Return empty slots in a column
@@ -220,7 +228,7 @@ function dropDisc(column, human) {
 // 0 for computer, 1 for human
 function nextMove(human) {
 	if (human) {
-		if (analyzeBoard(1, 0, 0, 0)) {
+		if (analyzeBoard(1)['win'].length) {
 			console.log('COMPUTER: LOSE');
 			resetGame(human);
 		}
@@ -231,7 +239,7 @@ function nextMove(human) {
 		}
 	}
 	else {
-		if (analyzeBoard(0, 0, 0, 0)) {
+		if (analyzeBoard(0)['win'].length) {
 			console.log('COMPUTER: WIN');
 			resetGame(human);
 		}
@@ -285,7 +293,12 @@ $('.slot').click(function() {
 
 // Computer AI
 function computerPlay() {
-	if (nearWin = analyzeBoard(0, 1, 0, 0)) {
+	var analysis = {
+		'computer': analyzeBoard(0),
+		'human': analyzeBoard(1)
+	};
+	console.log(analysis);
+	if (nearWin = analysis['computer']['nearWins']) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
 				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[i].toUpperCase());
@@ -294,7 +307,7 @@ function computerPlay() {
 			}
 		}
 	}
-	if (nearWin = analyzeBoard(1, 1, 0, 0)) {
+	if (nearWin = analysis['human']['nearWins']) {
 		for (var i in nearWin) {
 			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
 			if (testDrop(nearWin[i][1]) === p) {
@@ -310,33 +323,39 @@ function computerPlay() {
 			}
 		}
 	}
-	if (possibleWin = analyzeBoard(0, 0, 1, 0)) {
+	if (possibleWin = analysis['computer']['possibleWins']) {
 		for (var i in possibleWin) {
-			if ((testDrop(possibleWin[i][1]) === possibleWin[i])
-			&& (badMoves.indexOf(possibleWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + possibleWin[i].toUpperCase());
-				dropDisc(possibleWin[i][1], 0);
-				return true;
+			for (var r in possibleWin[i]) {
+				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
+				&& (badMoves.indexOf(possibleWin[i][r]) < 0)) {
+					console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + possibleWin[i][r].toUpperCase());
+					dropDisc(possibleWin[i][r][1], 0);
+					return true;
+				}
 			}
 		}
 	}
-	if (possibleWin = analyzeBoard(1, 0, 1, 0)) {
+	if (possibleWin = analysis['human']['possibleWins']) {
 		for (var i in possibleWin) {
-			if ((testDrop(possibleWin[i][1]) === possibleWin[i])
-			&& (badMoves.indexOf(possibleWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + possibleWin[i].toUpperCase());
-				dropDisc(possibleWin[i][1], 0);
-				return true;
+			for (var r in possibleWin[i]) {
+				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
+				&& (badMoves.indexOf(possibleWin[i][r]) < 0)) {
+					console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + possibleWin[i][r].toUpperCase());
+					dropDisc(possibleWin[i][r][1], 0);
+					return true;
+				}
 			}
 		}
 	}
-	if (distantWin = analyzeBoard(0, 0, 0, 1)) {
+	if (distantWin = analysis['computer']['distantWins']) {
 		for (var i in distantWin) {
-			if ((testDrop(distantWin[i][1]) === distantWin[i])
-			&& (badMoves.indexOf(distantWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING DISTANTLY RELEVANT MOVE AT ' + distantWin[i].toUpperCase());
-				dropDisc(distantWin[i][1], 0);
-				return true;
+			for (var r in distantWin[i]) {
+				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
+				&& (badMoves.indexOf(distantWin[i][r]) < 0)) {
+					console.log('COMPUTER: PLAYING DISTANTLY RELEVANT MOVE AT ' + distantWin[i][r].toUpperCase());
+					dropDisc(distantWin[i][r][1], 0);
+					return true;
+				}
 			}
 		}
 	}
