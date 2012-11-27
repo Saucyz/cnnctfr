@@ -69,14 +69,14 @@ function winningCombinations() {
 	}
 }
 
-// Check for game win
+// Analyze board looking for winning combinations
 // 0 for computer, 1 for human
-// Can also check for near-wins (wins with 1 disc missing)
-// Can also check for possible wins (with 2 discs missing)
-// Can also check for distant wins (with 3 discs missing)
-// If near-win or distant win mode, will return missing disc location(s)
-// Distant win mode will return moves arranged from more to less critical
-function checkWin(human, nearWin, possibleWin, distantWin) {
+// By default, checks for wins
+// Can check for near-wins (wins with 1 disc missing)
+// Can check for possible wins (with 2 discs missing)
+// Can check for distant wins (with 3 discs missing)
+// Returns missing disc location(s) arranged from more to less critical
+function analyzeBoard(human, nearWin, possibleWin, distantWin) {
 	var nearWins = [];
 	if (human) {
 		var criteria = 'human';
@@ -101,7 +101,14 @@ function checkWin(human, nearWin, possibleWin, distantWin) {
 				}
 			}
 		}
-		if (nearWin && (near.length === 1) && (m === 3)) {
+		if (m === 4) {
+			for (var r in winning[i]) {
+				$('#' + winning[i][r]).css('border-color', '#FFF'); 
+			}
+			$('.slot').css('cursor', 'auto');
+			return true;
+		}
+		else if (nearWin && (near.length === 1) && (m === 3)) {
 			nearWins.push(near[0]);
 		}
 		else if (possibleWin && (near.length === 2) && (m === 2)) {
@@ -109,13 +116,6 @@ function checkWin(human, nearWin, possibleWin, distantWin) {
 		}
 		else if (distantWin && (near.length === 3) && (m === 1)) {
 			return near;
-		}
-		else if (m === 4) {
-			for (var r in winning[i]) {
-				$('#' + winning[i][r]).css('border-color', '#FFF'); 
-			}
-			$('.slot').css('cursor', 'auto');
-			return true;
 		}
 	}
 	if (nearWins.length > 0) {
@@ -220,7 +220,7 @@ function dropDisc(column, human) {
 // 0 for computer, 1 for human
 function nextMove(human) {
 	if (human) {
-		if (checkWin(1, 0, 0, 0)) {
+		if (analyzeBoard(1, 0, 0, 0)) {
 			console.log('COMPUTER: LOSE');
 			resetGame(human);
 		}
@@ -231,7 +231,7 @@ function nextMove(human) {
 		}
 	}
 	else {
-		if (checkWin(0, 0, 0, 0)) {
+		if (analyzeBoard(0, 0, 0, 0)) {
 			console.log('COMPUTER: WIN');
 			resetGame(human);
 		}
@@ -285,7 +285,7 @@ $('.slot').click(function() {
 
 // Computer AI
 function computerPlay() {
-	if (nearWin = checkWin(0, 1, 0, 0)) {
+	if (nearWin = analyzeBoard(0, 1, 0, 0)) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
 				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[i].toUpperCase());
@@ -294,7 +294,7 @@ function computerPlay() {
 			}
 		}
 	}
-	if (nearWin = checkWin(1, 1, 0, 0)) {
+	if (nearWin = analyzeBoard(1, 1, 0, 0)) {
 		for (var i in nearWin) {
 			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
 			if (testDrop(nearWin[i][1]) === p) {
@@ -310,7 +310,7 @@ function computerPlay() {
 			}
 		}
 	}
-	if (possibleWin = checkWin(1, 0, 1, 0)) {
+	if (possibleWin = analyzeBoard(1, 0, 1, 0)) {
 		for (var i in possibleWin) {
 			if ((testDrop(possibleWin[i][1]) === possibleWin[i])
 			&& (badMoves.indexOf(possibleWin[i]) < 0)) {
@@ -320,7 +320,7 @@ function computerPlay() {
 			}
 		}
 	}
-	if (possibleWin = checkWin(0, 0, 1, 0)) {
+	if (possibleWin = analyzeBoard(0, 0, 1, 0)) {
 		for (var i in possibleWin) {
 			if ((testDrop(possibleWin[i][1]) === possibleWin[i])
 			&& (badMoves.indexOf(possibleWin[i]) < 0)) {
@@ -330,7 +330,7 @@ function computerPlay() {
 			}
 		}
 	}
-	if (distantWin = checkWin(0, 0, 0, 1)) {
+	if (distantWin = analyzeBoard(0, 0, 0, 1)) {
 		for (var i in distantWin) {
 			if ((testDrop(distantWin[i][1]) === distantWin[i])
 			&& (badMoves.indexOf(distantWin[i]) < 0)) {
