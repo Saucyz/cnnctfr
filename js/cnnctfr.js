@@ -15,8 +15,8 @@ cnnctfr.newGame = function() {
 	}
 	badMoves = [];
 	clearSlot('all');
-	//var firstPlayer = Math.floor(Math.random()*2);
-	var firstPlayer = 1;
+	var firstPlayer = Math.floor(Math.random()*2);
+	// var firstPlayer = 1;
 	if (firstPlayer === 1) {
 		myTurn = 1;
 	}
@@ -68,78 +68,6 @@ function winningCombinations() {
 			w++;
 		}
 	}
-}
-
-// Analyze board looking for winning combinations
-// 0 for computer, 1 for human
-// By default, just handles wins and draws
-// Also returns an object containing:
-// win: Winning combination, if any
-// nearWins: With 1 disc missing if any
-// possibleWins: With 2 discs missing, if any
-// distantWins: With 3 discs missing, if any
-// Missing disc location(s) arranged from more to less critical
-function analyzeBoard(human) {
-	var win = [];
-	var nearWins = [];
-	var possibleWins = [];
-	var distantWins = [];
-	if (human) {
-		var criteria = 'human';
-	}
-	else {
-		var criteria = 'computer';
-	}
-	for (var i in winning) {
-		var m = 0;
-		var near = [];
-		for (var r in winning[i]) {
-			if ($('#' + winning[i][r]).attr('status') === criteria) {
-				m++;
-			}
-			else if ($('#' + winning[i][r]).attr('status') === 'empty') {
-				if (($('#' + winning[i][r - 1]).attr('status') === criteria)
-				|| ($('#' + winning[i][r + 1]).attr('status') === criteria)) {
-					near.unshift(winning[i][r]);
-				}
-				else {
-					near.push(winning[i][r]);
-				}
-			}
-		}
-		if (m === 4) {
-			for (var r in winning[i]) {
-				$('#' + winning[i][r]).css('border-color', '#FFF');
-				win.push(winning[i][r]);
-			}
-			$('.slot').css('cursor', 'auto');
-		}
-		else if ((near.length === 1) && (m === 3)) {
-			nearWins.push(near[0]);
-		}
-		else if ((near.length === 2) && (m === 2)) {
-			possibleWins.push(near);
-		}
-		else if ((near.length === 3) && (m === 1)) {
-			distantWins.push(near);
-		}
-	}
-	// Detect draw
-	var draw = 1;
-	$('.slot').each(function(index) {
-		if ($(this).attr('status') === 'empty') {
-			draw = 0;
-		}
-	});
-	if (draw) {
-		resetGame(2);
-	}
-	return {
-		'win': win, 
-		'nearWins': nearWins, 
-		'possibleWins': possibleWins, 
-		'distantWins': distantWins
-	};
 }
 
 // Return empty slots in a column
@@ -290,6 +218,86 @@ $('.slot').click(function() {
 		dropDisc(column, 1);
 	}
 });
+
+// Analyze board looking for winning combinations
+// 0 for computer, 1 for human
+// By default, just handles wins and draws
+// Also returns an object containing:
+// win: Winning combination, if any
+// nearWins: With 1 disc missing if any
+// possibleWins: With 2 discs missing, if any
+// distantWins: With 3 discs missing, if any
+// Missing disc location(s) arranged from more to less critical
+function analyzeBoard(human) {
+	var win = [];
+	var nearWins = [];
+	var possibleWins = [];
+	var distantWins = [];
+	if (human) {
+		var criteria = 'human';
+	}
+	else {
+		var criteria = 'computer';
+	}
+	for (var i in winning) {
+		var m = 0;
+		var near = [];
+		for (var r in winning[i]) {
+			if ($('#' + winning[i][r]).attr('status') === criteria) {
+				m++;
+				if ($('#' + winning[i][r - 1]).attr('status') === 'empty') {
+					if (near.indexOf(winning[i][r - 1]) > -1) {
+						near.splice(near.indexOf(winning[i][r - 1]), 1);
+					}
+					near.unshift(winning[i][r - 1]);
+				}
+				if ($('#' + winning[i][r + 1]).attr('status') === 'empty') {
+					if (near.indexOf(winning[i][r + 1]) > -1) {
+						near.splice(near.indexOf(winning[i][r + 1]), 1);
+					}
+					near.unshift(winning[i][r + 1]);
+				}
+			}
+			if (near.indexOf(winning[i][r]) < 0) {
+				if ($('#' + winning[i][r]).attr('status') === 'empty') {
+					near.push(winning[i][r]);
+				}
+			}
+		}
+		if (m === 4) {
+			for (var r in winning[i]) {
+				$('#' + winning[i][r]).css('border-color', '#FFF');
+				win.push(winning[i][r]);
+			}
+			$('.slot').css('cursor', 'auto');
+		}
+		else if ((m === 3) && (near.length === 1)) {
+			nearWins.push(near[0]);
+		}
+		else if ((m === 2) && (near.length === 2)) {
+			possibleWins.push(near);
+		}
+		else if ((m === 1) && (near.length === 3)) {
+			distantWins.push(near);
+		}
+	}
+	// Detect draw
+	var draw = 1;
+	$('.slot').each(function(index) {
+		if ($(this).attr('status') === 'empty') {
+			draw = 0;
+		}
+	});
+	if (draw) {
+		resetGame(2);
+	}
+	return {
+		'win': win, 
+		'nearWins': nearWins, 
+		'possibleWins': possibleWins, 
+		'distantWins': distantWins
+	};
+}
 
 // Computer AI
 function computerPlay() {
