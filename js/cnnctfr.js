@@ -24,8 +24,8 @@ cnnctfr.newGame = function() {
 		myTurn = 0;
 		$('.slot').css('cursor', 'auto');
 		var analysis = {
-			'computer': analyzeBoard(0),
-			'human': analyzeBoard(1)
+			'computer': analyzeBoard('computer'),
+			'human': analyzeBoard('human')
 		};
 		window.setTimeout(function() {
 			computerPlay(analysis);
@@ -172,8 +172,8 @@ function dropDisc(column, human) {
 // 0 for computer, 1 for human
 function nextMove(human) {
 	var analysis = {
-		'computer': analyzeBoard(0),
-		'human': analyzeBoard(1)
+		'computer': analyzeBoard('computer'),
+		'human': analyzeBoard('human')
 	};
 	if (human) {
 		if (analysis['human']['win'].length) {
@@ -240,7 +240,7 @@ $('.slot').click(function() {
 });
 
 // Analyze board looking for winning combinations
-// 0 for computer, 1 for human
+// Criteria must be 'human' or 'computer'
 // By default, just handles wins and draws
 // Also returns an object containing:
 // win: Winning combination, if any
@@ -248,17 +248,11 @@ $('.slot').click(function() {
 // possibleWins: With 2 discs missing, if any
 // distantWins: With 3 discs missing, if any
 // Missing disc location(s) arranged from more to less critical
-function analyzeBoard(human) {
+function analyzeBoard(criteria) {
 	var win = [];
 	var nearWins = [];
 	var possibleWins = [];
 	var distantWins = [];
-	if (human) {
-		var criteria = 'human';
-	}
-	else {
-		var criteria = 'computer';
-	}
 	for (var i in winning) {
 		var m = 0;
 		var near = [];
@@ -322,8 +316,8 @@ function analyzeBoard(human) {
 // Computer AI
 // Needs analysis object as input in order to work:
 // analysis = {
-// 	'computer': analyzeBoard(0),
-// 	'human': analyzeBoard(1)
+// 	'computer': analyzeBoard('computer'),
+// 	'human': analyzeBoard('human')
 // };
 function computerPlay(analysis) {
 	console.log(analysis);
