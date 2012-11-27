@@ -25,7 +25,7 @@ cnnctfr.newGame = function() {
 		$('.slot').css('cursor', 'auto');
 		window.setTimeout(function() {
 			computerPlay();
-		}, 800);
+		}, 700);
 	}
 }
 
@@ -68,6 +68,18 @@ function winningCombinations() {
 			w++;
 		}
 	}
+}
+
+// Randomly shuffle array
+function shuffle(array) {
+	var tmp, current, top = array.length;
+	if(top) while(--top) {
+		current = Math.floor(Math.random() * (top + 1));
+		tmp = array[current];
+		array[current] = array[top];
+		array[top] = tmp;
+	}
+	return array;
 }
 
 // Return empty slots in a column
@@ -163,7 +175,7 @@ function nextMove(human) {
 		else {
 			window.setTimeout(function() {
 				computerPlay();
-			}, 800);
+			}, 700);
 		}
 	}
 	else {
@@ -307,6 +319,7 @@ function computerPlay() {
 	};
 	console.log(analysis);
 	if (nearWin = analysis['computer']['nearWins']) {
+		shuffle(nearWin);
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
 				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[i].toUpperCase());
@@ -316,6 +329,7 @@ function computerPlay() {
 		}
 	}
 	if (nearWin = analysis['human']['nearWins']) {
+		shuffle(nearWin);
 		for (var i in nearWin) {
 			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
 			if (testDrop(nearWin[i][1]) === p) {
@@ -332,6 +346,7 @@ function computerPlay() {
 		}
 	}
 	if (possibleWin = analysis['computer']['possibleWins']) {
+		shuffle(possibleWin);
 		for (var i in possibleWin) {
 			for (var r in possibleWin[i]) {
 				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
@@ -344,6 +359,7 @@ function computerPlay() {
 		}
 	}
 	if (possibleWin = analysis['human']['possibleWins']) {
+		shuffle(possibleWin);
 		for (var i in possibleWin) {
 			for (var r in possibleWin[i]) {
 				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
@@ -356,6 +372,7 @@ function computerPlay() {
 		}
 	}
 	if (distantWin = analysis['computer']['distantWins']) {
+		shuffle(distantWin);
 		for (var i in distantWin) {
 			for (var r in distantWin[i]) {
 				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
