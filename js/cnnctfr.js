@@ -23,8 +23,12 @@ cnnctfr.newGame = function() {
 	else {
 		myTurn = 0;
 		$('.slot').css('cursor', 'auto');
+		var analysis = {
+			'computer': analyzeBoard(0),
+			'human': analyzeBoard(1)
+		};
 		window.setTimeout(function() {
-			computerPlay();
+			computerPlay(analysis);
 		}, 700);
 	}
 }
@@ -167,19 +171,23 @@ function dropDisc(column, human) {
 // Move the game along after a disc is dropped
 // 0 for computer, 1 for human
 function nextMove(human) {
+	var analysis = {
+		'computer': analyzeBoard(0),
+		'human': analyzeBoard(1)
+	};
 	if (human) {
-		if (analyzeBoard(1)['win'].length) {
+		if (analysis['human']['win'].length) {
 			console.log('COMPUTER: LOSE');
 			resetGame(human);
 		}
 		else {
 			window.setTimeout(function() {
-				computerPlay();
+				computerPlay(analysis);
 			}, 700);
 		}
 	}
 	else {
-		if (analyzeBoard(0)['win'].length) {
+		if (analysis['computer']['win'].length) {
 			console.log('COMPUTER: WIN');
 			resetGame(human);
 		}
@@ -312,11 +320,12 @@ function analyzeBoard(human) {
 }
 
 // Computer AI
-function computerPlay() {
-	var analysis = {
-		'computer': analyzeBoard(0),
-		'human': analyzeBoard(1)
-	};
+// Needs analysis object as input in order to work:
+// analysis = {
+// 	'computer': analyzeBoard(0),
+// 	'human': analyzeBoard(1)
+// };
+function computerPlay(analysis) {
 	console.log(analysis);
 	if (nearWin = analysis['computer']['nearWins']) {
 		shuffle(nearWin);
