@@ -387,6 +387,19 @@ function computerPlay(analysis) {
 			}
 		}
 	}
+	if (distantWin = analysis['human']['distantWins']) {
+		shuffle(distantWin);
+		for (var i in distantWin) {
+			for (var r in distantWin[i]) {
+				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
+				&& (badMoves.indexOf(distantWin[i][r]) < 0)) {
+					console.log('COMPUTER: BLOCKING DISTANTLY RELEVANT THREAT AT ' + distantWin[i][r].toUpperCase());
+					dropDisc(distantWin[i][r][1], 0);
+					return true;
+				}
+			}
+		}
+	}
 	var free = freeColumns();
 	for (var i in badMoves) {
 		if ((free.indexOf(badMoves[i][1]) > -1) && (free.length > 1)) {
