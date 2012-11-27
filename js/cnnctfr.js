@@ -310,21 +310,21 @@ function computerPlay() {
 			}
 		}
 	}
-	if (possibleWin = analyzeBoard(1, 0, 1, 0)) {
+	if (possibleWin = analyzeBoard(0, 0, 1, 0)) {
 		for (var i in possibleWin) {
 			if ((testDrop(possibleWin[i][1]) === possibleWin[i])
 			&& (badMoves.indexOf(possibleWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + possibleWin[i].toUpperCase());
+				console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + possibleWin[i].toUpperCase());
 				dropDisc(possibleWin[i][1], 0);
 				return true;
 			}
 		}
 	}
-	if (possibleWin = analyzeBoard(0, 0, 1, 0)) {
+	if (possibleWin = analyzeBoard(1, 0, 1, 0)) {
 		for (var i in possibleWin) {
 			if ((testDrop(possibleWin[i][1]) === possibleWin[i])
 			&& (badMoves.indexOf(possibleWin[i]) < 0)) {
-				console.log('COMPUTER: PLAYING OPTIMISTIC MOVE AT ' + possibleWin[i].toUpperCase());
+				console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + possibleWin[i].toUpperCase());
 				dropDisc(possibleWin[i][1], 0);
 				return true;
 			}
