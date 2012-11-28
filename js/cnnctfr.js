@@ -217,8 +217,11 @@ function resetGame(winner) {
 			$('.computer').text(wins[0]);
 			$('.human').text(wins[1]);
 			$('#wins').fadeIn(function() {
-				if (winner) {
+				if (winner === 1) {
 					talk.say('losing');
+				}
+				else if (winner === 2) {
+					talk.say('draw');
 				}
 				else if (!wins[1] && Math.floor(Math.random()*2)) {
 					talk.say('undefeated');

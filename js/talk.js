@@ -39,7 +39,11 @@ var phrases = {
 		'I am defeated.',
 		'You are a valuable opponent.',
 		'I see I will have to try harder.'
-	]	
+	],
+	'draw': [
+		'Is that your best?',
+		'Good, but not good enough.'
+	]
 };
 
 talk.say = function(type) {
