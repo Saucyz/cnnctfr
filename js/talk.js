@@ -25,7 +25,8 @@ var phrases = {
 		'I am programmed for perfect play.',
 		'You are unchallenging.',
 		'I am programmed to win.',
-		'You are human; flawed.'
+		'You are human; flawed.',
+		'Easy.'
 	],
 	'blocking': [
 		'Try harder.',
@@ -34,7 +35,9 @@ var phrases = {
 		'Too obvious.',
 		'Nice try.',
 		'Did you think I would not notice?',
-		'I know what you are thinking.'
+		'I know what you are thinking.',
+		'Predictable.',
+		'Easy.'
 	],
 	'losing': [
 		'You have cornered me.',
