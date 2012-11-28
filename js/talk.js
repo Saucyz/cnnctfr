@@ -67,7 +67,7 @@ talk.say = function(type) {
 			$('#talk').append(phrase[i]);
 			i++;
 		}
-	}, 50);
+	}, 40);
 }
 	
 });
