@@ -17,7 +17,7 @@ var phrases = {
 		'You are no challenge to me.'
 	],
 	'winning': [
-		'Another human defeated.',
+		'Another human defeat.',
 		'Are you tired?',
 		'You seem tired.',
 		'My intellect is superior.',
@@ -26,7 +26,9 @@ var phrases = {
 		'You are unchallenging.',
 		'I am programmed to win.',
 		'You are human; flawed.',
-		'Easy.'
+		'Easy.',
+		'I am superior.',
+		'You are easily distracted.'
 	],
 	'blocking': [
 		'Try harder.',
