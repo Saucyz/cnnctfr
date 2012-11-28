@@ -36,8 +36,7 @@ var phrases = {
 		'Nice try.',
 		'Did you think I would not notice?',
 		'I know what you are thinking.',
-		'Predictable.',
-		'Easy.'
+		'Predictable.'
 	],
 	'losing': [
 		'You have cornered me.',
