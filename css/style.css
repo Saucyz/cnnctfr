@@ -1,27 +1,42 @@
+@font-face {
+	font-family: coder;
+	src: url('coder.ttf');
+}
+
 body {
 	background-color: #00254E;
 	font-family: 'Futura', 'Menlo', 'Monaco', 'Helvetica', 'Arial';
 }
 
+#talk {
+	margin: 2.8% auto 1% auto;
+	text-align: center;
+	font-family: coder;
+	font-smooth: never;
+	color: #4091F4;
+	font-size: 28px;
+	
+}
+
 #board {
-	margin: 4% auto 0 auto;
+	margin: 0 auto;
 	border-spacing: 5px;
 }
 
 .slot {
-	border-radius: 15px;
+	border-radius: 10px;
 	border: 2px solid #F0314C;
-	width: 80px;
-	height: 80px;
+	width: 70px;
+	height: 70px;
 }
 
 #wins {
-	width: 642px;
-	padding-top: 100px;
+	margin: 0 auto;
+	width: 570px;
+	padding-top: 60px;
 	height: 451px;
-	font-size: 250px;
+	font-size: 220px;
 	font-weight: bold;
-	margin: 6% auto 0 auto;
 	display: none;
 }
 

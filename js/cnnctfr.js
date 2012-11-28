@@ -29,8 +29,11 @@ cnnctfr.newGame = function() {
 		};
 		window.setTimeout(function() {
 			computerPlay(analysis);
-		}, 700);
+		}, 800);
 	}
+	window.setTimeout(function() {
+		talk.say('start');
+	}, 700);
 }
 
 // Calculate array of winning combinations
@@ -152,7 +155,7 @@ function testDrop(column) {
 
 // Drop a disc with animation through column
 // 0 if computer, 1 if human
-function dropDisc(column, human) {
+function dropDisc(column, human, phrase) {
 	var empty = emptySlots(column);
 	var i = 0;
 	var drop = window.setInterval(function() {
@@ -163,9 +166,12 @@ function dropDisc(column, human) {
 		i++;
 		if (i === empty.length) {
 			window.clearInterval(drop);
+			if (phrase) {
+				talk.say(phrase);
+			}
 			nextMove(human);
 		}
-	}, 60);
+	}, 60);	
 }
 
 // Move the game along after a disc is dropped
@@ -183,7 +189,7 @@ function nextMove(human) {
 		else {
 			window.setTimeout(function() {
 				computerPlay(analysis);
-			}, 700);
+			}, 800);
 		}
 	}
 	else {
@@ -211,17 +217,26 @@ function resetGame(winner) {
 			$('.computer').text(wins[0]);
 			$('.human').text(wins[1]);
 			$('#wins').fadeIn(function() {
+				if (winner) {
+					talk.say('losing');
+				}
+				else if (!wins[1] && Math.floor(Math.random()*2)) {
+					talk.say('undefeated');
+				}
+				else {
+					talk.say('winning');
+				}
 				window.setTimeout(function() {
 					wins[winner]++;
 					$('.computer').text(wins[0]);
 					$('.human').text(wins[1]);
-				}, 800);
+				}, 600);
 				window.setTimeout(function() {
 					$('#wins').fadeOut(function() {
 						cnnctfr.newGame();
 						$('#board').fadeIn();
 					});
-				}, 2300);
+				}, 3400);
 			});
 		});
 	}, 2500);
@@ -343,7 +358,7 @@ function computerPlay(analysis) {
 			}
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
 				console.log('COMPUTER: PLAYING BLOCKING MOVE AT ' + nearWin[i].toUpperCase());
-				dropDisc(nearWin[i][1], 0);
+				dropDisc(nearWin[i][1], 0, 'blocking');
 				return true;
 			}
 		}
@@ -419,5 +434,5 @@ function computerPlay(analysis) {
 }
 
 cnnctfr.newGame();
-	
+
 });
