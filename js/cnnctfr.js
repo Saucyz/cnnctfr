@@ -29,7 +29,7 @@ cnnctfr.newGame = function() {
 		};
 		window.setTimeout(function() {
 			computerPlay(analysis);
-		}, 800);
+		}, 700);
 	}
 	window.setTimeout(function() {
 		talk.say('start');
@@ -188,8 +188,8 @@ function nextMove(human) {
 		}
 		else {
 			window.setTimeout(function() {
-				computerPlay(analysis);
-			}, 800);
+				showAnalysis(analysis);
+			}, 400);
 		}
 	}
 	else {
@@ -331,6 +331,34 @@ function analyzeBoard(criteria) {
 	};
 }
 
+// Visualizes AI thinking process
+// Before actually making move
+function showAnalysis(analysis) {
+	var slots = [];
+	for (var i in analysis) {
+		for (var r in analysis[i]) {
+			for (var d in analysis[i][r]) {
+				for (var s in analysis[i][r][d]) {
+					slots.push(analysis[i][r][d][s]);
+				}
+			}
+		}
+	}
+	shuffle(slots);
+	var i = 0;
+	var show = window.setInterval(function() {
+		if (i > 0) {
+			$('#' + slots[i - 1]).css('border-color', '#F0314C');
+		}
+		if (i === slots.length) {
+			window.clearInterval(show);
+			computerPlay(analysis);
+		}
+		i++;
+		$('#' + slots[i]).css('border-color', 'rgba(64, 145, 244, 1)');
+	}, 40);
+}
+
 // Computer AI
 // Needs analysis object as input in order to work:
 // analysis = {
@@ -338,7 +366,6 @@ function analyzeBoard(criteria) {
 // 	'human': analyzeBoard('human')
 // };
 function computerPlay(analysis) {
-	console.log(analysis);
 	if (nearWin = analysis['computer']['nearWins']) {
 		shuffle(nearWin);
 		for (var i in nearWin) {
