@@ -339,7 +339,9 @@ function showAnalysis(analysis) {
 		for (var r in analysis[i]) {
 			for (var d in analysis[i][r]) {
 				for (var s in analysis[i][r][d]) {
-					slots.push(analysis[i][r][d][s]);
+					if (badMoves.indexOf(analysis[i][r][d][s]) < 0) {
+						slots.push(analysis[i][r][d][s]);
+					}
 				}
 			}
 		}
@@ -347,7 +349,7 @@ function showAnalysis(analysis) {
 	var i = 0;
 	var show = window.setInterval(function() {
 		if (i > 0) {
-			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 300);
+			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 270);
 		}
 		if (i === slots.length) {
 			window.clearInterval(show);
