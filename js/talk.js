@@ -46,7 +46,9 @@ var phrases = {
 		'You are a valuable opponent.',
 		'I will have to try harder.',
 		'I see.',
-		'Interesting.'
+		'Interesting.',
+		'Impossible.',
+		'Does not compute.'
 	],
 	'draw': [
 		'Is that your best?',
@@ -59,7 +61,6 @@ talk.say = function(type) {
 	if (phrase === lastPhrase) { return }
 	lastPhrase = phrase;
 	var i = 0;
-	console.log($('#talk').text());
 	$('#talk').html('&nbsp;');
 	var typing = window.setInterval(function() {
 		if (i === phrase.length) {
