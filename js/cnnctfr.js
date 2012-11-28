@@ -189,7 +189,7 @@ function nextMove(human) {
 		else {
 			window.setTimeout(function() {
 				showAnalysis(analysis);
-			}, 400);
+			}, 300);
 		}
 	}
 	else {
@@ -347,15 +347,17 @@ function showAnalysis(analysis) {
 	var i = 0;
 	var show = window.setInterval(function() {
 		if (i > 0) {
-			$('#' + slots[i - 1]).css('border-color', '#F0314C');
+			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 300);
 		}
 		if (i === slots.length) {
 			window.clearInterval(show);
-			computerPlay(analysis);
+			window.setTimeout(function() {
+				computerPlay(analysis);
+			}, 300);
 		}
 		i++;
 		$('#' + slots[i]).css('border-color', 'rgba(64, 145, 244, 1)');
-	}, 40);
+	}, 50);
 }
 
 // Computer AI
