@@ -344,7 +344,6 @@ function showAnalysis(analysis) {
 			}
 		}
 	}
-	shuffle(slots);
 	var i = 0;
 	var show = window.setInterval(function() {
 		if (i > 0) {
