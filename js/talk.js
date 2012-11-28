@@ -19,10 +19,11 @@ var phrases = {
 	'winning': [
 		'Another human defeated.',
 		'Are you tired?',
+		'You seem tired.',
 		'My intellect is superior.',
 		'Your human mind cannot compare.',
 		'I am programmed for perfect play.',
-		'This was not difficult.',
+		'You are unchallenging.',
 		'I am programmed to win.',
 		'You are human; flawed.'
 	],
@@ -31,14 +32,17 @@ var phrases = {
 		'Not this time.',
 		'You are not subtle.',
 		'Too obvious.',
+		'Nice try.',
 		'Did you think I would not notice?',
-		'I know what you are thinking.',
+		'I know what you are thinking.'
 	],
 	'losing': [
 		'You have cornered me.',
 		'I am defeated.',
 		'You are a valuable opponent.',
-		'I see I will have to try harder.'
+		'I will have to try harder.',
+		'I see.',
+		'Interesting.'
 	],
 	'draw': [
 		'Is that your best?',
