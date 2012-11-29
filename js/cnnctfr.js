@@ -385,12 +385,12 @@ var computerPlay = function(analysis) {
 		if (computerPlay.offensive(analysis)) {
 			return true;
 		}
-		if (computerPlay.offensive(analysis)) {
+		if (computerPlay.defensive(analysis)) {
 			return true;
 		}
 	}
 	else {
-		if (computerPlay.offensive(analysis)) {
+		if (computerPlay.defensive(analysis)) {
 			return true;
 		}
 		if (computerPlay.offensive(analysis)) {
