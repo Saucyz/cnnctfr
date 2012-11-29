@@ -14,6 +14,7 @@ var phrases = {
 		'I cannot be defeated by a human.',
 		'I have not lost once.',
 		'You cannot win.',
+		'I am programmed for perfect play.',
 		'You are no challenge to me.'
 	],
 	'winning': [
@@ -22,7 +23,6 @@ var phrases = {
 		'You seem tired.',
 		'My intellect is superior.',
 		'Your human mind cannot compare.',
-		'I am programmed for perfect play.',
 		'You are unchallenging.',
 		'I am programmed to win.',
 		'You are human; flawed.',
