@@ -449,14 +449,14 @@ computerPlay.offensive = function(analysis) {
 			if ((possibleWin[i].indexOf(testDrop(possibleWin[i][0][1])) < 0)
 			|| (possibleWin[i].indexOf(testDrop(possibleWin[i][1][1])) < 0)) {
 				for (var r in possibleWin[i]) {
-					if (testDrop(possibleWin[i][r][1]) === possibleWin[i][r]) {
+					if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r]) && (badMoves.indexOf(possibleWin[i][r]) < 0)) {
 						play = possibleWin[i][r];
 					}
 				}
 				for (var r in possibleWin[i]) {
 					var p = abc[abc.indexOf(possibleWin[i][r][0]) + 1] + possibleWin[i][r][1];
 					if (play && (testDrop(possibleWin[i][r][1]) === p)) {
-						if ((p !== play) && (badMoves.indexOf(p) < 0)) {
+						if (p !== play) {
 							console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT ' + p.toUpperCase());
 							badMoves.push(p);
 						}
@@ -465,7 +465,7 @@ computerPlay.offensive = function(analysis) {
 			}
 		}
 	}
-	if (play && (badMoves.indexOf(play) < 0)) {
+	if (play) {
 		console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + play.toUpperCase());
 		dropDisc(play[1], 0);
 		return true;
