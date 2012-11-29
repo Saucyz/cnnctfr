@@ -270,6 +270,7 @@ function analyzeBoard(criteria) {
 	var nearWins = [];
 	var possibleWins = [];
 	var distantWins = [];
+	shuffle(winning);
 	for (var i in winning) {
 		var m = 0;
 		var near = [];
@@ -348,13 +349,13 @@ function showAnalysis(analysis) {
 	var i = 0;
 	var show = window.setInterval(function() {
 		if (i > 0) {
-			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 265);
+			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 300);
 		}
 		if (i === slots.length) {
 			window.clearInterval(show);
 			window.setTimeout(function() {
 				computerPlay(analysis);
-			}, 265);
+			}, 300);
 		}
 		i++;
 		$('#' + slots[i]).css('border-color', 'rgba(64, 145, 244, 1)');
