@@ -3,6 +3,7 @@ var talk = function() {};
 $(window).load(function() {
 	
 var lastPhrase;
+var talking = 0;
 	
 var phrases = {
 	'start': [
@@ -20,7 +21,7 @@ var phrases = {
 	'winning': [
 		'Another human defeat.',
 		'Are you tired?',
-		'You seem tired.',
+		'You are no match for me.',
 		'My intellect is superior.',
 		'Your human mind cannot compare.',
 		'You are unchallenging.',
@@ -58,13 +59,15 @@ var phrases = {
 
 talk.say = function(type) {
 	var phrase = phrases[type][Math.floor(Math.random()*phrases[type].length)];
-	if (phrase === lastPhrase) { return }
+	if ((phrase === lastPhrase) || talking) { return }
 	lastPhrase = phrase;
 	var i = 0;
 	$('#talk').html('&nbsp;');
+	talking = 1;
 	var typing = window.setInterval(function() {
 		if (i === phrase.length) {
 			window.clearInterval(typing);
+			talking = 0;
 		}
 		else {
 			$('#talk').append(phrase[i]);
