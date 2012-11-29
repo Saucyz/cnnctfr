@@ -266,12 +266,14 @@ $('.slot').click(function() {
 // nearWins: With 1 disc missing if any
 // possibleWins: With 2 discs missing, if any
 // distantWins: With 3 discs missing, if any
+// disadvantage: Array of disadvantageous moves
 // Missing disc location(s) arranged from more to less critical
 function analyzeBoard(criteria) {
 	var win = [];
 	var nearWins = [];
 	var possibleWins = [];
 	var distantWins = [];
+	var disadvantage = [];
 	shuffle(winning);
 	for (var i in winning) {
 		var m = 0;
@@ -310,6 +312,10 @@ function analyzeBoard(criteria) {
 			$('.slot').css('cursor', 'auto');
 		}
 		else if ((m === 3) && (near.length === 1)) {
+			var p = abc[abc.indexOf(near[0][0]) + 1] + near[0][1];
+			if ($('#' + p).attr('status') === 'empty') {
+				disadvantage.push(p);
+			}
 			nearWins.push(near[0]);
 		}
 		else if ((m === 2) && (near.length === 2)) {
@@ -333,7 +339,8 @@ function analyzeBoard(criteria) {
 		'win': win, 
 		'nearWins': nearWins, 
 		'possibleWins': possibleWins, 
-		'distantWins': distantWins
+		'distantWins': distantWins,
+		'disadvantage': disadvantage
 	};
 }
 
@@ -375,17 +382,28 @@ function showAnalysis(analysis) {
 // 	'human': analyzeBoard('human')
 // };
 var computerPlay = function(analysis) {
+	computerPlay.detectThreats(analysis);
 	if (computerPlay.win(analysis)) {
 		return true;
 	}
 	if (computerPlay.block(analysis)) {
 		return true;
 	}
-	if (computerPlay.offensive(analysis)) {
-		return true;
+	if (Math.floor(Math.random()*2)) {
+		if (computerPlay.offensive(analysis)) {
+			return true;
+		}
+		if (computerPlay.defensive(analysis)) {
+			return true;
+		}
 	}
-	if (computerPlay.defensive(analysis)) {
-		return true;
+	else {
+		if (computerPlay.defensive(analysis)) {
+			return true;
+		}
+		if (computerPlay.offensive(analysis)) {
+			return true;
+		}
 	}
 	if (Math.floor(Math.random()*2)) {
 		if (computerPlay.distantOffensive(analysis)) {
@@ -409,6 +427,25 @@ var computerPlay = function(analysis) {
 	return false;
 }
 
+computerPlay.detectThreats = function(analysis) {
+	if (analysis['human']['disadvantage'].length) {
+		for (var i in analysis['human']['disadvantage']) {
+			if (badMoves.indexOf(analysis['human']['disadvantage'][i]) < 0) {
+				console.log('COMPUTER: DISASTROUS MOVE DETECTED AT ' + analysis['human']['disadvantage'][i].toUpperCase());
+				badMoves.push(analysis['human']['disadvantage'][i]);
+			}
+		}
+	}
+	if (analysis['computer']['disadvantage'].length) {
+		for (var i in analysis['computer']['disadvantage']) {
+			if (badMoves.indexOf(analysis['computer']['disadvantage'][i]) < 0) {
+				console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT ' + analysis['computer']['disadvantage'][i].toUpperCase());
+				badMoves.push(analysis['computer']['disadvantage'][i]);
+			}
+		}
+	}
+}
+
 computerPlay.win = function(analysis) {
 	if (nearWin = analysis['computer']['nearWins']) {
 		for (var i in nearWin) {
@@ -425,13 +462,6 @@ computerPlay.win = function(analysis) {
 computerPlay.block = function(analysis) {
 	if (nearWin = analysis['human']['nearWins']) {
 		for (var i in nearWin) {
-			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
-			if (testDrop(nearWin[i][1]) === p) {
-				if (badMoves.indexOf(p) < 0) {
-					console.log('COMPUTER: DISASTROUS MOVE DETECTED AT ' + p.toUpperCase());
-					badMoves.push(p);
-				}
-			}
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
 				console.log('COMPUTER: PLAYING BLOCKING MOVE AT ' + nearWin[i].toUpperCase());
 				dropDisc(nearWin[i][1], 0, 'blocking');
@@ -443,32 +473,17 @@ computerPlay.block = function(analysis) {
 }
 
 computerPlay.offensive = function(analysis) {
-	var play = 0;
 	if (possibleWin = analysis['computer']['possibleWins']) {
 		for (var i in possibleWin) {
-			if ((possibleWin[i].indexOf(testDrop(possibleWin[i][0][1])) < 0)
-			|| (possibleWin[i].indexOf(testDrop(possibleWin[i][1][1])) < 0)) {
-				for (var r in possibleWin[i]) {
-					if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r]) && (badMoves.indexOf(possibleWin[i][r]) < 0)) {
-						play = possibleWin[i][r];
-					}
-				}
-				for (var r in possibleWin[i]) {
-					var p = abc[abc.indexOf(possibleWin[i][r][0]) + 1] + possibleWin[i][r][1];
-					if (play && (testDrop(possibleWin[i][r][1]) === p)) {
-						if (p !== play) {
-							console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT ' + p.toUpperCase());
-							badMoves.push(p);
-						}
-					}
+			for (var r in possibleWin[i]) {
+				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
+				&& (badMoves.indexOf(possibleWin[i][r]) < 0)) {
+					console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + possibleWin[i][r].toUpperCase());
+					dropDisc(possibleWin[i][r][1], 0);
+					return true;
 				}
 			}
 		}
-	}
-	if (play) {
-		console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + play.toUpperCase());
-		dropDisc(play[1], 0);
-		return true;
 	}
 	return false;
 }
