@@ -125,6 +125,7 @@ function insertDisc(slot, human) {
 		var playerColor = '#4091F4';
 		$('#' + slot).attr('status', 'computer');
 	}
+	$('#' + slot).stop();
 	$('#' + slot).css('cursor', 'auto');
 	$('#' + slot).css('background', playerColor);
 	$('#' + slot).css('border-color', playerColor);
@@ -349,7 +350,7 @@ function showAnalysis(analysis) {
 	var i = 0;
 	var show = window.setInterval(function() {
 		if (i > 0) {
-			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 270);
+			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 300);
 		}
 		if (i === slots.length) {
 			window.clearInterval(show);
