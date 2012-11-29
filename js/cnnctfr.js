@@ -11,7 +11,7 @@ var badMoves = [];
 // Start new game
 cnnctfr.newGame = function() {
 	if (!winning.length) {
-		winningCombinations();
+		winning = winningCombinations();
 	}
 	badMoves = [];
 	clearSlot('all');
@@ -39,42 +39,44 @@ cnnctfr.newGame = function() {
 // Calculate array of winning combinations
 function winningCombinations() {
 	var w = 0;
+	var result = [];
 	for (var i in abc) {
 		for (var r = 1; r < 5; r++) {
-			winning[w] = [];
+			result[w] = [];
 			for (var d = 0; d < 4; d++) {
-				winning[w].push(abc[i] + (r + d));
+				result[w].push(abc[i] + (r + d));
 			}
 			w++;
 		}
 	}
 	for (var i = 7; i > 0; i--) {
 		for (var r = 6; r !== 3; r--) {
-			winning[w] = [];
+			result[w] = [];
 			for (var d = 4; d > 0; d--) {
-				winning[w].push(abc[r - d] + i);
+				result[w].push(abc[r - d] + i);
 			}
 			w++;
 		}
 	}
 	for (var i = 3; i < abc.length; i++) {
 		for (var r = 4; r < 8; r++) {
-			winning[w] = [];
+			result[w] = [];
 			for (var d = 0; d < 4; d++) {
-				winning[w].push(abc[i - d] + (r - d));
+				result[w].push(abc[i - d] + (r - d));
 			}
 			w++;
 		}
 	}
 	for (var i = 3; i < abc.length; i++) {
 		for (var r = 4; r > 0; r--) {
-			winning[w] = [];
+			result[w] = [];
 			for (var d = 0; d < 4; d++) {
-				winning[w].push(abc[i - d] + (r + d));
+				result[w].push(abc[i - d] + (r + d));
 			}
 			w++;
 		}
 	}
+	return result;
 }
 
 // Randomly shuffle array
@@ -290,9 +292,13 @@ function analyzeBoard(criteria) {
 					near.unshift(winning[i][r + 1]);
 				}
 			}
-			if (near.indexOf(winning[i][r]) < 0) {
-				if ($('#' + winning[i][r]).attr('status') === 'empty') {
+			else if ($('#' + winning[i][r]).attr('status') === 'empty') {
+				if (near.indexOf(winning[i][r]) < 0) {
 					near.push(winning[i][r]);
+				}
+				else {
+					near.splice(near.indexOf(winning[i][r]), 1);
+					near.unshift(winning[i][r]);
 				}
 			}
 		}
@@ -370,7 +376,6 @@ function showAnalysis(analysis) {
 // };
 function computerPlay(analysis) {
 	if (nearWin = analysis['computer']['nearWins']) {
-		shuffle(nearWin);
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
 				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[i].toUpperCase());
@@ -380,7 +385,6 @@ function computerPlay(analysis) {
 		}
 	}
 	if (nearWin = analysis['human']['nearWins']) {
-		shuffle(nearWin);
 		for (var i in nearWin) {
 			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
 			if (testDrop(nearWin[i][1]) === p) {
@@ -397,7 +401,6 @@ function computerPlay(analysis) {
 		}
 	}
 	if (possibleWin = analysis['computer']['possibleWins']) {
-		shuffle(possibleWin);
 		for (var i in possibleWin) {
 			for (var r in possibleWin[i]) {
 				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
@@ -410,7 +413,6 @@ function computerPlay(analysis) {
 		}
 	}
 	if (possibleWin = analysis['human']['possibleWins']) {
-		shuffle(possibleWin);
 		for (var i in possibleWin) {
 			for (var r in possibleWin[i]) {
 				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
@@ -423,7 +425,6 @@ function computerPlay(analysis) {
 		}
 	}
 	if (distantWin = analysis['computer']['distantWins']) {
-		shuffle(distantWin);
 		for (var i in distantWin) {
 			for (var r in distantWin[i]) {
 				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
@@ -436,7 +437,6 @@ function computerPlay(analysis) {
 		}
 	}
 	if (distantWin = analysis['human']['distantWins']) {
-		shuffle(distantWin);
 		for (var i in distantWin) {
 			for (var r in distantWin[i]) {
 				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
