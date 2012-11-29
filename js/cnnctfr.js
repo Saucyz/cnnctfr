@@ -280,13 +280,13 @@ function analyzeBoard(criteria) {
 			if ($('#' + winning[i][r]).attr('status') === criteria) {
 				m++;
 				if ($('#' + winning[i][r - 1]).attr('status') === 'empty') {
-					if (near.indexOf(winning[i][r - 1]) > -1) {
+					if (near.indexOf(winning[i][r - 1]) >= 0) {
 						near.splice(near.indexOf(winning[i][r - 1]), 1);
 					}
 					near.unshift(winning[i][r - 1]);
 				}
 				if ($('#' + winning[i][r + 1]).attr('status') === 'empty') {
-					if (near.indexOf(winning[i][r + 1]) > -1) {
+					if (near.indexOf(winning[i][r + 1]) >= 0) {
 						near.splice(near.indexOf(winning[i][r + 1]), 1);
 					}
 					near.unshift(winning[i][r + 1]);
@@ -374,7 +374,52 @@ function showAnalysis(analysis) {
 // 	'computer': analyzeBoard('computer'),
 // 	'human': analyzeBoard('human')
 // };
-function computerPlay(analysis) {
+var computerPlay = function(analysis) {
+	if (computerPlay.win(analysis)) {
+		return true;
+	}
+	if (computerPlay.block(analysis)) {
+		return true;
+	}
+	if (Math.floor(Math.random()*2)) {
+		if (computerPlay.offensive(analysis)) {
+			return true;
+		}
+		if (computerPlay.defensive(analysis)) {
+			return true;
+		}
+	}
+	else {
+		if (computerPlay.defensive(analysis)) {
+			return true;
+		}
+		if (computerPlay.offensive(analysis)) {
+			return true;
+		}
+	}
+	if (Math.floor(Math.random()*2)) {
+		if (computerPlay.distantOffensive(analysis)) {
+			return true;
+		}
+		if (computerPlay.distantDefensive(analysis)) {
+			return true;
+		}
+	}
+	else {
+		if (computerPlay.distantDefensive(analysis)) {
+			return true;
+		}
+		if (computerPlay.distantOffensive(analysis)) {
+			return true;
+		}
+	}
+	if (computerPlay.random()) {
+		return true;
+	}
+	return false;
+}
+
+computerPlay.win = function(analysis) {
 	if (nearWin = analysis['computer']['nearWins']) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
@@ -384,6 +429,10 @@ function computerPlay(analysis) {
 			}
 		}
 	}
+	return false;
+}
+
+computerPlay.block = function(analysis) {
 	if (nearWin = analysis['human']['nearWins']) {
 		for (var i in nearWin) {
 			var p = abc[abc.indexOf(nearWin[i][0]) + 1] + nearWin[i][1];
@@ -400,18 +449,34 @@ function computerPlay(analysis) {
 			}
 		}
 	}
+	return false;
+}
+
+computerPlay.offensive = function(analysis) {
 	if (possibleWin = analysis['computer']['possibleWins']) {
 		for (var i in possibleWin) {
-			for (var r in possibleWin[i]) {
-				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
-				&& (badMoves.indexOf(possibleWin[i][r]) < 0)) {
-					console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + possibleWin[i][r].toUpperCase());
-					dropDisc(possibleWin[i][r][1], 0);
-					return true;
+			if ((possibleWin[i].indexOf(testDrop(possibleWin[i][0][1])) < 0)
+			|| (possibleWin[i].indexOf(testDrop(possibleWin[i][1][1])) < 0)) {
+				for (var r in possibleWin[i]) {
+					if (badMoves.indexOf(possibleWin[i][r]) < 0) {
+						if (testDrop(possibleWin[i][r][1]) === possibleWin[i][r]) {
+								console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + possibleWin[i][r].toUpperCase());
+								dropDisc(possibleWin[i][r][1], 0);
+								return true;
+						}
+						else if (testDrop(possibleWin[i][r][1]) === (abc.indexOf(possibleWin[i][r][0] + 1) + possibleWin[i][r][1])) {
+							console.log('COMPUTER: NON-STRATEGIC MOVE DETECTED AT ' + testDrop(possibleWin[i][r][1]).toUpperCase());
+							badMoves.push(testDrop(possibleWin[i][r][1]));
+						}
+					}
 				}
 			}
 		}
 	}
+	return false;
+}
+
+computerPlay.defensive = function(analysis) {
 	if (possibleWin = analysis['human']['possibleWins']) {
 		for (var i in possibleWin) {
 			for (var r in possibleWin[i]) {
@@ -424,6 +489,10 @@ function computerPlay(analysis) {
 			}
 		}
 	}
+	return false;
+}
+
+computerPlay.distantOffensive = function(analysis) {
 	if (distantWin = analysis['computer']['distantWins']) {
 		for (var i in distantWin) {
 			for (var r in distantWin[i]) {
@@ -436,6 +505,10 @@ function computerPlay(analysis) {
 			}
 		}
 	}
+	return false;
+}
+
+computerPlay.distantDefensive = function(analysis) {
 	if (distantWin = analysis['human']['distantWins']) {
 		for (var i in distantWin) {
 			for (var r in distantWin[i]) {
@@ -448,16 +521,20 @@ function computerPlay(analysis) {
 			}
 		}
 	}
+	return false;
+}
+
+computerPlay.random = function() {
 	var free = freeColumns();
 	for (var i in badMoves) {
-		if ((free.indexOf(badMoves[i][1]) > -1) && (free.length > 1)) {
+		if ((free.indexOf(badMoves[i][1]) >= 0) && (free.length > 1)) {
 			free.splice(free.indexOf(badMoves[i][1]), 1);
 		}
 	}
-	if ((free.indexOf('1') > -1) && (free.length > 1)) {
+	if ((free.indexOf('1') >= 0) && (free.length > 1)) {
 		free.splice(free.indexOf('1'), 1);
 	}
-	if ((free.indexOf('7') > -1) && (free.length > 1)) {
+	if ((free.indexOf('7') >= 0) && (free.length > 1)) {
 		free.splice(free.indexOf('7'), 1);
 	}
 	r = free[Math.floor(Math.random()*free.length)];
@@ -465,6 +542,7 @@ function computerPlay(analysis) {
 	dropDisc(r, 0);
 	return true;
 }
+
 
 cnnctfr.newGame();
 
