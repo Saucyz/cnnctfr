@@ -381,21 +381,11 @@ var computerPlay = function(analysis) {
 	if (computerPlay.block(analysis)) {
 		return true;
 	}
-	if (Math.floor(Math.random()*2)) {
-		if (computerPlay.offensive(analysis)) {
-			return true;
-		}
-		if (computerPlay.defensive(analysis)) {
-			return true;
-		}
+	if (computerPlay.offensive(analysis)) {
+		return true;
 	}
-	else {
-		if (computerPlay.defensive(analysis)) {
-			return true;
-		}
-		if (computerPlay.offensive(analysis)) {
-			return true;
-		}
+	if (computerPlay.defensive(analysis)) {
+		return true;
 	}
 	if (Math.floor(Math.random()*2)) {
 		if (computerPlay.distantOffensive(analysis)) {
