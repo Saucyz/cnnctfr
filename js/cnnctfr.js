@@ -385,12 +385,12 @@ var computerPlay = function(analysis) {
 		if (computerPlay.offensive(analysis)) {
 			return true;
 		}
-		if (computerPlay.defensive(analysis)) {
+		if (computerPlay.offensive(analysis)) {
 			return true;
 		}
 	}
 	else {
-		if (computerPlay.defensive(analysis)) {
+		if (computerPlay.offensive(analysis)) {
 			return true;
 		}
 		if (computerPlay.offensive(analysis)) {
@@ -453,25 +453,32 @@ computerPlay.block = function(analysis) {
 }
 
 computerPlay.offensive = function(analysis) {
+	var play = 0;
 	if (possibleWin = analysis['computer']['possibleWins']) {
 		for (var i in possibleWin) {
 			if ((possibleWin[i].indexOf(testDrop(possibleWin[i][0][1])) < 0)
 			|| (possibleWin[i].indexOf(testDrop(possibleWin[i][1][1])) < 0)) {
 				for (var r in possibleWin[i]) {
-					if (badMoves.indexOf(possibleWin[i][r]) < 0) {
-						if (testDrop(possibleWin[i][r][1]) === possibleWin[i][r]) {
-								console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + possibleWin[i][r].toUpperCase());
-								dropDisc(possibleWin[i][r][1], 0);
-								return true;
-						}
-						else if (testDrop(possibleWin[i][r][1]) === (abc.indexOf(possibleWin[i][r][0] + 1) + possibleWin[i][r][1])) {
-							console.log('COMPUTER: NON-STRATEGIC MOVE DETECTED AT ' + testDrop(possibleWin[i][r][1]).toUpperCase());
-							badMoves.push(testDrop(possibleWin[i][r][1]));
+					if (testDrop(possibleWin[i][r][1]) === possibleWin[i][r]) {
+						play = possibleWin[i][r];
+					}
+				}
+				for (var r in possibleWin[i]) {
+					var p = abc[abc.indexOf(possibleWin[i][r][0]) + 1] + possibleWin[i][r][1];
+					if (play && (testDrop(possibleWin[i][r][1]) === p)) {
+						if ((p !== play) && (badMoves.indexOf(p) < 0)) {
+							console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT ' + p.toUpperCase());
+							badMoves.push(p);
 						}
 					}
 				}
 			}
 		}
+	}
+	if (play && (badMoves.indexOf(play) < 0)) {
+		console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + play.toUpperCase());
+		dropDisc(play[1], 0);
+		return true;
 	}
 	return false;
 }
