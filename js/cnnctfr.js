@@ -1,3 +1,5 @@
+// CNNCTFR - Central Neural Network Computer That Forms Rows
+
 var cnnctfr = function() {};
 
 $(window).load(function() {
@@ -383,48 +385,14 @@ function showAnalysis(analysis) {
 // };
 var computerPlay = function(analysis) {
 	computerPlay.detectThreats(analysis);
-	if (computerPlay.win(analysis)) {
-		return true;
-	}
-	if (computerPlay.block(analysis)) {
-		return true;
-	}
-	if (Math.floor(Math.random()*2)) {
-		if (computerPlay.offensive(analysis)) {
-			return true;
-		}
-		if (computerPlay.defensive(analysis)) {
-			return true;
-		}
-	}
-	else {
-		if (computerPlay.defensive(analysis)) {
-			return true;
-		}
-		if (computerPlay.offensive(analysis)) {
-			return true;
-		}
-	}
-	if (Math.floor(Math.random()*2)) {
-		if (computerPlay.distantOffensive(analysis)) {
-			return true;
-		}
-		if (computerPlay.distantDefensive(analysis)) {
-			return true;
-		}
-	}
-	else {
-		if (computerPlay.distantDefensive(analysis)) {
-			return true;
-		}
-		if (computerPlay.distantOffensive(analysis)) {
-			return true;
-		}
-	}
-	if (computerPlay.random()) {
-		return true;
-	}
-	return false;
+	if (computerPlay.win(analysis)) { return true }
+	if (computerPlay.block(analysis)) { return true }
+	if (computerPlay.offensive(analysis)) { return true }
+	if (computerPlay.defensive(analysis)) { return true }
+	if (computerPlay.distantOffensive(analysis)) { return true }
+	if (computerPlay.distantDefensive(analysis)) { return true }
+	if (computerPlay.random()) { return true }
+	else { return false }
 }
 
 computerPlay.detectThreats = function(analysis) {
