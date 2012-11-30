@@ -362,7 +362,7 @@ function showAnalysis(analysis) {
 	var i = 0;
 	var show = window.setInterval(function() {
 		if (i > 0) {
-			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 300);
+			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 290);
 		}
 		if (i === slots.length) {
 			window.clearInterval(show);
@@ -372,7 +372,7 @@ function showAnalysis(analysis) {
 		}
 		i++;
 		$('#' + slots[i]).css('border-color', 'rgba(64, 145, 244, 1)');
-	}, 50);
+	}, 35);
 }
 
 // Computer AI
