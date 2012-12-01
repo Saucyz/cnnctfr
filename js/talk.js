@@ -29,7 +29,8 @@ var phrases = {
 		'You are human; flawed.',
 		'Easy.',
 		'I am superior.',
-		'You are easily distracted.'
+		'You are easily distracted.',
+		'I am perfect.'
 	],
 	'blocking': [
 		'Try harder.',
