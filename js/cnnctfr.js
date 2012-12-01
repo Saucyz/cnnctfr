@@ -329,7 +329,6 @@ function analyzeBoard(criteria) {
 			for (var d in near) {
 				var p = abc[abc.indexOf(near[d][0]) + 1] + near[d][1];
 				if (($('#' + p).attr('status') === 'empty') && (distantDisadvantage.indexOf(p) < 0)) {
-					console.log(p);
 					distantDisadvantage.push(p);
 				}
 			}
@@ -401,7 +400,6 @@ function showAnalysis(analysis) {
 // 	'human': analyzeBoard('human')
 // };
 var computerPlay = function(analysis) {
-	console.log(analysis);
 	computerPlay.detectThreats(analysis);
 	if (computerPlay.win(analysis)) { return true }
 	if (computerPlay.block(analysis)) { return true }
