@@ -431,13 +431,9 @@ computerPlay.detectThreats = function(analysis) {
 		}
 	}
 	if (analysis['human']['distantDisadvantage'].length) {
-		for (var i in analysis['human']['distantDisadvantage']) {
-			if (distantlyBadMoves.indexOf(analysis['human']['distantDisadvantage'][i]) < 0) {
-				console.log('COMPUTER: DISTANTLY DISADVANTAGEOUS MOVE DETECTED AT '
-				+ analysis['human']['distantDisadvantage'][i].toUpperCase());
-				distantlyBadMoves.push(analysis['human']['distantDisadvantage'][i]);
-			}
-		}
+		console.log('COMPUTER: DISTANTLY DISADVANTAGEOUS MOVE DETECTED AT '
+		+ analysis['human']['distantDisadvantage'].join(', ').toUpperCase());
+		distantlyBadMoves = analysis['human']['distantDisadvantage'].slice();
 	}
 }
 
