@@ -9,6 +9,7 @@ var winning = [];
 var myTurn = null;
 var wins = [0, 0, 0];
 var badMoves = [];
+var distantlyBadMoves = [];
 
 // Start new game
 cnnctfr.newGame = function() {
@@ -16,6 +17,7 @@ cnnctfr.newGame = function() {
 		winning = winningCombinations();
 	}
 	badMoves = [];
+	distantlyBadMoves = [];
 	clearSlot('all');
 	var firstPlayer = Math.floor(Math.random()*2);
 	// var firstPlayer = 1;
@@ -276,6 +278,7 @@ function analyzeBoard(criteria) {
 	var possibleWins = [];
 	var distantWins = [];
 	var disadvantage = [];
+	var distantDisadvantage = [];
 	shuffle(winning);
 	for (var i in winning) {
 		var m = 0;
@@ -315,16 +318,29 @@ function analyzeBoard(criteria) {
 		}
 		else if ((m === 3) && (near.length === 1)) {
 			var p = abc[abc.indexOf(near[0][0]) + 1] + near[0][1];
-			if ($('#' + p).attr('status') === 'empty') {
+			if (($('#' + p).attr('status') === 'empty') && (disadvantage.indexOf(p) < 0)) {
 				disadvantage.push(p);
 			}
-			nearWins.push(near[0]);
+			if (nearWins.indexOf(near[0]) < 0) {
+				nearWins.push(near[0]);
+			}
 		}
 		else if ((m === 2) && (near.length === 2)) {
-			possibleWins.push(near);
+			for (var d in near) {
+				var p = abc[abc.indexOf(near[d][0]) + 1] + near[d][1];
+				if (($('#' + p).attr('status') === 'empty') && (distantDisadvantage.indexOf(p) < 0)) {
+					console.log(p);
+					distantDisadvantage.push(p);
+				}
+			}
+			if (possibleWins.indexOf(near) < 0) {
+				possibleWins.push(near);
+			}
 		}
 		else if ((m === 1) && (near.length === 3)) {
-			distantWins.push(near);
+			if (distantWins.indexOf(near) < 0) {
+				distantWins.push(near);
+			}
 		}
 	}
 	// Detect draw
@@ -342,7 +358,8 @@ function analyzeBoard(criteria) {
 		'nearWins': nearWins, 
 		'possibleWins': possibleWins, 
 		'distantWins': distantWins,
-		'disadvantage': disadvantage
+		'disadvantage': disadvantage,
+		'distantDisadvantage': distantDisadvantage
 	};
 }
 
@@ -384,6 +401,7 @@ function showAnalysis(analysis) {
 // 	'human': analyzeBoard('human')
 // };
 var computerPlay = function(analysis) {
+	console.log(analysis);
 	computerPlay.detectThreats(analysis);
 	if (computerPlay.win(analysis)) { return true }
 	if (computerPlay.block(analysis)) { return true }
@@ -399,7 +417,8 @@ computerPlay.detectThreats = function(analysis) {
 	if (analysis['human']['disadvantage'].length) {
 		for (var i in analysis['human']['disadvantage']) {
 			if (badMoves.indexOf(analysis['human']['disadvantage'][i]) < 0) {
-				console.log('COMPUTER: DISASTROUS MOVE DETECTED AT ' + analysis['human']['disadvantage'][i].toUpperCase());
+				console.log('COMPUTER: DISASTROUS MOVE DETECTED AT '
+				+ analysis['human']['disadvantage'][i].toUpperCase());
 				badMoves.push(analysis['human']['disadvantage'][i]);
 			}
 		}
@@ -407,8 +426,18 @@ computerPlay.detectThreats = function(analysis) {
 	if (analysis['computer']['disadvantage'].length) {
 		for (var i in analysis['computer']['disadvantage']) {
 			if (badMoves.indexOf(analysis['computer']['disadvantage'][i]) < 0) {
-				console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT ' + analysis['computer']['disadvantage'][i].toUpperCase());
+				console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT '
+				+ analysis['computer']['disadvantage'][i].toUpperCase());
 				badMoves.push(analysis['computer']['disadvantage'][i]);
+			}
+		}
+	}
+	if (analysis['human']['distantDisadvantage'].length) {
+		for (var i in analysis['human']['distantDisadvantage']) {
+			if (distantlyBadMoves.indexOf(analysis['human']['distantDisadvantage'][i]) < 0) {
+				console.log('COMPUTER: DISTANTLY DISADVANTAGEOUS MOVE DETECTED AT '
+				+ analysis['human']['distantDisadvantage'][i].toUpperCase());
+				distantlyBadMoves.push(analysis['human']['distantDisadvantage'][i]);
 			}
 		}
 	}
@@ -418,7 +447,8 @@ computerPlay.win = function(analysis) {
 	if (nearWin = analysis['computer']['nearWins']) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
-				console.log('COMPUTER: PLAYING WINNING MOVE AT ' + nearWin[i].toUpperCase());
+				console.log('COMPUTER: PLAYING WINNING MOVE AT '
+				+ nearWin[i].toUpperCase());
 				dropDisc(nearWin[i][1], 0);
 				return true;
 			}
@@ -431,7 +461,8 @@ computerPlay.block = function(analysis) {
 	if (nearWin = analysis['human']['nearWins']) {
 		for (var i in nearWin) {
 			if (testDrop(nearWin[i][1]) === nearWin[i]) {
-				console.log('COMPUTER: PLAYING BLOCKING MOVE AT ' + nearWin[i].toUpperCase());
+				console.log('COMPUTER: PLAYING BLOCKING MOVE AT '
+				+ nearWin[i].toUpperCase());
 				dropDisc(nearWin[i][1], 0, 'blocking');
 				return true;
 			}
@@ -446,7 +477,8 @@ computerPlay.offensive = function(analysis) {
 			for (var r in possibleWin[i]) {
 				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
 				&& (badMoves.indexOf(possibleWin[i][r]) < 0)) {
-					console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT ' + possibleWin[i][r].toUpperCase());
+					console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT '
+					+ possibleWin[i][r].toUpperCase());
 					dropDisc(possibleWin[i][r][1], 0);
 					return true;
 				}
@@ -462,7 +494,8 @@ computerPlay.defensive = function(analysis) {
 			for (var r in possibleWin[i]) {
 				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
 				&& (badMoves.indexOf(possibleWin[i][r]) < 0)) {
-					console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT ' + possibleWin[i][r].toUpperCase());
+					console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT '
+					+ possibleWin[i][r].toUpperCase());
 					dropDisc(possibleWin[i][r][1], 0);
 					return true;
 				}
@@ -477,8 +510,10 @@ computerPlay.distantOffensive = function(analysis) {
 		for (var i in distantWin) {
 			for (var r in distantWin[i]) {
 				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
-				&& (badMoves.indexOf(distantWin[i][r]) < 0)) {
-					console.log('COMPUTER: PLAYING DISTANTLY RELEVANT MOVE AT ' + distantWin[i][r].toUpperCase());
+				&& (badMoves.indexOf(distantWin[i][r]) < 0)
+				&& (distantlyBadMoves.indexOf(distantWin[i][r]) < 0)) {
+					console.log('COMPUTER: PLAYING DISTANTLY RELEVANT MOVE AT '
+					+ distantWin[i][r].toUpperCase());
 					dropDisc(distantWin[i][r][1], 0);
 					return true;
 				}
@@ -493,8 +528,10 @@ computerPlay.distantDefensive = function(analysis) {
 		for (var i in distantWin) {
 			for (var r in distantWin[i]) {
 				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
-				&& (badMoves.indexOf(distantWin[i][r]) < 0)) {
-					console.log('COMPUTER: BLOCKING DISTANTLY RELEVANT THREAT AT ' + distantWin[i][r].toUpperCase());
+				&& (badMoves.indexOf(distantWin[i][r]) < 0)
+				&& (distantlyBadMoves.indexOf(distantWin[i][r]) < 0)) {
+					console.log('COMPUTER: BLOCKING DISTANTLY RELEVANT THREAT AT '
+					+ distantWin[i][r].toUpperCase());
 					dropDisc(distantWin[i][r][1], 0);
 					return true;
 				}
@@ -511,6 +548,11 @@ computerPlay.random = function() {
 			free.splice(free.indexOf(badMoves[i][1]), 1);
 		}
 	}
+	for (var i in distantlyBadMoves) {
+		if ((free.indexOf(distantlyBadMoves[i][1]) >= 0) && (free.length > 1)) {
+			free.splice(free.indexOf(distantlyBadMoves[i][1]), 1);
+		}
+	}
 	if ((free.indexOf('1') >= 0) && (free.length > 1)) {
 		free.splice(free.indexOf('1'), 1);
 	}
@@ -518,7 +560,8 @@ computerPlay.random = function() {
 		free.splice(free.indexOf('7'), 1);
 	}
 	r = free[Math.floor(Math.random()*free.length)];
-	console.log('COMPUTER: PLAYING RANDOM MOVE AT ' + testDrop(r).toUpperCase());
+	console.log('COMPUTER: PLAYING RANDOM MOVE AT '
+	+ testDrop(r).toUpperCase());
 	dropDisc(r, 0);
 	return true;
 }
