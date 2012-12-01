@@ -194,7 +194,7 @@ function nextMove(human) {
 		else {
 			window.setTimeout(function() {
 				showAnalysis(analysis);
-			}, 300);
+			}, 100);
 		}
 	}
 	else {
@@ -370,9 +370,7 @@ function showAnalysis(analysis) {
 		for (var r in analysis[i]) {
 			for (var d in analysis[i][r]) {
 				for (var s in analysis[i][r][d]) {
-					if (badMoves.indexOf(analysis[i][r][d][s]) < 0) {
-						slots.push(analysis[i][r][d][s]);
-					}
+					slots.push(analysis[i][r][d][s]);
 				}
 			}
 		}
@@ -380,17 +378,17 @@ function showAnalysis(analysis) {
 	var i = 0;
 	var show = window.setInterval(function() {
 		if (i > 0) {
-			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 290);
+			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 190);
 		}
 		if (i === slots.length) {
 			window.clearInterval(show);
 			window.setTimeout(function() {
 				computerPlay(analysis);
-			}, 300);
+			}, 200);
 		}
 		i++;
 		$('#' + slots[i]).css('border-color', 'rgba(64, 145, 244, 1)');
-	}, 35);
+	}, 20);
 }
 
 // Computer AI
