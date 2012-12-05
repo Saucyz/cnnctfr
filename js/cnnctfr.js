@@ -37,7 +37,7 @@ cnnctfr.newGame = function() {
 	}
 	window.setTimeout(function() {
 		talk.say('start');
-	}, 700);
+	}, 300);
 }
 
 // Calculate array of winning combinations
@@ -384,7 +384,7 @@ function showAnalysis(analysis) {
 			window.clearInterval(show);
 			window.setTimeout(function() {
 				computerPlay(analysis);
-			}, 200);
+			}, 20);
 		}
 		i++;
 		$('#' + slots[i]).css('border-color', 'rgba(64, 145, 244, 1)');
