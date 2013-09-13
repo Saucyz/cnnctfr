@@ -1,9 +1,9 @@
-var talk = function() {};
+var talk = function() {}
 
 $(window).load(function() {
 	
-var lastPhrase;
-var talking = 0;
+var lastPhrase
+var talking = 0
 	
 var phrases = {
 	'start': [
@@ -56,25 +56,25 @@ var phrases = {
 		'Is that your best?',
 		'Good, but not good enough.'
 	]
-};
+}
 
 talk.say = function(type) {
-	var phrase = phrases[type][Math.floor(Math.random()*phrases[type].length)];
+	var phrase = phrases[type][Math.floor(Math.random()*phrases[type].length)]
 	if ((phrase === lastPhrase) || talking) { return }
-	lastPhrase = phrase;
-	var i = 0;
-	$('#talk').html('&nbsp;');
-	talking = 1;
+	lastPhrase = phrase
+	var i = 0
+	$('#talk').html('&nbsp;')
+	talking = 1
 	var typing = window.setInterval(function() {
 		if (i === phrase.length) {
-			window.clearInterval(typing);
-			talking = 0;
+			window.clearInterval(typing)
+			talking = 0
 		}
 		else {
-			$('#talk').append(phrase[i]);
-			i++;
+			$('#talk').append(phrase[i])
+			i++
 		}
-	}, 40);
+	}, 40)
 }
 	
-});
+})
