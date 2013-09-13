@@ -193,7 +193,7 @@ function nextMove(human) {
 		}
 		else {
 			window.setTimeout(function() {
-				showAnalysis(analysis)
+				computerPlay(analysis)
 			}, 100)
 		}
 	}
@@ -362,35 +362,6 @@ function analyzeBoard(criteria) {
 	}
 }
 
-// Visualizes AI thinking process
-// Before actually making move
-function showAnalysis(analysis) {
-	var slots = []
-	for (var i in analysis) {
-		for (var r in analysis[i]) {
-			for (var d in analysis[i][r]) {
-				for (var s in analysis[i][r][d]) {
-					slots.push(analysis[i][r][d][s])
-				}
-			}
-		}
-	}
-	var i = 0
-	var show = window.setInterval(function() {
-		if (i > 0) {
-			$('#' + slots[i - 1]).animate({'border-color': '#F0314C'}, 190)
-		}
-		if (i === slots.length) {
-			window.clearInterval(show)
-			window.setTimeout(function() {
-				computerPlay(analysis)
-			}, 10)
-		}
-		i++
-		$('#' + slots[i]).css('border-color', 'rgba(64, 145, 244, 1)')
-	}, 10)
-}
-
 // Computer AI
 // Needs analysis object as input in order to work:
 // analysis = {
@@ -410,22 +381,22 @@ var computerPlay = function(analysis) {
 }
 
 computerPlay.detectThreats = function(analysis) {
-	if (analysis['human']['disadvantage'].length) {
-		for (var i in analysis['human']['disadvantage']) {
-			if (badMoves.indexOf(analysis['human']['disadvantage'][i]) < 0) {
+	for (var i in analysis['human']['nearWins']) {
+		if (analysis['human']['nearWins'][i][0] !== 'f') {
+			var disaster = abc[abc.indexOf(analysis['human']['nearWins'][i][0]) + 1]
+			disaster += analysis['human']['nearWins'][i][1]
+			if (badMoves.indexOf(disaster) < 0) {
 				console.log('COMPUTER: DISASTROUS MOVE DETECTED AT '
-				+ analysis['human']['disadvantage'][i].toUpperCase())
-				badMoves.push(analysis['human']['disadvantage'][i])
+				+ disaster.toUpperCase())
+				badMoves.unshift(disaster)
 			}
 		}
 	}
-	if (analysis['computer']['disadvantage'].length) {
-		for (var i in analysis['computer']['disadvantage']) {
-			if (badMoves.indexOf(analysis['computer']['disadvantage'][i]) < 0) {
-				console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT '
-				+ analysis['computer']['disadvantage'][i].toUpperCase())
-				badMoves.push(analysis['computer']['disadvantage'][i])
-			}
+	for (var i in analysis['computer']['disadvantage']) {
+		if (badMoves.indexOf(analysis['computer']['disadvantage'][i]) < 0) {
+			console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT '
+			+ analysis['computer']['disadvantage'][i].toUpperCase())
+			badMoves.push(analysis['computer']['disadvantage'][i])
 		}
 	}
 	if (analysis['human']['distantDisadvantage'].length) {
