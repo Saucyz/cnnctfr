@@ -358,7 +358,7 @@ function analyzeBoard(player) {
 				result['three'].push(winningCombinations[i])
 				var empty = findEmptySlots(winningCombinations[i])
 				if (empty.length && empty[0][0] !== 'f') {
-					var under = abc[abc.indexOf(empty[0]) + 1] + empty[0][1]
+					var under = abc[abc.indexOf(empty[0][0]) + 1] + empty[0][1]
 					if (!boardMatrix[under]) {
 						result['under'].push(under)
 					}
@@ -397,8 +397,11 @@ var computerPlay = function(analysis) {
 }
 
 computerPlay.detectBad = function(analysis) {
-	computerMoves['bad']  = analysis['human']['under']
-	computerMoves['bad'] += analysis['computer']['under']
+	computerMoves['bad'] = []
+	computerMoves['bad'] = computerMoves['bad']
+		.concat(analysis['human']['under'])
+	computerMoves['bad'] = computerMoves['bad']
+		.concat(analysis['computer']['under'])
 	return false
 }
 
@@ -437,7 +440,7 @@ computerPlay.strategic = function(analysis, mode) {
 					if (computerMoves['bad'].indexOf(empty[r]) < 0) {
 						console.log('COMPUTER: STRATEGIC '
 							+ mode.toUpperCase()
-							+ ' AT ' + empty[0].toUpperCase())
+							+ ' AT ' + empty[r].toUpperCase())
 						dropDisc(empty[r][1], 'computer')
 						return true
 					}
@@ -449,18 +452,14 @@ computerPlay.strategic = function(analysis, mode) {
 }
 
 computerPlay.general = function(analysis) {
-	var free = freeColumns()
-	for (var i in computerMoves['bad']) {
-		var index = free.indexOf(computerMoves['bad'][i][1])
-		if ((index >= 0)  && (free.length > 1)) {
-			free.splice(index, 1)
-		}
-	}
+	var column = null
 	if (testDrop(4) === 'f4') {
 		column = 4
 	}
 	else {
-		column = free[Math.floor(Math.random() * free.length)]
+		while ((column === null) || (computerMoves['bad'].indexOf(column) >= 0)) {
+			column = freeColumns()[Math.floor(Math.random() * freeColumns().length)]
+		}
 	}
 	console.log('COMPUTER: PLAYING AT ' + testDrop(column).toUpperCase())
 	dropDisc(column, 'computer')
