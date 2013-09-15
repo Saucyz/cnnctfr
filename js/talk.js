@@ -18,7 +18,7 @@ var phrases = {
 		'I am programmed for perfect play.',
 		'You are no challenge to me.'
 	],
-	'winning': [
+	'win': [
 		'Another human defeat.',
 		'Are you tired?',
 		'You are no match for me.',
@@ -32,7 +32,7 @@ var phrases = {
 		'You are easily distracted.',
 		'I am perfect.'
 	],
-	'blocking': [
+	'block': [
 		'Try harder.',
 		'Not this time.',
 		'You are not subtle.',

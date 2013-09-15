@@ -1,32 +1,138 @@
 // CNNCTFR - Central Neural Network Computer That Forms Rows
+// Nadim Kobeissi, 2013
 
 var cnnctfr = function() {}
-
 $(window).load(function() {
 
+// -----------------------------------------------
+// INTERNAL VARIABLES & INITIALIZATION
+// -----------------------------------------------
+
+var humanTurn = false
+var winningCombinations = []
 var abc = ['a', 'b', 'c', 'd', 'e', 'f']
-var winning = []
-var myTurn = null
-var wins = [0, 0, 0]
-var badMoves = []
-var distantlyBadMoves = []
+var boardMatrix = {}
+var computerMoves = {}
+var playerColors = {
+	human: '#F0314C',
+	computer: '#4091F4'
+}
+var wins = {
+	human: 0,
+	computer: 0,
+	draw: 0
+}
+
+// Initialize board UI
+function initBoardUI() {
+	$('#board').html('')
+	for (var c in abc) {
+		$('#board').append('<tr></tr>')
+		for (var r = 1; r < 8; r++) {
+			$('#board tr').last()
+				.append('<td></td>')
+			$('#board td').last()
+				.addClass('slot')
+				.attr('id', abc[c] + r)
+		}
+	}
+	$('.slot').click(function() {
+		var row = $(this).attr('id')[0]
+		var column = $(this).attr('id')[1]
+		if (humanTurn && !boardMatrix[row + column]) {
+			humanTurn = false
+			console.log('HUMAN: PLAYING MOVE AT ' + testDrop(column).toUpperCase())
+			dropDisc(column, 'human')
+		}
+	})
+}
+
+// Initialize board matrix
+function initBoardMatrix() {
+	boardMatrix = {
+		'a1': null, 'b1': null, 'c1': null, 'd1': null, 'e1': null, 'f1': null,
+		'a2': null, 'b2': null, 'c2': null, 'd2': null, 'e2': null, 'f2': null,
+		'a3': null, 'b3': null, 'c3': null, 'd3': null, 'e3': null, 'f3': null,
+		'a4': null, 'b4': null, 'c4': null, 'd4': null, 'e4': null, 'f4': null,
+		'a5': null, 'b5': null, 'c5': null, 'd5': null, 'e5': null, 'f5': null,
+		'a6': null, 'b6': null, 'c6': null, 'd6': null, 'e6': null, 'f6': null,
+		'a7': null, 'b7': null, 'c7': null, 'd7': null, 'e7': null, 'f7': null
+	}
+}
+
+// Initialize array of winning combinations
+function initWinningCombinations() {
+	winningCombinations = []
+	var w = 0
+	for (var i in abc) {
+		for (var r = 1; r < 5; r++) {
+			winningCombinations[w] = []
+			for (var d = 0; d < 4; d++) {
+				winningCombinations[w].push(abc[i] + (r + d))
+			}
+			w++
+		}
+	}
+	for (var i = 7; i > 0; i--) {
+		for (var r = 6; r !== 3; r--) {
+			winningCombinations[w] = []
+			for (var d = 4; d > 0; d--) {
+				winningCombinations[w].push(abc[r - d] + i)
+			}
+			w++
+		}
+	}
+	for (var i = 3; i < abc.length; i++) {
+		for (var r = 4; r < 8; r++) {
+			winningCombinations[w] = []
+			for (var d = 0; d < 4; d++) {
+				winningCombinations[w].push(abc[i - d] + (r - d))
+			}
+			w++
+		}
+	}
+	for (var i = 3; i < abc.length; i++) {
+		for (var r = 4; r > 0; r--) {
+			winningCombinations[w] = []
+			for (var d = 0; d < 4; d++) {
+				winningCombinations[w].push(abc[i - d] + (r + d))
+			}
+			w++
+		}
+	}
+}
+
+// -----------------------------------------------
+// HELPER FUNCTIONS
+// -----------------------------------------------
+
+// Randomly shuffle an array
+function shuffle(array) {
+	var tmp, current, top = array.length
+	if (top) while(--top) {
+		current = Math.floor(Math.random() * (top + 1))
+		tmp = array[current]
+		array[current] = array[top]
+		array[top] = tmp
+	}
+}
+
+// -----------------------------------------------
+// BOARD & GAME LOGIC
+// -----------------------------------------------
 
 // Start new game
 cnnctfr.newGame = function() {
-	if (!winning.length) {
-		winning = winningCombinations()
+	initBoardMatrix()
+	computerMoves = {
+		bad: []
 	}
-	badMoves = []
-	distantlyBadMoves = []
 	clearSlot('all')
-	var firstPlayer = Math.floor(Math.random()*2)
-	// var firstPlayer = 1
-	if (firstPlayer === 1) {
-		myTurn = 1
+	if (Math.floor(Math.random()*2)) {
+		humanTurn = true
 	}
 	else {
-		myTurn = 0
-		$('.slot').css('cursor', 'auto')
+		humanTurn = false
 		var analysis = {
 			'computer': analyzeBoard('computer'),
 			'human': analyzeBoard('human')
@@ -40,70 +146,15 @@ cnnctfr.newGame = function() {
 	}, 300)
 }
 
-// Randomly shuffle an array
-function shuffle(array) {
-	var tmp, current, top = array.length
-	if(top) while(--top) {
-		current = Math.floor(Math.random() * (top + 1))
-		tmp = array[current]
-		array[current] = array[top]
-		array[top] = tmp
-	}
-	return array
-}
-
-// Calculate array of winning combinations
-function winningCombinations() {
-	var w = 0
-	var result = []
-	for (var i in abc) {
-		for (var r = 1; r < 5; r++) {
-			result[w] = []
-			for (var d = 0; d < 4; d++) {
-				result[w].push(abc[i] + (r + d))
-			}
-			w++
-		}
-	}
-	for (var i = 7; i > 0; i--) {
-		for (var r = 6; r !== 3; r--) {
-			result[w] = []
-			for (var d = 4; d > 0; d--) {
-				result[w].push(abc[r - d] + i)
-			}
-			w++
-		}
-	}
-	for (var i = 3; i < abc.length; i++) {
-		for (var r = 4; r < 8; r++) {
-			result[w] = []
-			for (var d = 0; d < 4; d++) {
-				result[w].push(abc[i - d] + (r - d))
-			}
-			w++
-		}
-	}
-	for (var i = 3; i < abc.length; i++) {
-		for (var r = 4; r > 0; r--) {
-			result[w] = []
-			for (var d = 0; d < 4; d++) {
-				result[w].push(abc[i - d] + (r + d))
-			}
-			w++
-		}
-	}
-	return result
-}
-
 // Return empty slots in a column
 function emptySlots(column) {
 	var empty = []
 	for (var i in abc) {
-		if ($('#' + abc[i] + column).attr('status') === 'empty') {
+		if (!boardMatrix[abc[i] + column]) {
 			empty.push(abc[i] + column)
 		}
 	}
-	if (empty.length === 0) {
+	if (!empty.length) {
 		return false
 	}
 	return empty
@@ -114,45 +165,48 @@ function freeColumns() {
 	var free = []
 	for (var i = 1; i < 8; i++) {
 		if (emptySlots(i)) {
-			free.push(i.toString())
+			free.push(i)
 		}
 	}
 	return free
 }
 
-// Insert disc into slot.
-// 0 if computer, 1 if human
-function insertDisc(slot, human) {
-	if (human) {
-		var playerColor = '#F0314C'
-		$('#' + slot).attr('status', 'human')
-	}
-	else {
-		var playerColor = '#4091F4'
-		$('#' + slot).attr('status', 'computer')
-	}
+// Insert disc into `slot`.
+// `player` can be 'human' or 'computer'
+function insertDisc(slot, player) {
+	boardMatrix[slot] = player
 	$('#' + slot).stop()
-	$('#' + slot).css('cursor', 'auto')
-	$('#' + slot).css('background', playerColor)
-	$('#' + slot).css('border-color', playerColor)
+	$('#' + slot).css('background', playerColors[player])
+	$('#' + slot).css('border-color', playerColors[player])
+}
+
+// Find which slots are empty in an array of slots.
+function findEmptySlots(slots) {
+	var empty = []
+	for (var i in slots) {
+		if (!boardMatrix[slots[i]]) {
+			empty.push(slots[i])
+		}
+	}
+	return empty
 }
 
 // Clear slot
 // 'all' to clear all slots
 function clearSlot(slot) {
 	if (slot === 'all') {
+		initBoardMatrix()
 		slot = '.slot'
 	}
 	else {
+		boardMatrix[slot] = null
 		slot = '#' + slot
 	}
-	$(slot).attr('status', 'empty')
-	$(slot).css('cursor', 'pointer')
 	$(slot).css('background', '')
 	$(slot).css('border-color', '#F0314C')
 }
 
-// See which slot a disc will end up at if dropped in column
+// See which slot a disc will end up at if dropped in `column`
 function testDrop(column) {
 	if (empty = emptySlots(column)) {
 		return empty[empty.length - 1]
@@ -160,36 +214,50 @@ function testDrop(column) {
 	return false
 }
 
-// Drop a disc with animation through column
-// 0 if computer, 1 if human
-function dropDisc(column, human, phrase) {
+// Drop a disc with animation through `column`
+// `player` can be 'human' or 'computer'
+// `phrase` is what the computer will comment on this move
+function dropDisc(column, player, phrase) {
 	var empty = emptySlots(column)
 	var i = 0
 	var drop = window.setInterval(function() {
 		if (i > 0) {
 			clearSlot(empty[i - 1])
 		}
-		insertDisc(empty[i], human)
+		insertDisc(empty[i], player)
 		i++
 		if (i === empty.length) {
 			window.clearInterval(drop)
 			if (phrase) { talk.say(phrase) }
-			nextMove(human)
+			nextMove(player)
 		}
 	}, 53);	
 }
 
 // Move the game along after a disc is dropped
-// 0 for computer, 1 for human
-function nextMove(human) {
+// `player` is the upcoming player
+// `player` can be 'human' or 'computer'
+function nextMove(player) {
 	var analysis = {
 		'computer': analyzeBoard('computer'),
 		'human': analyzeBoard('human')
 	}
-	if (human) {
-		if (analysis['human']['win'].length) {
+	var draw = true
+	for (var i in boardMatrix) {
+		if (boardMatrix[i]) {
+			draw = false
+		}
+	}
+	if (draw) {
+		resetGame(draw)
+		return false
+	}
+	var winner = null
+	if (player === 'human') {
+		if (analysis['human']['four'].length) {
+			winner = 'human'
 			console.log('COMPUTER: LOSE')
-			resetGame(human)
+			resetGame(player)
 		}
 		else {
 			window.setTimeout(function() {
@@ -197,47 +265,47 @@ function nextMove(human) {
 			}, 100)
 		}
 	}
-	else {
-		if (analysis['computer']['win'].length) {
+	else if (player === 'computer') {
+		if (analysis['computer']['four'].length) {
+			winner = 'computer'
 			console.log('COMPUTER: WIN')
-			resetGame(human)
+			resetGame(player)
 		}
 		else {
-			myTurn = 1
-			$('.slot').each(function(index) {
-				if ($(this).attr('status') === 'empty') {
-					$(this).css('cursor', 'pointer')
-				}
-			})
+			humanTurn = true
+		}
+	}
+	if (winner) {
+		for (var i in analysis[winner]['four']) {
+			for (var r in analysis[winner]['four'][i]) {
+				$('#' + analysis[winner]['four'][i][r])
+					.css('border-color', '#FFF')
+			}
 		}
 	}
 }
 
 // Reset game, increase scoreboard
-// 0 is computer winner, 1 if human winner
-// 2 if draw
+// `winner` can be 'human', 'computer' or 'draw'.
 function resetGame(winner) {
 	window.setTimeout(function() {
 		$('#board').fadeOut(function() {
 			$('.computer').text(wins[0])
 			$('.human').text(wins[1])
 			$('#wins').fadeIn(function() {
-				if (winner === 1) {
+				if (winner === 'human') {
 					talk.say('losing')
 				}
-				else if (winner === 2) {
+				else if (winner === 'draw') {
 					talk.say('draw')
 				}
 				else if (!wins[1] && Math.floor(Math.random()*2)) {
 					talk.say('undefeated')
 				}
-				else {
-					talk.say('winning')
-				}
 				window.setTimeout(function() {
 					wins[winner]++
-					$('.computer').text(wins[0])
-					$('.human').text(wins[1])
+					$('.computer').text(wins['computer'])
+					$('.human').text(wins['human'])
 				}, 600)
 				window.setTimeout(function() {
 					$('#wins').fadeOut(function() {
@@ -250,117 +318,66 @@ function resetGame(winner) {
 	}, 2500)
 }
 
-// If slot is clicked
-$('.slot').click(function() {
-	var row = $(this).attr('id')[0]
-	var column = $(this).attr('id')[1]
-	if (myTurn && ($(this).attr('status') === 'empty')) {
-		myTurn = 0
-		$('.slot').css('cursor', 'auto')
-		console.log('HUMAN: PLAYING MOVE AT ' + testDrop(column).toUpperCase())
-		dropDisc(column, 1)
-	}
-})
+// -----------------------------------------------
+// BOARD ANALYSIS, THREAT AND MOVE DETECTION
+// -----------------------------------------------
 
 // Analyze board looking for winning combinations
-// Criteria must be 'human' or 'computer'
-// By default, just handles wins and draws
-// Also returns an object containing:
-// win: Winning combination, if any
-// nearWins: With 1 disc missing if any
-// possibleWins: With 2 discs missing, if any
-// distantWins: With 3 discs missing, if any
-// disadvantage: Array of disadvantageous moves
-// Missing disc location(s) arranged from more to less critical
-function analyzeBoard(criteria) {
-	var win = []
-	var nearWins = []
-	var possibleWins = []
-	var distantWins = []
-	var disadvantage = []
-	var distantDisadvantage = []
-	shuffle(winning)
-	for (var i in winning) {
-		var m = 0
-		var near = []
-		for (var r in winning[i]) {
-			if ($('#' + winning[i][r]).attr('status') === criteria) {
-				m++
-				if ($('#' + winning[i][r - 1]).attr('status') === 'empty') {
-					if (near.indexOf(winning[i][r - 1]) >= 0) {
-						near.splice(near.indexOf(winning[i][r - 1]), 1)
+// `player` must be 'human' or 'computer'
+// Returns an object containing the arrays:
+// four: Winning combination for `player`, if any,
+// three: With 1 disc missing if any,
+// two: With 2 discs missing, if any,
+// one: With 3 discs missing, if any,
+// under: Squares (if any) where if opponent put a piece, `player` could immediately win.
+function analyzeBoard(player) {
+	var result = {
+		four: [],
+		three: [],
+		two: [],
+		one: [],
+		under: [],
+	}
+	shuffle(winningCombinations)
+	for (var i in winningCombinations) {
+		var match = 0
+		for (var r in winningCombinations[i]) {
+			if (boardMatrix[winningCombinations[i][r]] === player) {
+				match++
+			}
+			else if (boardMatrix[winningCombinations[i][r]]) {
+				match = 0
+				break
+			}
+		}
+		switch (match) {
+			case 4:
+				result['four'].push(winningCombinations[i])
+				break;
+			case 3:
+				result['three'].push(winningCombinations[i])
+				var empty = findEmptySlots(winningCombinations[i])
+				if (empty.length && empty[0][0] !== 'f') {
+					var under = abc[abc.indexOf(empty[0]) + 1] + empty[0][1]
+					if (!boardMatrix[under]) {
+						result['under'].push(under)
 					}
-					near.unshift(winning[i][r - 1])
 				}
-				if ($('#' + winning[i][r + 1]).attr('status') === 'empty') {
-					if (near.indexOf(winning[i][r + 1]) >= 0) {
-						near.splice(near.indexOf(winning[i][r + 1]), 1)
-					}
-					near.unshift(winning[i][r + 1])
-				}
-			}
-			else if ($('#' + winning[i][r]).attr('status') === 'empty') {
-				if (near.indexOf(winning[i][r]) < 0) {
-					near.push(winning[i][r])
-				}
-				else {
-					near.splice(near.indexOf(winning[i][r]), 1)
-					near.unshift(winning[i][r])
-				}
-			}
-		}
-		if (m === 4) {
-			for (var r in winning[i]) {
-				$('#' + winning[i][r]).css('border-color', '#FFF')
-				win.push(winning[i][r])
-			}
-			$('.slot').css('cursor', 'auto')
-		}
-		else if ((m === 3) && (near.length === 1)) {
-			var p = abc[abc.indexOf(near[0][0]) + 1] + near[0][1]
-			if (($('#' + p).attr('status') === 'empty') && (disadvantage.indexOf(p) < 0)) {
-				disadvantage.push(p)
-			}
-			if (nearWins.indexOf(near[0]) < 0) {
-				nearWins.push(near[0])
-			}
-		}
-		else if ((m === 2) && (near.length === 2)) {
-			for (var d in near) {
-				var p = abc[abc.indexOf(near[d][0]) + 1] + near[d][1]
-				if (($('#' + p).attr('status') === 'empty') && (distantDisadvantage.indexOf(p) < 0)) {
-					distantDisadvantage.push(p)
-				}
-			}
-			if (possibleWins.indexOf(near) < 0) {
-				possibleWins.push(near)
-			}
-		}
-		else if ((m === 1) && (near.length === 3)) {
-			if (distantWins.indexOf(near) < 0) {
-				distantWins.push(near)
-			}
+				break;
+			case 2:
+				result['two'].push(winningCombinations[i])
+				break;
+			case 1:
+				result['one'].push(winningCombinations[i])
+				break;
 		}
 	}
-	// Detect draw
-	var draw = 1
-	$('.slot').each(function(index) {
-		if ($(this).attr('status') === 'empty') {
-			draw = 0
-		}
-	})
-	if (draw) {
-		resetGame(2)
-	}
-	return {
-		'win': win, 
-		'nearWins': nearWins, 
-		'possibleWins': possibleWins, 
-		'distantWins': distantWins,
-		'disadvantage': disadvantage,
-		'distantDisadvantage': distantDisadvantage
-	}
+	return result
 }
+
+// -----------------------------------------------
+// COMPUTER AI
+// -----------------------------------------------
 
 // Computer AI
 // Needs analysis object as input in order to work:
@@ -369,81 +386,61 @@ function analyzeBoard(criteria) {
 // 	'human': analyzeBoard('human')
 // }
 var computerPlay = function(analysis) {
-	computerPlay.detectThreats(analysis)
-	if (computerPlay.win(analysis)) { return true }
-	if (computerPlay.block(analysis)) { return true }
-	if (computerPlay.offensive(analysis)) { return true }
-	if (computerPlay.defensive(analysis)) { return true }
-	if (computerPlay.distantOffensive(analysis)) { return true }
-	if (computerPlay.distantDefensive(analysis)) { return true }
-	if (computerPlay.random()) { return true }
-	else { return false }
+	if (
+		computerPlay.detectBad(analysis)              ||
+		computerPlay.definite(analysis, 'win')        ||
+		computerPlay.definite(analysis, 'block')      ||
+		computerPlay.strategic(analysis, 'offensive') ||
+		computerPlay.strategic(analysis, 'defensive') ||
+		computerPlay.general(analysis)
+	) { return }
 }
 
-computerPlay.detectThreats = function(analysis) {
-	for (var i in analysis['human']['nearWins']) {
-		if (analysis['human']['nearWins'][i][0] !== 'f') {
-			var disaster = abc[abc.indexOf(analysis['human']['nearWins'][i][0]) + 1]
-			disaster += analysis['human']['nearWins'][i][1]
-			if (badMoves.indexOf(disaster) < 0) {
-				console.log('COMPUTER: DISASTROUS MOVE DETECTED AT '
-				+ disaster.toUpperCase())
-				badMoves.unshift(disaster)
-			}
-		}
-	}
-	for (var i in analysis['computer']['disadvantage']) {
-		if (badMoves.indexOf(analysis['computer']['disadvantage'][i]) < 0) {
-			console.log('COMPUTER: DISADVANTAGEOUS MOVE DETECTED AT '
-			+ analysis['computer']['disadvantage'][i].toUpperCase())
-			badMoves.push(analysis['computer']['disadvantage'][i])
-		}
-	}
-	if (analysis['human']['distantDisadvantage'].length) {
-		console.log('COMPUTER: DISTANTLY DISADVANTAGEOUS MOVE DETECTED AT '
-		+ analysis['human']['distantDisadvantage'].join(', ').toUpperCase())
-		distantlyBadMoves = analysis['human']['distantDisadvantage'].slice()
-	}
+computerPlay.detectBad = function(analysis) {
+	computerMoves['bad']  = analysis['human']['under']
+	computerMoves['bad'] += analysis['computer']['under']
+	return false
 }
 
-computerPlay.win = function(analysis) {
-	if (nearWin = analysis['computer']['nearWins']) {
-		for (var i in nearWin) {
-			if (testDrop(nearWin[i][1]) === nearWin[i]) {
-				console.log('COMPUTER: PLAYING WINNING MOVE AT '
-				+ nearWin[i].toUpperCase())
-				dropDisc(nearWin[i][1], 0)
-				return true
-			}
+computerPlay.definite = function(analysis, mode) {
+	if (mode === 'win') {
+		var three = analysis['computer']['three']
+	}
+	if (mode === 'block') {
+		var three = analysis['human']['three']
+	}
+	for (var i in three) {
+		var empty = findEmptySlots(three[i])
+		if (empty.length && testDrop(empty[0][1]) === empty[0]) {
+			console.log('COMPUTER: '
+				+ mode.toUpperCase()
+				+ ' AT ' + empty[0].toUpperCase())
+			dropDisc(empty[0][1], 'computer', mode)
+			return true
 		}
 	}
 	return false
 }
 
-computerPlay.block = function(analysis) {
-	if (nearWin = analysis['human']['nearWins']) {
-		for (var i in nearWin) {
-			if (testDrop(nearWin[i][1]) === nearWin[i]) {
-				console.log('COMPUTER: PLAYING BLOCKING MOVE AT '
-				+ nearWin[i].toUpperCase())
-				dropDisc(nearWin[i][1], 0, 'blocking')
-				return true
-			}
-		}
+computerPlay.strategic = function(analysis, mode) {
+	if (mode === 'offensive') {
+		var two = analysis['computer']['two']
 	}
-	return false
-}
-
-computerPlay.offensive = function(analysis) {
-	if (possibleWin = analysis['computer']['possibleWins']) {
-		for (var i in possibleWin) {
-			for (var r in possibleWin[i]) {
-				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
-				&& (badMoves.indexOf(possibleWin[i][r]) < 0)) {
-					console.log('COMPUTER: PLAYING OFFENSIVE MOVE AT '
-					+ possibleWin[i][r].toUpperCase())
-					dropDisc(possibleWin[i][r][1], 0)
-					return true
+	if (mode === 'defensive') {
+		var two = analysis['human']['two']
+	}
+	for (var i in two) {
+		var empty = findEmptySlots(two[i])
+		if (empty.length) {
+			for (var r in empty) {
+				if (testDrop(empty[r][1]) === empty[r]) {
+					if (computerMoves['bad'].indexOf(empty[r]) < 0) {
+						console.log('COMPUTER: STRATEGIC '
+							+ mode.toUpperCase()
+							+ ' AT ' + empty[0].toUpperCase())
+						dropDisc(empty[r][1], 'computer')
+						return true
+					}
 				}
 			}
 		}
@@ -451,85 +448,32 @@ computerPlay.offensive = function(analysis) {
 	return false
 }
 
-computerPlay.defensive = function(analysis) {
-	if (possibleWin = analysis['human']['possibleWins']) {
-		for (var i in possibleWin) {
-			for (var r in possibleWin[i]) {
-				if ((testDrop(possibleWin[i][r][1]) === possibleWin[i][r])
-				&& (badMoves.indexOf(possibleWin[i][r]) < 0)) {
-					console.log('COMPUTER: PLAYING DEFENSIVE MOVE AT '
-					+ possibleWin[i][r].toUpperCase())
-					dropDisc(possibleWin[i][r][1], 0)
-					return true
-				}
-			}
-		}
-	}
-	return false
-}
-
-computerPlay.distantOffensive = function(analysis) {
-	if (distantWin = analysis['computer']['distantWins']) {
-		for (var i in distantWin) {
-			for (var r in distantWin[i]) {
-				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
-				&& (badMoves.indexOf(distantWin[i][r]) < 0)
-				&& (distantlyBadMoves.indexOf(distantWin[i][r]) < 0)) {
-					console.log('COMPUTER: PLAYING DISTANTLY RELEVANT MOVE AT '
-					+ distantWin[i][r].toUpperCase())
-					dropDisc(distantWin[i][r][1], 0)
-					return true
-				}
-			}
-		}
-	}
-	return false
-}
-
-computerPlay.distantDefensive = function(analysis) {
-	if (distantWin = analysis['human']['distantWins']) {
-		for (var i in distantWin) {
-			for (var r in distantWin[i]) {
-				if ((testDrop(distantWin[i][r][1]) === distantWin[i][r])
-				&& (badMoves.indexOf(distantWin[i][r]) < 0)
-				&& (distantlyBadMoves.indexOf(distantWin[i][r]) < 0)) {
-					console.log('COMPUTER: BLOCKING DISTANTLY RELEVANT THREAT AT '
-					+ distantWin[i][r].toUpperCase())
-					dropDisc(distantWin[i][r][1], 0)
-					return true
-				}
-			}
-		}
-	}
-	return false
-}
-
-computerPlay.random = function() {
+computerPlay.general = function(analysis) {
 	var free = freeColumns()
-	for (var i in badMoves) {
-		if ((free.indexOf(badMoves[i][1]) >= 0) && (free.length > 1)) {
-			free.splice(free.indexOf(badMoves[i][1]), 1)
+	for (var i in computerMoves['bad']) {
+		var index = free.indexOf(computerMoves['bad'][i][1])
+		if ((index >= 0)  && (free.length > 1)) {
+			free.splice(index, 1)
 		}
 	}
-	for (var i in distantlyBadMoves) {
-		if ((free.indexOf(distantlyBadMoves[i][1]) >= 0) && (free.length > 1)) {
-			free.splice(free.indexOf(distantlyBadMoves[i][1]), 1)
-		}
+	if (testDrop(4) === 'f4') {
+		column = 4
 	}
-	if ((free.indexOf('1') >= 0) && (free.length > 1)) {
-		free.splice(free.indexOf('1'), 1)
+	else {
+		column = free[Math.floor(Math.random() * free.length)]
 	}
-	if ((free.indexOf('7') >= 0) && (free.length > 1)) {
-		free.splice(free.indexOf('7'), 1)
-	}
-	r = free[Math.floor(Math.random()*free.length)]
-	console.log('COMPUTER: PLAYING RANDOM MOVE AT '
-	+ testDrop(r).toUpperCase())
-	dropDisc(r, 0)
+	console.log('COMPUTER: PLAYING AT ' + testDrop(column).toUpperCase())
+	dropDisc(column, 'computer')
 	return true
 }
 
 
+// -----------------------------------------------
+// INITIALIZE AND START PROGRAM
+// -----------------------------------------------
+
+initBoardUI()
+initWinningCombinations()
 cnnctfr.newGame()
 
 })
