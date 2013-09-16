@@ -394,6 +394,8 @@ function analyzeBoard(player) {
 // 	'human': analyzeBoard('human')
 // }
 var computerPlay = function(analysis) {
+	console.log(analysis['human']['under'])
+	console.log(analysis['computer']['under'])
 	if (
 		computerPlay.definite(analysis, 'win')        ||
 		computerPlay.definite(analysis, 'block')      ||
@@ -430,18 +432,19 @@ computerPlay.strategic = function(analysis, mode) {
 	if (mode === 'defensive') {
 		var two = analysis['human']['two']
 	}
+	var possibleMoves = []
 	for (var i in two) {
 		var empty = findEmptySlots(two[i])
 		if (empty.length) {
 			for (var r in empty) {
-				if (testDrop(empty[r][1]) === empty[r]) {
-					if (analysis['human']['under'].indexOf(empty[r]) < 0) {
-						console.log('COMPUTER: STRATEGIC '
-							+ mode.toUpperCase()
-							+ ' AT ' + empty[r].toUpperCase())
-						dropDisc(empty[r][1], 'computer')
-						return true
-					}
+				if ((testDrop(empty[r][1]) === empty[r])
+				&& (analysis['human']['under'].indexOf(empty[r]) < 0)
+				&& (analysis['computer']['under'].indexOf(empty[r]) < 0)) {
+					console.log('COMPUTER: STRATEGIC '
+						+ mode.toUpperCase()
+						+ ' AT ' + empty[r].toUpperCase())
+					dropDisc(empty[r][1], 'computer')
+					return true
 				}
 			}
 		}
@@ -452,13 +455,17 @@ computerPlay.strategic = function(analysis, mode) {
 computerPlay.general = function(analysis) {
 	var column
 	var free = freeColumns()
-	while ((free.length > 1) && (free.indexOf(analysis['human']['under']) >= 0)) {
-		free[free.indexOf(analysis['computer']['under'])] = null
-		free = cleanArray(free)
+	for (var i in analysis['human']['under']) {
+		while ((free.length > 1) && (free.indexOf(analysis['human']['under'][i]) >= 0)) {
+			free[free.indexOf(analysis['human']['under'][i])] = null
+			free = cleanArray(free)
+		}
 	}
-	while ((free.length > 1) && (free.indexOf(analysis['computer']['under']) >= 0)) {
-		free[free.indexOf(analysis['computer']['under'])] = null
-		free = cleanArray(free)
+	for (var i in analysis['computer']['under']) {
+		while ((free.length > 1) && (free.indexOf(analysis['computer']['under'][i]) >= 0)) {
+			free[free.indexOf(analysis['computer']['under'][i])] = null
+			free = cleanArray(free)
+		}
 	}
 	if ((free.indexOf(4) >= 0) && (testDrop(4) === 'f4')) {
 		column = 4
