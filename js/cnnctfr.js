@@ -465,6 +465,7 @@ computerPlay.general = function(analysis) {
 			free = cleanArray(free)
 		}
 	}
+	console.log(free)
 	if ((free.indexOf(4) >= 0) && (testDrop(4) === 'f4')) {
 		column = 4
 	}
