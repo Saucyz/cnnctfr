@@ -394,8 +394,6 @@ function analyzeBoard(player) {
 // 	'human': analyzeBoard('human')
 // }
 var computerPlay = function(analysis) {
-	console.log(analysis['human']['under'])
-	console.log(analysis['computer']['under'])
 	if (
 		computerPlay.definite(analysis, 'win')        ||
 		computerPlay.definite(analysis, 'block')      ||
