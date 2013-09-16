@@ -12,7 +12,6 @@ var humanTurn = false
 var winningCombinations = []
 var abc = ['a', 'b', 'c', 'd', 'e', 'f']
 var boardMatrix = {}
-var computerMoves = {}
 var playerColors = {
 	human: '#F0314C',
 	computer: '#4091F4'
@@ -109,13 +108,25 @@ function initWinningCombinations() {
 // Randomly shuffle an array
 function shuffle(array) {
 	var tmp, current, top = array.length
-	if (top) while(--top) {
+	if (top) while (--top) {
 		current = Math.floor(Math.random() * (top + 1))
 		tmp = array[current]
 		array[current] = array[top]
 		array[top] = tmp
 	}
 }
+
+// Clean an array from false/null/0 values
+function cleanArray(actual){
+	var newArray = new Array()
+	for (var i = 0; i < actual.length; i++) {
+		if (actual[i]) {
+			newArray.push(actual[i])
+		}
+	}
+	return newArray;
+}
+
 
 // -----------------------------------------------
 // BOARD & GAME LOGIC
@@ -124,9 +135,6 @@ function shuffle(array) {
 // Start new game
 cnnctfr.newGame = function() {
 	initBoardMatrix()
-	computerMoves = {
-		bad: []
-	}
 	clearSlot('all')
 	if (Math.floor(Math.random()*2)) {
 		humanTurn = true
@@ -387,22 +395,12 @@ function analyzeBoard(player) {
 // }
 var computerPlay = function(analysis) {
 	if (
-		computerPlay.detectBad(analysis)              ||
 		computerPlay.definite(analysis, 'win')        ||
 		computerPlay.definite(analysis, 'block')      ||
 		computerPlay.strategic(analysis, 'offensive') ||
 		computerPlay.strategic(analysis, 'defensive') ||
 		computerPlay.general(analysis)
 	) { return }
-}
-
-computerPlay.detectBad = function(analysis) {
-	computerMoves['bad'] = []
-	computerMoves['bad'] = computerMoves['bad']
-		.concat(analysis['human']['under'])
-	computerMoves['bad'] = computerMoves['bad']
-		.concat(analysis['computer']['under'])
-	return false
 }
 
 computerPlay.definite = function(analysis, mode) {
@@ -437,7 +435,7 @@ computerPlay.strategic = function(analysis, mode) {
 		if (empty.length) {
 			for (var r in empty) {
 				if (testDrop(empty[r][1]) === empty[r]) {
-					if (computerMoves['bad'].indexOf(empty[r]) < 0) {
+					if (analysis['human']['under'].indexOf(empty[r]) < 0) {
 						console.log('COMPUTER: STRATEGIC '
 							+ mode.toUpperCase()
 							+ ' AT ' + empty[r].toUpperCase())
@@ -452,14 +450,21 @@ computerPlay.strategic = function(analysis, mode) {
 }
 
 computerPlay.general = function(analysis) {
-	var column = null
-	if (testDrop(4) === 'f4') {
+	var column
+	var free = freeColumns()
+	while ((free.length > 1) && (free.indexOf(analysis['human']['under']) >= 0)) {
+		free[free.indexOf(analysis['computer']['under'])] = null
+		free = cleanArray(free)
+	}
+	while ((free.length > 1) && (free.indexOf(analysis['computer']['under']) >= 0)) {
+		free[free.indexOf(analysis['computer']['under'])] = null
+		free = cleanArray(free)
+	}
+	if ((free.indexOf(4) >= 0) && (testDrop(4) === 'f4')) {
 		column = 4
 	}
 	else {
-		while ((column === null) || (computerMoves['bad'].indexOf(column) >= 0)) {
-			column = freeColumns()[Math.floor(Math.random() * freeColumns().length)]
-		}
+		column = free[Math.floor(Math.random() * free.length)]
 	}
 	console.log('COMPUTER: PLAYING AT ' + testDrop(column).toUpperCase())
 	dropDisc(column, 'computer')
