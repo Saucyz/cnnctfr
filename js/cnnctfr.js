@@ -117,14 +117,14 @@ function shuffle(array) {
 }
 
 // Clean an array from false/null/0 values
-function cleanArray(actual){
+function cleanArray(actual) {
 	var newArray = new Array()
 	for (var i = 0; i < actual.length; i++) {
 		if (actual[i]) {
 			newArray.push(actual[i])
 		}
 	}
-	return newArray;
+	return newArray
 }
 
 
@@ -452,20 +452,22 @@ computerPlay.strategic = function(analysis, mode) {
 
 computerPlay.general = function(analysis) {
 	var column
+	var badMove
 	var free = freeColumns()
 	for (var i in analysis['human']['under']) {
-		while ((free.length > 1) && (free.indexOf(analysis['human']['under'][i]) >= 0)) {
-			free[free.indexOf(analysis['human']['under'][i])] = null
+		badMove = free.indexOf(parseInt(analysis['human']['under'][i][1]))
+		while ((free.length > 1) && (badMove >= 0)) {
+			free[badMove] = null
 			free = cleanArray(free)
 		}
 	}
 	for (var i in analysis['computer']['under']) {
-		while ((free.length > 1) && (free.indexOf(analysis['computer']['under'][i]) >= 0)) {
-			free[free.indexOf(analysis['computer']['under'][i])] = null
+		badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
+		while ((free.length > 1) && (badMove >= 0)) {
+			free[badMove] = null
 			free = cleanArray(free)
 		}
 	}
-	console.log(free)
 	if ((free.indexOf(4) >= 0) && (testDrop(4) === 'f4')) {
 		column = 4
 	}
