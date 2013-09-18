@@ -488,7 +488,7 @@ computerPlay.general = function(analysis) {
 		while ((free.length > 1) && (badMove >= 0)) {
 			free[badMove] = null
 			free = cleanArray(free)
-			badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
+			badMove = free.indexOf(parseInt(analysis['human']['under'][i][1]))
 		}
 	}
 	for (var i in analysis['computer']['under']) {
