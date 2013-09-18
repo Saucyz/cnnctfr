@@ -19,9 +19,7 @@ var phrases = {
 		'You are no challenge to me.'
 	],
 	'win': [
-		'Absolutely pathetic.',
 		'A meager attempt.',
-		'Such incredible failure.',
 		'CNNCTFR algorithm succeeded.',
 		'Insert better challenger.',
 		'You are no match for me.',
