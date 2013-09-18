@@ -117,16 +117,15 @@ function shuffle(array) {
 }
 
 // Clean an array from false/null/0 values
-function cleanArray(actual) {
+function cleanArray(array) {
 	var newArray = new Array()
-	for (var i = 0; i < actual.length; i++) {
-		if (actual[i]) {
-			newArray.push(actual[i])
+	for (var i = 0; i < array.length; i++) {
+		if (array[i]) {
+			newArray.push(array[i])
 		}
 	}
 	return newArray
 }
-
 
 // -----------------------------------------------
 // BOARD & GAME LOGIC
@@ -383,6 +382,24 @@ function analyzeBoard(player) {
 	return result
 }
 
+// Analyze a bunch of combinations, determine empty squares,
+// Remove duplicate squares, and arrange from most to least repeated
+function scoreMoves(combinations) {
+	var score = {}
+	for (var i in combinations) {
+		var empty = findEmptySlots(combinations[i])
+		for (var r in empty) {
+			if (!score[empty[r]]) {
+				score[empty[r]] = 1
+			}
+			else {
+				score[empty[r]]++
+			}
+		}
+	}
+	return score
+}
+
 // -----------------------------------------------
 // COMPUTER AI
 // -----------------------------------------------
@@ -397,8 +414,7 @@ var computerPlay = function(analysis) {
 	if (
 		computerPlay.definite(analysis, 'win')        ||
 		computerPlay.definite(analysis, 'block')      ||
-		computerPlay.strategic(analysis, 'offensive') ||
-		computerPlay.strategic(analysis, 'defensive') ||
+		computerPlay.strategic(analysis)              ||
 		computerPlay.general(analysis)
 	) { return }
 }
@@ -423,28 +439,41 @@ computerPlay.definite = function(analysis, mode) {
 	return false
 }
 
-computerPlay.strategic = function(analysis, mode) {
-	if (mode === 'offensive') {
-		var two = analysis['computer']['two']
+computerPlay.strategic = function(analysis) {
+	var moves = scoreMoves(analysis['computer']['two'])
+	var hMoves = scoreMoves(analysis['human']['two'])
+	for (var a in hMoves) {
+		if (moves[a]) {
+			moves[a] += hMoves[a]
+		}
+		else {
+			moves[a] = hMoves[a]
+		}
 	}
-	if (mode === 'defensive') {
-		var two = analysis['human']['two']
-	}
-	var possibleMoves = []
-	for (var i in two) {
-		var empty = findEmptySlots(two[i])
-		if (empty.length) {
-			for (var r in empty) {
-				if ((testDrop(empty[r][1]) === empty[r])
-				&& (analysis['human']['under'].indexOf(empty[r]) < 0)
-				&& (analysis['computer']['under'].indexOf(empty[r]) < 0)) {
-					console.log('COMPUTER: STRATEGIC '
-						+ mode.toUpperCase()
-						+ ' AT ' + empty[r].toUpperCase())
-					dropDisc(empty[r][1], 'computer')
-					return true
-				}
+	for (var c = 20; c > 0; c--) {
+		if (!Object.keys(moves).length) {
+			return false
+		}
+		var highest = {
+			square: null,
+			score: 0
+		}
+		for (var i in moves) {
+			if (moves[i] > highest['score']) {
+				highest['square'] = i
+				highest['score'] = moves[i]
 			}
+		}
+		console.log(highest)
+		if ((testDrop(highest['square'][1]) === highest['square'])
+			&& (analysis['human']['under'].indexOf(highest['square']) < 0)
+			&& (analysis['computer']['under'].indexOf(highest['square']) < 0)) {
+				console.log('COMPUTER: STRATEGIC MOVE AT ' + highest['square'].toUpperCase())
+				dropDisc(highest['square'][1], 'computer')
+				return true
+		}
+		else {
+			delete moves[highest['square']]
 		}
 	}
 	return false
@@ -459,6 +488,7 @@ computerPlay.general = function(analysis) {
 		while ((free.length > 1) && (badMove >= 0)) {
 			free[badMove] = null
 			free = cleanArray(free)
+			badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
 		}
 	}
 	for (var i in analysis['computer']['under']) {
@@ -466,6 +496,7 @@ computerPlay.general = function(analysis) {
 		while ((free.length > 1) && (badMove >= 0)) {
 			free[badMove] = null
 			free = cleanArray(free)
+			badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
 		}
 	}
 	if ((free.indexOf(4) >= 0) && (testDrop(4) === 'f4')) {
