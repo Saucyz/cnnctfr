@@ -464,7 +464,6 @@ computerPlay.strategic = function(analysis) {
 				highest['score'] = moves[i]
 			}
 		}
-		console.log(highest)
 		if ((testDrop(highest['square'][1]) === highest['square'])
 			&& (analysis['human']['under'].indexOf(highest['square']) < 0)
 			&& (analysis['computer']['under'].indexOf(highest['square']) < 0)) {

@@ -7,7 +7,7 @@ var talking = 0
 	
 var phrases = {
 	'start': [
-		'Let us play.',
+		'CNNCTFR version 2 ready.',
 	],
 	'undefeated': [
 		'You cannot defeat me.',
