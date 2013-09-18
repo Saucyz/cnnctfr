@@ -467,7 +467,8 @@ computerPlay.strategic = function(analysis) {
 		if ((testDrop(highest['square'][1]) === highest['square'])
 			&& (analysis['human']['under'].indexOf(highest['square']) < 0)
 			&& (analysis['computer']['under'].indexOf(highest['square']) < 0)) {
-				console.log('COMPUTER: STRATEGIC MOVE AT ' + highest['square'].toUpperCase())
+				console.log('COMPUTER: STRATEGIC MOVE AT '
+					+ highest['square'].toUpperCase())
 				dropDisc(highest['square'][1], 'computer')
 				return true
 		}
