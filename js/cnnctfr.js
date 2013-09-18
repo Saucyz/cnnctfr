@@ -412,9 +412,9 @@ function scoreMoves(combinations) {
 // }
 var computerPlay = function(analysis) {
 	if (
-		computerPlay.definite(analysis, 'win')        ||
-		computerPlay.definite(analysis, 'block')      ||
-		computerPlay.strategic(analysis)              ||
+		computerPlay.definite(analysis, 'win')    ||
+		computerPlay.definite(analysis, 'block')  ||
+		computerPlay.strategic(analysis)          ||
 		computerPlay.general(analysis)
 	) { return }
 }
