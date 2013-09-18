@@ -19,6 +19,13 @@ var phrases = {
 		'You are no challenge to me.'
 	],
 	'win': [
+		'Absolutely pathetic.',
+		'A meager attempt.',
+		'Such incredible failure.',
+		'CNNCTFR algorithm succeeded.',
+		'Insert better challenger.',
+		'You are no match for me.',
+		'This is far from enough to defeat me.',
 		'Another human defeat.',
 		'Are you tired?',
 		'You are no match for me.',
@@ -74,7 +81,7 @@ talk.say = function(type) {
 			$('#talk').append(phrase[i])
 			i++
 		}
-	}, 40)
+	}, 30)
 }
 	
 })
