@@ -251,7 +251,7 @@ function nextMove(player) {
 	}
 	var draw = true
 	for (var i in boardMatrix) {
-		if (boardMatrix[i]) {
+		if (!boardMatrix[i]) {
 			draw = false
 		}
 	}
