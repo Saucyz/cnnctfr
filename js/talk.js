@@ -49,7 +49,7 @@ var phrases = {
 		'I know what you are thinking.',
 		'Predictable.'
 	],
-	'losing': [
+	'lose': [
 		'You have cornered me.',
 		'I am defeated.',
 		'You are a valuable opponent.',

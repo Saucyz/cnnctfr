@@ -297,16 +297,19 @@ function nextMove(player) {
 function resetGame(winner) {
 	window.setTimeout(function() {
 		$('#board').fadeOut(function() {
-			$('.computer').text(wins[0])
-			$('.human').text(wins[1])
+			$('.computer').text(wins['computer'])
+			$('.human').text(wins['human'])
 			$('#wins').fadeIn(function() {
-				if (winner === 'human') {
-					talk.say('losing')
+				if (winner === 'computer') {
+					talk.say('win')
+				}
+				else if (winner === 'human') {
+					talk.say('lose')
 				}
 				else if (winner === 'draw') {
 					talk.say('draw')
 				}
-				else if (!wins[1] && Math.floor(Math.random()*2)) {
+				else if (!wins['human'] && Math.floor(Math.random()*2)) {
 					talk.say('undefeated')
 				}
 				window.setTimeout(function() {
@@ -432,7 +435,12 @@ computerPlay.definite = function(analysis, mode) {
 			console.log('COMPUTER: '
 				+ mode.toUpperCase()
 				+ ' AT ' + empty[0].toUpperCase())
-			dropDisc(empty[0][1], 'computer', mode)
+			if (mode === 'block') {
+				dropDisc(empty[0][1], 'computer', 'block')
+			}
+			else {
+				dropDisc(empty[0][1], 'computer')
+			}
 			return true
 		}
 	}
