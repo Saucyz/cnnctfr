@@ -520,7 +520,7 @@ for (var c in abc) {
 			.attr('id', abc[c] + r)
 	}
 }
-$('.slot').click(function() {
+$('.slot').on('click touchend', function() {
 	var row    = $(this).attr('id')[0]
 	var column = $(this).attr('id')[1]
 	if (cnnctfr.humanTurn && !cnnctfr.boardMatrix[row + column]) {
