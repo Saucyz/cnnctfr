@@ -1,66 +1,33 @@
 // CNNCTFR - Central Neural Network Computer That Forms Rows
 // Nadim Kobeissi, 2013
 
-var cnnctfr = function() {}
+var cnnctfr = {}
 $(window).load(function() {
 
 // -----------------------------------------------
 // INTERNAL VARIABLES & INITIALIZATION
 // -----------------------------------------------
 
-var humanTurn = false
-var winningCombinations = []
-var abc = ['a', 'b', 'c', 'd', 'e', 'f']
-var boardMatrix = {}
-var playerColors = {
-	human: '#F0314C',
+abc = [
+	'a', 'b',
+	'c', 'd',
+	'e', 'f'
+]
+
+cnnctfr.humanTurn = false
+
+cnnctfr.playerColors = {
+	human:    '#F0314C',
 	computer: '#4091F4'
 }
-var wins = {
-	human: 0,
+
+cnnctfr.wins = {
+	human:    0,
 	computer: 0,
-	draw: 0
+	draw:     0
 }
 
-// Initialize board UI
-function initBoardUI() {
-	$('#board').html('')
-	for (var c in abc) {
-		$('#board').append('<tr></tr>')
-		for (var r = 1; r < 8; r++) {
-			$('#board tr').last()
-				.append('<td></td>')
-			$('#board td').last()
-				.addClass('slot')
-				.attr('id', abc[c] + r)
-		}
-	}
-	$('.slot').click(function() {
-		var row = $(this).attr('id')[0]
-		var column = $(this).attr('id')[1]
-		if (humanTurn && !boardMatrix[row + column]) {
-			humanTurn = false
-			console.log('HUMAN: PLAYING MOVE AT ' + testDrop(column).toUpperCase())
-			dropDisc(column, 'human')
-		}
-	})
-}
-
-// Initialize board matrix
-function initBoardMatrix() {
-	boardMatrix = {
-		'a1': null, 'b1': null, 'c1': null, 'd1': null, 'e1': null, 'f1': null,
-		'a2': null, 'b2': null, 'c2': null, 'd2': null, 'e2': null, 'f2': null,
-		'a3': null, 'b3': null, 'c3': null, 'd3': null, 'e3': null, 'f3': null,
-		'a4': null, 'b4': null, 'c4': null, 'd4': null, 'e4': null, 'f4': null,
-		'a5': null, 'b5': null, 'c5': null, 'd5': null, 'e5': null, 'f5': null,
-		'a6': null, 'b6': null, 'c6': null, 'd6': null, 'e6': null, 'f6': null,
-		'a7': null, 'b7': null, 'c7': null, 'd7': null, 'e7': null, 'f7': null
-	}
-}
-
-// Initialize array of winning combinations
-function initWinningCombinations() {
+cnnctfr.winningCombinations = (function() {
 	winningCombinations = []
 	var w = 0
 	for (var i in abc) {
@@ -99,6 +66,20 @@ function initWinningCombinations() {
 			w++
 		}
 	}
+	return winningCombinations
+})()
+
+// Initialize board matrix
+cnnctfr.blankBoardMatrix = function() {
+	return {
+		'a1': null, 'b1': null, 'c1': null, 'd1': null, 'e1': null, 'f1': null,
+		'a2': null, 'b2': null, 'c2': null, 'd2': null, 'e2': null, 'f2': null,
+		'a3': null, 'b3': null, 'c3': null, 'd3': null, 'e3': null, 'f3': null,
+		'a4': null, 'b4': null, 'c4': null, 'd4': null, 'e4': null, 'f4': null,
+		'a5': null, 'b5': null, 'c5': null, 'd5': null, 'e5': null, 'f5': null,
+		'a6': null, 'b6': null, 'c6': null, 'd6': null, 'e6': null, 'f6': null,
+		'a7': null, 'b7': null, 'c7': null, 'd7': null, 'e7': null, 'f7': null
+	}
 }
 
 // -----------------------------------------------
@@ -106,7 +87,7 @@ function initWinningCombinations() {
 // -----------------------------------------------
 
 // Randomly shuffle an array
-function shuffle(array) {
+var shuffle = function(array) {
 	var tmp, current, top = array.length
 	if (top) while (--top) {
 		current = Math.floor(Math.random() * (top + 1))
@@ -117,7 +98,7 @@ function shuffle(array) {
 }
 
 // Clean an array from false/null/0 values
-function cleanArray(array) {
+var clean = function(array) {
 	var newArray = new Array()
 	for (var i = 0; i < array.length; i++) {
 		if (array[i]) {
@@ -133,16 +114,16 @@ function cleanArray(array) {
 
 // Start new game
 cnnctfr.newGame = function() {
-	initBoardMatrix()
-	clearSlot('all')
+	cnnctfr.boardMatrix = cnnctfr.blankBoardMatrix()
+	clearSlot()
 	if (Math.floor(Math.random()*2)) {
-		humanTurn = true
+		cnnctfr.humanTurn = true
 	}
 	else {
-		humanTurn = false
+		cnnctfr.humanTurn = false
 		var analysis = {
 			'computer': analyzeBoard('computer'),
-			'human': analyzeBoard('human')
+			'human':    analyzeBoard('human')
 		}
 		window.setTimeout(function() {
 			computerPlay(analysis)
@@ -154,10 +135,10 @@ cnnctfr.newGame = function() {
 }
 
 // Return empty slots in a column
-function emptySlots(column) {
+var emptySlots = function(column) {
 	var empty = []
 	for (var i in abc) {
-		if (!boardMatrix[abc[i] + column]) {
+		if (!cnnctfr.boardMatrix[abc[i] + column]) {
 			empty.push(abc[i] + column)
 		}
 	}
@@ -168,7 +149,7 @@ function emptySlots(column) {
 }
 
 // Return columns with free slots
-function freeColumns() {
+var freeColumns = function() {
 	var free = []
 	for (var i = 1; i < 8; i++) {
 		if (emptySlots(i)) {
@@ -180,18 +161,18 @@ function freeColumns() {
 
 // Insert disc into `slot`.
 // `player` can be 'human' or 'computer'
-function insertDisc(slot, player) {
-	boardMatrix[slot] = player
+var insertDisc = function(slot, player) {
+	cnnctfr.boardMatrix[slot] = player
 	$('#' + slot).stop()
-	$('#' + slot).css('background', playerColors[player])
-	$('#' + slot).css('border-color', playerColors[player])
+		.css('background',   cnnctfr.playerColors[player])
+		.css('border-color', cnnctfr.playerColors[player])
 }
 
 // Find which slots are empty in an array of slots.
-function findEmptySlots(slots) {
+var findEmptySlots = function(slots) {
 	var empty = []
 	for (var i in slots) {
-		if (!boardMatrix[slots[i]]) {
+		if (!cnnctfr.boardMatrix[slots[i]]) {
 			empty.push(slots[i])
 		}
 	}
@@ -199,22 +180,24 @@ function findEmptySlots(slots) {
 }
 
 // Clear slot
-// 'all' to clear all slots
-function clearSlot(slot) {
-	if (slot === 'all') {
-		initBoardMatrix()
-		slot = '.slot'
-	}
-	else {
-		boardMatrix[slot] = null
+// If no slot is specified, clears all slots.
+var clearSlot = function(slot) {
+	if (slot) {
+		cnnctfr.boardMatrix[slot] = null
 		slot = '#' + slot
 	}
-	$(slot).css('background', '')
-	$(slot).css('border-color', '#F0314C')
+	else {
+		cnnctfr.boardMatrix = cnnctfr.blankBoardMatrix()
+		slot = '.slot'
+	}
+	$(slot).css({
+		'background':   '',
+		'border-color': '#F0314C'
+	})
 }
 
 // See which slot a disc will end up at if dropped in `column`
-function testDrop(column) {
+var testDrop = function(column) {
 	if (empty = emptySlots(column)) {
 		return empty[empty.length - 1]
 	}
@@ -224,7 +207,7 @@ function testDrop(column) {
 // Drop a disc with animation through `column`
 // `player` can be 'human' or 'computer'
 // `phrase` is what the computer will comment on this move
-function dropDisc(column, player, phrase) {
+var dropDisc = function(column, player, phrase) {
 	var empty = emptySlots(column)
 	var i = 0
 	var drop = window.setInterval(function() {
@@ -238,20 +221,20 @@ function dropDisc(column, player, phrase) {
 			if (phrase) { talk.say(phrase) }
 			nextMove(player)
 		}
-	}, 53);	
+	}, 53);
 }
 
 // Move the game along after a disc is dropped
 // `player` is the upcoming player
 // `player` can be 'human' or 'computer'
-function nextMove(player) {
+var nextMove = function(player) {
 	var analysis = {
 		'computer': analyzeBoard('computer'),
 		'human': analyzeBoard('human')
 	}
 	var draw = true
-	for (var i in boardMatrix) {
-		if (!boardMatrix[i]) {
+	for (var i in cnnctfr.boardMatrix) {
+		if (!cnnctfr.boardMatrix[i]) {
 			draw = false
 		}
 	}
@@ -279,7 +262,7 @@ function nextMove(player) {
 			resetGame(player)
 		}
 		else {
-			humanTurn = true
+			cnnctfr.humanTurn = true
 		}
 	}
 	if (winner) {
@@ -294,11 +277,11 @@ function nextMove(player) {
 
 // Reset game, increase scoreboard
 // `winner` can be 'human', 'computer' or 'draw'.
-function resetGame(winner) {
+var resetGame = function(winner) {
 	window.setTimeout(function() {
 		$('#board').fadeOut(function() {
-			$('.computer').text(wins['computer'])
-			$('.human').text(wins['human'])
+			$('.computer').text(cnnctfr.wins.computer)
+			$('.human').text(cnnctfr.wins.human)
 			$('#wins').fadeIn(function() {
 				if (winner === 'computer') {
 					talk.say('win')
@@ -309,13 +292,13 @@ function resetGame(winner) {
 				else if (winner === 'draw') {
 					talk.say('draw')
 				}
-				else if (!wins['human'] && Math.floor(Math.random()*2)) {
+				else if (!cnnctfr.wins.human && Math.floor(Math.random()*2)) {
 					talk.say('undefeated')
 				}
 				window.setTimeout(function() {
-					wins[winner]++
-					$('.computer').text(wins['computer'])
-					$('.human').text(wins['human'])
+					cnnctfr.wins[winner]++
+					$('.computer').text(cnnctfr.wins.computer)
+					$('.human').text(cnnctfr.wins.human)
 				}, 600)
 				window.setTimeout(function() {
 					$('#wins').fadeOut(function() {
@@ -340,22 +323,22 @@ function resetGame(winner) {
 // two: With 2 discs missing, if any,
 // one: With 3 discs missing, if any,
 // under: Squares (if any) where if opponent put a piece, `player` could immediately win.
-function analyzeBoard(player) {
+var analyzeBoard = function(player) {
 	var result = {
-		four: [],
+		four:  [],
 		three: [],
-		two: [],
-		one: [],
+		two:   [],
+		one:   [],
 		under: [],
 	}
 	shuffle(winningCombinations)
 	for (var i in winningCombinations) {
 		var match = 0
 		for (var r in winningCombinations[i]) {
-			if (boardMatrix[winningCombinations[i][r]] === player) {
+			if (cnnctfr.boardMatrix[winningCombinations[i][r]] === player) {
 				match++
 			}
-			else if (boardMatrix[winningCombinations[i][r]]) {
+			else if (cnnctfr.boardMatrix[winningCombinations[i][r]]) {
 				match = 0
 				break
 			}
@@ -369,7 +352,7 @@ function analyzeBoard(player) {
 				var empty = findEmptySlots(winningCombinations[i])
 				if (empty.length && empty[0][0] !== 'f') {
 					var under = abc[abc.indexOf(empty[0][0]) + 1] + empty[0][1]
-					if (!boardMatrix[under]) {
+					if (!cnnctfr.boardMatrix[under]) {
 						result['under'].push(under)
 					}
 				}
@@ -387,7 +370,7 @@ function analyzeBoard(player) {
 
 // Analyze a bunch of combinations, determine empty squares,
 // Remove duplicate squares, and arrange from most to least repeated
-function scoreMoves(combinations) {
+var scoreMoves = function(combinations) {
 	var score = {}
 	for (var i in combinations) {
 		var empty = findEmptySlots(combinations[i])
@@ -495,7 +478,7 @@ computerPlay.general = function(analysis) {
 		badMove = free.indexOf(parseInt(analysis['human']['under'][i][1]))
 		while ((free.length > 1) && (badMove >= 0)) {
 			free[badMove] = null
-			free = cleanArray(free)
+			free = clean(free)
 			badMove = free.indexOf(parseInt(analysis['human']['under'][i][1]))
 		}
 	}
@@ -503,7 +486,7 @@ computerPlay.general = function(analysis) {
 		badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
 		while ((free.length > 1) && (badMove >= 0)) {
 			free[badMove] = null
-			free = cleanArray(free)
+			free = clean(free)
 			badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
 		}
 	}
@@ -523,8 +506,31 @@ computerPlay.general = function(analysis) {
 // INITIALIZE AND START PROGRAM
 // -----------------------------------------------
 
-initBoardUI()
-initWinningCombinations()
+// Initialize board UI
+cnnctfr.boardMatrix = cnnctfr.blankBoardMatrix()
+
+$('#board').html('')
+for (var c in abc) {
+	$('#board').append('<tr></tr>')
+	for (var r = 1; r < 8; r++) {
+		$('#board tr').last()
+			.append('<td></td>')
+		$('#board td').last()
+			.addClass('slot')
+			.attr('id', abc[c] + r)
+	}
+}
+$('.slot').click(function() {
+	var row    = $(this).attr('id')[0]
+	var column = $(this).attr('id')[1]
+	if (cnnctfr.humanTurn && !cnnctfr.boardMatrix[row + column]) {
+		cnnctfr.humanTurn = false
+		console.log('HUMAN: PLAYING MOVE AT ' + testDrop(column).toUpperCase())
+		dropDisc(column, 'human')
+	}
+})
+
+// Start new game
 cnnctfr.newGame()
 
 })
