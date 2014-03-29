@@ -221,7 +221,7 @@ var dropDisc = function(column, player, phrase) {
 			if (phrase) { talk.say(phrase) }
 			nextMove(player)
 		}
-	}, 53);
+	}, 53)
 }
 
 // Move the game along after a disc is dropped
@@ -346,7 +346,7 @@ var analyzeBoard = function(player) {
 		switch (match) {
 			case 4:
 				result['four'].push(winningCombinations[i])
-				break;
+				break
 			case 3:
 				result['three'].push(winningCombinations[i])
 				var empty = findEmptySlots(winningCombinations[i])
@@ -356,13 +356,13 @@ var analyzeBoard = function(player) {
 						result['under'].push(under)
 					}
 				}
-				break;
+				break
 			case 2:
 				result['two'].push(winningCombinations[i])
-				break;
+				break
 			case 1:
 				result['one'].push(winningCombinations[i])
-				break;
+				break
 		}
 	}
 	return result
