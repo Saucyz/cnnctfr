@@ -43,6 +43,8 @@ var phrases = {
 		'You are unchallenging.',
 		'I am programmed to win.',
 		'You are human; flawed.',
+		'Program execution complete.',
+		'Please insert better challenger.',
 		'Easy.',
 		'I am superior.',
 		'You are easily distracted.',
@@ -75,7 +77,8 @@ var phrases = {
 	],
 	'draw': [
 		'Is that your best?',
-		'Good, but not good enough.'
+		'Good, but not good enough.',
+		'We are perfectly matched... almost.'
 	]
 }
 
