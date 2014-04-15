@@ -1,13 +1,23 @@
 var talk = function() {}
 
 $(window).load(function() {
-	
+
+meSpeak.loadConfig('js/mespeak_config.json')
+meSpeak.loadVoice('js/en-us.json')
+
 var lastPhrase
 var talking = 0
-	
+
 var phrases = {
 	'start': [
-		'CNNCTFR version 2 ready.',
+		'I am ready for you.',
+		'Bring it on.',
+		'Let us play a game.',
+		'Stay a while and play with me.',
+		'Can you defeat me?',
+		'Are you a match for me?',
+		'Will you play a game?',
+		'Shall we play a game?'
 	],
 	'undefeated': [
 		'You cannot defeat me.',
@@ -16,7 +26,8 @@ var phrases = {
 		'I have not lost once.',
 		'You cannot win.',
 		'I am programmed for perfect play.',
-		'You are no challenge to me.'
+		'You are no challenge to me.',
+		'I do not know defeat.'
 	],
 	'win': [
 		'A meager attempt.',
@@ -68,6 +79,11 @@ var phrases = {
 
 talk.say = function(type) {
 	var phrase = phrases[type][Math.floor(Math.random()*phrases[type].length)]
+	meSpeak.speak(phrase, {
+		pitch: 0,
+		speed: 160,
+		variant: 'klatt3'
+	})
 	if ((phrase === lastPhrase) || talking) { return }
 	lastPhrase = phrase
 	var i = 0
@@ -82,7 +98,7 @@ talk.say = function(type) {
 			$('#talk').append(phrase[i])
 			i++
 		}
-	}, 30)
+	}, 56)
 }
-	
+
 })
