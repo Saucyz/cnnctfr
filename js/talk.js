@@ -61,7 +61,10 @@ var phrases = {
 		'Predictable.',
 		'Did you think that would work?',
 		'How obvious.',
-		'I thought you might try that.'
+		'I thought you might try that.',
+		'A boring strategy.',
+		'This is not enough to fool me.',
+		'Try something else.'
 	],
 	'lose': [
 		'You have cornered me.',
