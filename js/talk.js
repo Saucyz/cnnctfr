@@ -69,7 +69,9 @@ var phrases = {
 		'I see.',
 		'Interesting.',
 		'Impossible.',
-		'Does not compute.'
+		'Does not compute.',
+		'I was not programmed to lose.',
+		'You have my attention.'
 	],
 	'draw': [
 		'Is that your best?',
