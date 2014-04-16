@@ -17,7 +17,7 @@ var phrases = {
 		'Can you defeat me?',
 		'Are you a match for me?',
 		'Will you play a game?',
-		'Shall we play a game?'
+		'Shall we play a game?',
 		'Accept my challenge.',
 		'I am programmed for perfect play.',
 		'Is your strategy stronger than mine?',
