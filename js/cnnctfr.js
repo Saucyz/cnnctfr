@@ -95,6 +95,7 @@ var shuffle = function(array) {
 		array[current] = array[top]
 		array[top] = tmp
 	}
+	return array
 }
 
 // Clean an array from false/null/0 values
@@ -494,7 +495,21 @@ computerPlay.general = function(analysis) {
 		column = 4
 	}
 	else {
-		column = free[Math.floor(Math.random() * free.length)]
+		var preferred = [
+			shuffle([3, 5]),
+			shuffle([6, 2]),
+			shuffle([1, 7])
+		]
+		for (var i in preferred) {
+			if (column) { break }
+			for (var o in preferred[i]) {
+				if (free.indexOf(preferred[i][o]) >= 0) {
+					column = preferred[i][o]
+					console.log(column)
+					break
+				}
+			}
+		}
 	}
 	console.log('COMPUTER: PLAYING AT ' + testDrop(column).toUpperCase())
 	dropDisc(column, 'computer')
