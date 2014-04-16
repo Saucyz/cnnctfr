@@ -1,5 +1,6 @@
 // CNNCTFR - Central Neural Network Computer That Forms Rows
-// Nadim Kobeissi, 2013
+// Nadim Kobeissi, 2013 - 2014
+// Revision 5
 
 var cnnctfr = {}
 $(window).load(function() {
@@ -239,10 +240,6 @@ var nextMove = function(player) {
 			draw = false
 		}
 	}
-	if (draw) {
-		resetGame(draw)
-		return false
-	}
 	var winner = null
 	if (player === 'human') {
 		if (analysis['human']['four'].length) {
@@ -273,6 +270,10 @@ var nextMove = function(player) {
 					.css('border-color', '#FFF')
 			}
 		}
+	}
+	else if (draw) {
+		resetGame(draw)
+		return false
 	}
 }
 
