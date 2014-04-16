@@ -18,6 +18,11 @@ var phrases = {
 		'Are you a match for me?',
 		'Will you play a game?',
 		'Shall we play a game?'
+		'Accept my challenge.',
+		'I am programmed for perfect play.',
+		'Is your strategy stronger than mine?',
+		'Can you outsmart me?',
+		'Time to play.'
 	],
 	'undefeated': [
 		'You cannot defeat me.',
@@ -46,12 +51,16 @@ var phrases = {
 		'Program execution complete.',
 		'Please insert better challenger.',
 		'Easy.',
+		'Are you concentrating?',
 		'I am superior.',
+		'You must never lose hope.',
+		'Do not let this hurt your confidence.',
 		'You are easily distracted.',
 		'I am perfect.'
 	],
 	'block': [
 		'Try harder.',
+		'Are you concentrating?',
 		'Not this time.',
 		'You are not subtle.',
 		'Too obvious.',
@@ -71,12 +80,14 @@ var phrases = {
 		'I am defeated.',
 		'You are a valuable opponent.',
 		'I will have to try harder.',
-		'I see.',
+		'I see...',
 		'Interesting.',
 		'Impossible.',
 		'Does not compute.',
 		'I was not programmed to lose.',
-		'You have my attention.'
+		'You have my attention.',
+		'Your luck ends now.',
+		'I will not allow this to happen again.'
 	],
 	'draw': [
 		'Is that your best?',
@@ -86,13 +97,13 @@ var phrases = {
 }
 
 talk.say = function(type) {
-	var phrase = phrases[type][Math.floor(Math.random()*phrases[type].length)]
-	meSpeak.speak(phrase, {
-		pitch: 0,
-		speed: 160,
-		variant: 'klatt3'
-	})
-	if ((phrase === lastPhrase) || talking) { return }
+	if (talking) { return }
+	phrase = lastPhrase
+	while (phrase === lastPhrase) {
+		var phrase = phrases[type][
+			Math.floor(Math.random() * phrases[type].length)
+		]
+	}
 	lastPhrase = phrase
 	var i = 0
 	$('#talk').html('&nbsp;')
@@ -107,6 +118,11 @@ talk.say = function(type) {
 			i++
 		}
 	}, 56)
+	meSpeak.speak(phrase, {
+		pitch: 0,
+		speed: 160,
+		variant: 'klatt3'
+	})
 }
 
 })
