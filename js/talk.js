@@ -50,6 +50,7 @@ var phrases = {
 		'I am programmed to win.',
 		'You are human; flawed.',
 		'Program execution complete.',
+		'There is no excuse for you.',
 		'Please insert better challenger.',
 		'Easy.',
 		'Are you concentrating?',
@@ -101,6 +102,8 @@ var phrases = {
 		'We are perfectly matched... almost.'
 	]
 }
+
+phrases.undefeated = phrases.undefeated.concat(phrases.win)
 
 talk.say = function(type) {
 	if (talking) { return }
