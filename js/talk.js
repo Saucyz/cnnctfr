@@ -45,7 +45,8 @@ var phrases = {
 		'You are no match for me.',
 		'My intellect is superior.',
 		'Your human mind cannot compare.',
-		'You are unchallenging.',
+		'You are not challenging me.',
+		'Ha ha ha ha ha.',
 		'I am programmed to win.',
 		'You are human; flawed.',
 		'Program execution complete.',
@@ -56,7 +57,10 @@ var phrases = {
 		'You must never lose hope.',
 		'Do not let this hurt your confidence.',
 		'You are easily distracted.',
-		'I am perfect.'
+		'I am perfect.',
+		'Humans offer me no challenge.',
+		'A more intelligent challenger is required.',
+		'Go, train, and come back.'
 	],
 	'block': [
 		'Try harder.',
@@ -81,10 +85,12 @@ var phrases = {
 		'You are a valuable opponent.',
 		'I will have to try harder.',
 		'I see...',
-		'Interesting.',
+		'Interesting...',
 		'Impossible.',
 		'Does not compute.',
 		'I was not programmed to lose.',
+		'System failure.',
+		'ERROR',
 		'You have my attention.',
 		'Your luck ends now.',
 		'I will not allow this to happen again.'
