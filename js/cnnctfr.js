@@ -23,10 +23,8 @@ cnnctfr.wins = {
 }
 
 var row = [
-	'a', 'b',
-	'c', 'd',
-	'e', 'f',
-	'g'
+	'a', 'b', 'c', 'd',
+	'e', 'f', 'g'
 ]
 
 var col = [
