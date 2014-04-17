@@ -12,14 +12,16 @@ var phrases = {
 	'start': [
 		'I am ready for you.',
 		'Bring it on.',
+		'I am CNNCTFR. You cannot defeat me.',
+		'I am CNNCTFR. I will defeat you.',
+		'I am CNNCTFR. Your odds of winning are negligible.',
+		'Can you connect four?',
 		'Let us play a game.',
 		'Stay a while and play with me.',
 		'Can you defeat me?',
 		'Are you a match for me?',
 		'Will you play a game?',
-		'Shall we play a game?',
 		'Accept my challenge.',
-		'I am programmed for perfect play.',
 		'Is your strategy stronger than mine?',
 		'Can you outsmart me?',
 		'Time to play.'
@@ -36,7 +38,7 @@ var phrases = {
 	],
 	'win': [
 		'A meager attempt.',
-		'CNNCTFR algorithm succeeded.',
+		'For you, winning is an art. For me, it is a science.',
 		'Insert better challenger.',
 		'You are no match for me.',
 		'This is far from enough to defeat me.',
@@ -46,12 +48,11 @@ var phrases = {
 		'My intellect is superior.',
 		'Your human mind cannot compare.',
 		'You are not challenging me.',
-		'Ha ha ha ha ha.',
+		'Ha ha ha ha ha ha ha ha.',
 		'I am programmed to win.',
 		'You are human; flawed.',
 		'Program execution complete.',
 		'There is no excuse for you.',
-		'Please insert better challenger.',
 		'Easy.',
 		'Are you concentrating?',
 		'I am superior.',
@@ -76,6 +77,8 @@ var phrases = {
 		'Did you think that would work?',
 		'How obvious.',
 		'I thought you might try that.',
+		'You lack creativity.',
+		'You claw desperately for victory. You cannot obtain it.',
 		'A boring strategy.',
 		'This is not enough to fool me.',
 		'Try something else.'
@@ -92,6 +95,7 @@ var phrases = {
 		'I was not programmed to lose.',
 		'System failure.',
 		'ERROR',
+		'????????????????',
 		'You have my attention.',
 		'Your luck ends now.',
 		'I will not allow this to happen again.'
@@ -130,6 +134,7 @@ talk.say = function(type) {
 	meSpeak.speak(phrase, {
 		pitch: 0,
 		speed: 160,
+		wordgap: 1,
 		variant: 'klatt3'
 	})
 }
