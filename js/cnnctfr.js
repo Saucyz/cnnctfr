@@ -420,9 +420,11 @@ computerPlay.definite = function(analysis, mode) {
 	for (var i in three) {
 		var empty = findEmptySlots(three[i])
 		if (empty.length && testDrop(empty[0][1]) === empty[0]) {
-			console.log('COMPUTER: '
+			console.log(
+				'COMPUTER: '
 				+ mode.toUpperCase()
-				+ ' AT ' + empty[0].toUpperCase())
+				+ ' AT ' + empty[0].toUpperCase()
+			)
 			if (mode === 'block') {
 				dropDisc(empty[0][1], 'computer', 'block')
 			}
@@ -455,22 +457,28 @@ computerPlay.strategic = function(analysis) {
 			score: 0
 		}
 		for (var i in moves) {
+			if (testDrop(i[1]) !== i) {
+				delete moves[i]
+				continue
+			}
+			if (analysis['human']['under'].indexOf(i) >= 0) {
+				delete moves[i]
+				continue
+			}
+			if (analysis['computer']['under'].indexOf(i) >= 0) {
+				moves[i]--
+			}
 			if (moves[i] > highest['score']) {
-				highest['square'] = i
-				highest['score'] = moves[i]
+				highest.square = i
+				highest.score  = moves[i]
 			}
 		}
-		if ((testDrop(highest['square'][1]) === highest['square'])
-			&& (analysis['human']['under'].indexOf(highest['square']) < 0)
-			&& (analysis['computer']['under'].indexOf(highest['square']) < 0)) {
-				console.log('COMPUTER: STRATEGIC MOVE AT '
-					+ highest['square'].toUpperCase())
-				dropDisc(highest['square'][1], 'computer')
-				return true
-		}
-		else {
-			delete moves[highest['square']]
-		}
+		console.log(
+			'COMPUTER: STRATEGIC MOVE AT '
+			+ highest.square.toUpperCase()
+		)
+		dropDisc(highest.square[1], 'computer')
+		return true
 	}
 	return false
 }
@@ -508,8 +516,10 @@ computerPlay.general = function(analysis) {
 			}
 		}
 	}
-	console.log(analysis['human']['under'])
-	console.log('COMPUTER: PLAYING AT ' + testDrop(column).toUpperCase())
+	console.log(
+		'COMPUTER: PLAYING AT ' +
+		testDrop(column).toUpperCase()
+	)
 	dropDisc(column, 'computer')
 	return true
 }
@@ -538,7 +548,10 @@ $('.slot').on('click touchend', function() {
 	var column = $(this).attr('id')[1]
 	if (cnnctfr.humanTurn && !cnnctfr.boardMatrix[row + column]) {
 		cnnctfr.humanTurn = false
-		console.log('HUMAN: PLAYING MOVE AT ' + testDrop(column).toUpperCase())
+		console.log(
+			'HUMAN: PLAYING MOVE AT ' +
+			testDrop(column).toUpperCase()
+		)
 		dropDisc(column, 'human')
 	}
 })
