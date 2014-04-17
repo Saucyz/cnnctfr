@@ -38,7 +38,7 @@ var phrases = {
 	],
 	'win': [
 		'A meager attempt.',
-		'For you, winning is an art. For me, it is a science.',
+		'For you, winning is an art. For me, a science.',
 		'Insert better challenger.',
 		'You are no match for me.',
 		'This is far from enough to defeat me.',

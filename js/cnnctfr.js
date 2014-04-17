@@ -255,7 +255,7 @@ var nextMove = function(player) {
 		else {
 			window.setTimeout(function() {
 				computerPlay(analysis)
-			}, 100)
+			}, 300 + Math.round(Math.random() * 300))
 		}
 	}
 	else if (player === 'computer') {
