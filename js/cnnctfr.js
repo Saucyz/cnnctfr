@@ -361,7 +361,6 @@ var analyzeBoard = function(player) {
 					var under = row[row.indexOf(empty[0][0]) + 1] + empty[0][1]
 					if (!cnnctfr.boardMatrix[under]) {
 						result['under'].push(under)
-						console.log('under', under)
 					}
 				}
 				break
@@ -391,7 +390,6 @@ var scoreMoves = function(combinations) {
 			}
 		}
 	}
-	console.log('score', score)
 	return score
 }
 
