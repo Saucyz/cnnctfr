@@ -459,16 +459,11 @@ computerPlay.strategic = function(analysis) {
 		for (var i in moves) {
 			if (testDrop(i[1]) !== i) {
 				delete moves[i]
-				continue
 			}
-			if (analysis['human']['under'].indexOf(i) >= 0) {
+			else if (analysis['human']['under'].indexOf(i) >= 0) {
 				delete moves[i]
-				continue
 			}
-			if (analysis['computer']['under'].indexOf(i) >= 0) {
-				moves[i]--
-			}
-			if (moves[i] > highest['score']) {
+			else if (moves[i] > highest['score']) {
 				highest.square = i
 				highest.score  = moves[i]
 			}
