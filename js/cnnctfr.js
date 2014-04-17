@@ -422,8 +422,8 @@ computerPlay.definite = function(analysis, mode) {
 		if (empty.length && testDrop(empty[0][1]) === empty[0]) {
 			console.log(
 				'COMPUTER: '
-				+ mode.toUpperCase()
-				+ ' AT ' + empty[0].toUpperCase()
+				+ mode.toUpperCase() + ' '
+				+ empty[0].toUpperCase()
 			)
 			if (mode === 'block') {
 				dropDisc(empty[0][1], 'computer', 'block')
@@ -475,7 +475,7 @@ computerPlay.strategic = function(analysis) {
 		}
 		if (highest.square) {
 			console.log(
-				'COMPUTER: STRATEGIC MOVE AT '
+				'COMPUTER: STRATEGIC '
 				+ highest.square.toUpperCase()
 			)
 			dropDisc(highest.square[1], 'computer')
@@ -519,7 +519,7 @@ computerPlay.general = function(analysis) {
 		}
 	}
 	console.log(
-		'COMPUTER: PLAYING AT ' +
+		'COMPUTER: PLAYING ' +
 		testDrop(column).toUpperCase()
 	)
 	dropDisc(column, 'computer')
@@ -551,7 +551,7 @@ $('.slot').on('click touchend', function() {
 	if (cnnctfr.humanTurn && !cnnctfr.boardMatrix[row + column]) {
 		cnnctfr.humanTurn = false
 		console.log(
-			'HUMAN: PLAYING MOVE AT ' +
+			'HUMAN: PLAYING ' +
 			testDrop(column).toUpperCase()
 		)
 		dropDisc(column, 'human')
