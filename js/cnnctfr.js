@@ -484,14 +484,14 @@ computerPlay.general = function(analysis) {
 	for (var i in analysis['human']['under']) {
 		badMove = free.indexOf(parseInt(analysis['human']['under'][i][1]))
 		while ((free.length > 1) && (badMove >= 0)) {
-			free.splice(free.indexOf(badMove), 1)
+			free.splice(badMove, 1)
 			badMove = free.indexOf(parseInt(analysis['human']['under'][i][1]))
 		}
 	}
 	for (var i in analysis['computer']['under']) {
 		badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
 		while ((free.length > 1) && (badMove >= 0)) {
-			free.splice(free.indexOf(badMove), 1)
+			free.splice(badMove, 1)
 			badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
 		}
 	}
@@ -510,6 +510,7 @@ computerPlay.general = function(analysis) {
 			}
 		}
 	}
+	console.log(analysis['human']['under'])
 	console.log('COMPUTER: PLAYING AT ' + testDrop(column).toUpperCase())
 	dropDisc(column, 'computer')
 	return true
