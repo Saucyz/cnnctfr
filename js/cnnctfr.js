@@ -9,12 +9,6 @@ $(window).load(function() {
 // INTERNAL VARIABLES & INITIALIZATION
 // -----------------------------------------------
 
-abc = [
-	'a', 'b',
-	'c', 'd',
-	'e', 'f'
-]
-
 cnnctfr.humanTurn = false
 
 cnnctfr.playerColors = {
@@ -28,58 +22,78 @@ cnnctfr.wins = {
 	draw:     0
 }
 
-cnnctfr.winningCombinations = (function() {
-	winningCombinations = []
-	var w = 0
-	for (var i in abc) {
-		for (var r = 1; r < 5; r++) {
-			winningCombinations[w] = []
-			for (var d = 0; d < 4; d++) {
-				winningCombinations[w].push(abc[i] + (r + d))
-			}
-			w++
+var row = [
+	'a', 'b',
+	'c', 'd',
+	'e', 'f',
+	'g'
+]
+
+var col = [
+	1, 2, 3, 4,
+	5, 6, 7, 8
+]
+
+var winningCombinations = (function() {
+	var wc = []
+	// —
+	for (var r in row) {
+		for (var c = 0; c < col.length - 3; c++) {
+			wc.push([
+				row[r] + col[c + 0],
+				row[r] + col[c + 1],
+				row[r] + col[c + 2],
+				row[r] + col[c + 3]
+			])
 		}
 	}
-	for (var i = 7; i > 0; i--) {
-		for (var r = 6; r !== 3; r--) {
-			winningCombinations[w] = []
-			for (var d = 4; d > 0; d--) {
-				winningCombinations[w].push(abc[r - d] + i)
-			}
-			w++
+	// |
+	for (var c in col) {
+		for (var r = 0; r < row.length - 3; r++) {
+			wc.push([
+				row[r + 0] + col[c],
+				row[r + 1] + col[c],
+				row[r + 2] + col[c],
+				row[r + 3] + col[c]
+			])
 		}
 	}
-	for (var i = 3; i < abc.length; i++) {
-		for (var r = 4; r < 8; r++) {
-			winningCombinations[w] = []
-			for (var d = 0; d < 4; d++) {
-				winningCombinations[w].push(abc[i - d] + (r - d))
-			}
-			w++
+	// \
+	for (var r = 0; r < row.length - 3; r++) {
+		for (var c = 0; c < col.length - 3; c++) {
+			wc.push([
+				row[r + 0] + col[c + 0],
+				row[r + 1] + col[c + 1],
+				row[r + 2] + col[c + 2],
+				row[r + 3] + col[c + 3]
+			])
 		}
 	}
-	for (var i = 3; i < abc.length; i++) {
-		for (var r = 4; r > 0; r--) {
-			winningCombinations[w] = []
-			for (var d = 0; d < 4; d++) {
-				winningCombinations[w].push(abc[i - d] + (r + d))
-			}
-			w++
+	// /
+	for (var r = 3; r < row.length; r++) {
+		for (var c = 0; c < col.length - 3; c++) {
+			wc.push([
+				row[r - 0] + col[c + 0],
+				row[r - 1] + col[c + 1],
+				row[r - 2] + col[c + 2],
+				row[r - 3] + col[c + 3]
+			])
 		}
 	}
-	return winningCombinations
+	return wc
 })()
 
 // Initialize board matrix
 cnnctfr.blankBoardMatrix = function() {
 	return {
-		'a1': null, 'b1': null, 'c1': null, 'd1': null, 'e1': null, 'f1': null,
-		'a2': null, 'b2': null, 'c2': null, 'd2': null, 'e2': null, 'f2': null,
-		'a3': null, 'b3': null, 'c3': null, 'd3': null, 'e3': null, 'f3': null,
-		'a4': null, 'b4': null, 'c4': null, 'd4': null, 'e4': null, 'f4': null,
-		'a5': null, 'b5': null, 'c5': null, 'd5': null, 'e5': null, 'f5': null,
-		'a6': null, 'b6': null, 'c6': null, 'd6': null, 'e6': null, 'f6': null,
-		'a7': null, 'b7': null, 'c7': null, 'd7': null, 'e7': null, 'f7': null
+		a1: null, b1: null, c1: null, d1: null, e1: null, f1: null, g1: null,
+		a2: null, b2: null, c2: null, d2: null, e2: null, f2: null, g2: null,
+		a3: null, b3: null, c3: null, d3: null, e3: null, f3: null, g3: null,
+		a4: null, b4: null, c4: null, d4: null, e4: null, f4: null, g4: null,
+		a5: null, b5: null, c5: null, d5: null, e5: null, f5: null, g5: null,
+		a6: null, b6: null, c6: null, d6: null, e6: null, f6: null, g6: null,
+		a7: null, b7: null, c7: null, d7: null, e7: null, f7: null, g7: null,
+		a8: null, b8: null, c8: null, d8: null, e8: null, f8: null, g8: null
 	}
 }
 
@@ -89,25 +103,15 @@ cnnctfr.blankBoardMatrix = function() {
 
 // Randomly shuffle an array
 var shuffle = function(array) {
-	var tmp, current, top = array.length
+	var result = array.slice(0)
+	var tmp, current, top = result.length
 	if (top) while (--top) {
 		current = Math.floor(Math.random() * (top + 1))
-		tmp = array[current]
-		array[current] = array[top]
-		array[top] = tmp
+		tmp = result[current]
+		result[current] = result[top]
+		result[top] = tmp
 	}
-	return array
-}
-
-// Clean an array from false/null/0 values
-var clean = function(array) {
-	var newArray = new Array()
-	for (var i = 0; i < array.length; i++) {
-		if (array[i]) {
-			newArray.push(array[i])
-		}
-	}
-	return newArray
+	return result
 }
 
 // -----------------------------------------------
@@ -139,9 +143,9 @@ cnnctfr.newGame = function() {
 // Return empty slots in a column
 var emptySlots = function(column) {
 	var empty = []
-	for (var i in abc) {
-		if (!cnnctfr.boardMatrix[abc[i] + column]) {
-			empty.push(abc[i] + column)
+	for (var r in row) {
+		if (!cnnctfr.boardMatrix[row[r] + column]) {
+			empty.push(row[r] + column)
 		}
 	}
 	if (!empty.length) {
@@ -153,9 +157,9 @@ var emptySlots = function(column) {
 // Return columns with free slots
 var freeColumns = function() {
 	var free = []
-	for (var i = 1; i < 8; i++) {
-		if (emptySlots(i)) {
-			free.push(i)
+	for (var c in col) {
+		if (emptySlots(col[c])) {
+			free.push(col[c])
 		}
 	}
 	return free
@@ -165,9 +169,10 @@ var freeColumns = function() {
 // `player` can be 'human' or 'computer'
 var insertDisc = function(slot, player) {
 	cnnctfr.boardMatrix[slot] = player
-	$('#' + slot).stop()
-		.css('background',   cnnctfr.playerColors[player])
-		.css('border-color', cnnctfr.playerColors[player])
+	$('#' + slot).stop().css({
+		'background':   cnnctfr.playerColors[player],
+		'border-color': cnnctfr.playerColors[player]
+	})
 }
 
 // Find which slots are empty in an array of slots.
@@ -333,7 +338,7 @@ var analyzeBoard = function(player) {
 		one:   [],
 		under: [],
 	}
-	shuffle(winningCombinations)
+	winningCombinations = shuffle(winningCombinations)
 	for (var i in winningCombinations) {
 		var match = 0
 		for (var r in winningCombinations[i]) {
@@ -352,10 +357,11 @@ var analyzeBoard = function(player) {
 			case 3:
 				result['three'].push(winningCombinations[i])
 				var empty = findEmptySlots(winningCombinations[i])
-				if (empty.length && empty[0][0] !== 'f') {
-					var under = abc[abc.indexOf(empty[0][0]) + 1] + empty[0][1]
+				if (empty.length && empty[0][0] !== row[row.length - 1]) {
+					var under = row[row.indexOf(empty[0][0]) + 1] + empty[0][1]
 					if (!cnnctfr.boardMatrix[under]) {
 						result['under'].push(under)
+						console.log('under', under)
 					}
 				}
 				break
@@ -385,6 +391,7 @@ var scoreMoves = function(combinations) {
 			}
 		}
 	}
+	console.log('score', score)
 	return score
 }
 
@@ -433,17 +440,17 @@ computerPlay.definite = function(analysis, mode) {
 }
 
 computerPlay.strategic = function(analysis) {
-	var moves = scoreMoves(analysis['computer']['two'])
+	var moves  = scoreMoves(analysis['computer']['two'])
 	var hMoves = scoreMoves(analysis['human']['two'])
 	for (var a in hMoves) {
 		if (moves[a]) {
 			moves[a] += hMoves[a]
 		}
 		else {
-			moves[a] = hMoves[a]
+			moves[a]  = hMoves[a]
 		}
 	}
-	for (var c = 20; c > 0; c--) {
+	for (var c = 50; c > 0; c--) {
 		if (!Object.keys(moves).length) {
 			return false
 		}
@@ -479,36 +486,29 @@ computerPlay.general = function(analysis) {
 	for (var i in analysis['human']['under']) {
 		badMove = free.indexOf(parseInt(analysis['human']['under'][i][1]))
 		while ((free.length > 1) && (badMove >= 0)) {
-			free[badMove] = null
-			free = clean(free)
+			free.splice(free.indexOf(badMove), 1)
 			badMove = free.indexOf(parseInt(analysis['human']['under'][i][1]))
 		}
 	}
 	for (var i in analysis['computer']['under']) {
 		badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
 		while ((free.length > 1) && (badMove >= 0)) {
-			free[badMove] = null
-			free = clean(free)
+			free.splice(free.indexOf(badMove), 1)
 			badMove = free.indexOf(parseInt(analysis['computer']['under'][i][1]))
 		}
 	}
-	if ((free.indexOf(4) >= 0) && (testDrop(4) === 'f4')) {
-		column = 4
-	}
-	else {
-		var preferred = [
-			shuffle([3, 5]),
-			shuffle([6, 2]),
-			shuffle([1, 7])
-		]
-		for (var i in preferred) {
-			if (column) { break }
-			for (var o in preferred[i]) {
-				if (free.indexOf(preferred[i][o]) >= 0) {
-					column = preferred[i][o]
-					console.log(column)
-					break
-				}
+	var preferred = [
+		shuffle([4, 5]),
+		shuffle([3, 6]),
+		shuffle([2, 7]),
+		shuffle([1, 8])
+	]
+	for (var i in preferred) {
+		if (column) { break }
+		for (var o in preferred[i]) {
+			if (free.indexOf(preferred[i][o]) >= 0) {
+				column = preferred[i][o]
+				break
 			}
 		}
 	}
@@ -526,14 +526,14 @@ computerPlay.general = function(analysis) {
 cnnctfr.boardMatrix = cnnctfr.blankBoardMatrix()
 
 $('#board').html('')
-for (var c in abc) {
+for (var r in row) {
 	$('#board').append('<tr></tr>')
-	for (var r = 1; r < 8; r++) {
+	for (var c in col) {
 		$('#board tr').last()
 			.append('<td></td>')
 		$('#board td').last()
 			.addClass('slot')
-			.attr('id', abc[c] + r)
+			.attr('id', row[r] + col[c])
 	}
 }
 $('.slot').on('click touchend', function() {

@@ -134,7 +134,6 @@ talk.say = function(type) {
 	meSpeak.speak(phrase, {
 		pitch: 0,
 		speed: 160,
-		wordgap: 1,
 		variant: 'klatt3'
 	})
 }
