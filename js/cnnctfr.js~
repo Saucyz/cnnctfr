@@ -12,11 +12,8 @@ $(window).load(function() {
 cnnctfr.humanTurn = false
 
 cnnctfr.playerColors = {
-	//human:    '#F0314C',
-	//computer: '#4091F4'
-
-	computer:    '#F0314C',
-	human: '#4091F4'
+	human:    '#F0314C',
+	computer: '#4091F4'
 }
 
 cnnctfr.wins = {
