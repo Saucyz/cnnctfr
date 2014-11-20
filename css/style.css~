@@ -53,7 +53,7 @@ body {
 	text-align: right;
 }
 
-#wins .draw { /* Displays draws */
+#wins .draw {
 	color: #F4A340;
 	float: center;
 	text-align: center;

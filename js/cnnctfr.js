@@ -12,11 +12,8 @@ $(window).load(function() {
 cnnctfr.humanTurn = false
 
 cnnctfr.playerColors = {
-	//human:    '#F0314C',
-	//computer: '#4091F4'
-
-	computer:    '#F0314C',
-	human: '#4091F4'
+	human:    '#F0314C',
+	computer: '#4091F4'
 }
 
 cnnctfr.wins = {
@@ -290,6 +287,7 @@ var resetGame = function(winner) {
 		$('#board').fadeOut(function() {
 			$('.computer').text(cnnctfr.wins.computer)
 			$('.human').text(cnnctfr.wins.human)
+			$('.draw').text(cnnctfr.wins.draw) // Displays draws
 			$('#wins').fadeIn(function() {
 				if (winner === 'computer') {
 					talk.say('win')
@@ -307,11 +305,13 @@ var resetGame = function(winner) {
 					cnnctfr.wins[winner]++
 					$('.computer').text(cnnctfr.wins.computer)
 					$('.human').text(cnnctfr.wins.human)
+					$('.draw').text(cnnctfr.wins.draw) // Displays draws
 				}, 600)
 				window.setTimeout(function() {
 					$('#wins').fadeOut(function() {
 						cnnctfr.newGame()
 						$('#board').fadeIn()
+						$('#wins').fadeIn() // Shows score sort of at the bottom, have to scroll
 					})
 				}, 3400)
 			})
