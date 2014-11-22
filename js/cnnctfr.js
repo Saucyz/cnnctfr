@@ -17,9 +17,9 @@ cnnctfr.playerColors = {
 }
 
 cnnctfr.wins = {
-	human:    0,
-	computer: 0,
-	draw:     0
+	human:    1,
+	computer: 2,
+	draw:     3
 }
 
 var row = [
@@ -283,6 +283,7 @@ var nextMove = function(player) {
 // Reset game, increase scoreboard
 // `winner` can be 'human', 'computer' or 'draw'.
 var resetGame = function(winner) {
+	//winner = 'draw' // Test
 	window.setTimeout(function() {
 		$('#board').fadeOut(function() {
 			$('.computer').text(cnnctfr.wins.computer)
@@ -302,7 +303,11 @@ var resetGame = function(winner) {
 					talk.say('undefeated')
 				}
 				window.setTimeout(function() {
-					cnnctfr.wins[winner]++
+					/*if (winner === 'draw') {
+						cnnctfr.wins.draw++					
+					}
+					else*/cnnctfr.wins[winner]++//Changed to increment draw
+					
 					$('.computer').text(cnnctfr.wins.computer)
 					$('.human').text(cnnctfr.wins.human)
 					$('.draw').text(cnnctfr.wins.draw) // Displays draws

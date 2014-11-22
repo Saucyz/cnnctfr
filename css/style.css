@@ -33,9 +33,9 @@ body {
 
 #wins {
 	margin: 0 auto;
-	width: 1=270px;/*570*/
+	width: 570px;/*570*/
 	padding-top: 60px;
-	height: 151px;/*451*/
+	height: 251px;/*451*/
 	font-size: 220px;
 	font-weight: bold;
 	display: none;
@@ -55,6 +55,5 @@ body {
 
 #wins .draw { /* Displays draws */
 	color: #F4A340;
-	float: center;
 	text-align: center;
 }
