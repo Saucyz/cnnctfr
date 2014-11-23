@@ -17,9 +17,9 @@ cnnctfr.playerColors = {
 }
 
 cnnctfr.wins = {
-	human:    1,
-	computer: 2,
-	draw:     3
+	human:    0,
+	computer: 0,
+	draw:     0
 }
 
 var row = [
@@ -310,6 +310,7 @@ var resetGame = function(winner) {
 					
 					$('.computer').text(cnnctfr.wins.computer)
 					$('.human').text(cnnctfr.wins.human)
+					$('#draw').fadeIn()
 					$('.draw').text(cnnctfr.wins.draw) // Displays draws
 				}, 600)
 				window.setTimeout(function() {

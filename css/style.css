@@ -53,7 +53,11 @@ body {
 	text-align: right;
 }
 
-#wins .draw { /* Displays draws */
+#draw { /* Displays draws wins .   	text-align: center;*/
+	margin: 0 auto;
+	width: 570px;/*570*/
+	height: 251px;/*451*/
+	font-size: 220px;
 	color: #F4A340;
-	text-align: center;
+	text-align: center
 }
