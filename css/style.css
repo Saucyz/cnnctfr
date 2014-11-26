@@ -8,6 +8,35 @@ body {
 	font-family: 'Futura', 'Menlo', 'Monaco', 'Helvetica', 'Arial';
 }
 
+#sse60
+{
+    	background-color: #4091F4;
+    	padding:0px;
+    	clear:both;
+    	text-align:center;
+    	border-radius: 4px;
+    	-moz-border-radius: 4px;
+    	-webkit-border-radius: 4px;
+}
+#sses60
+{
+   	margin: 0 auto;/*If you don't want the menu center aligned, remove this line and above text-align:center*/	
+	font-size:0;
+	/*background:#fff url(bg.gif) bottom left;*/
+}
+#sses60 ul, #sses60 li {
+    	display:inline;
+    	list-style-type: none;padding:0;margin:0;zoom:1;
+}
+#sses60 a
+{
+    	text-align: center;zoom:1;
+    	display: inline-block;
+	font: normal 12px Arial;
+	padding:10px 16px;/*This defines the size of each menu item*/
+	text-decoration:none;
+}
+
 #talk {
 	margin: 2.8% auto 1% auto;
 	text-align: center;
