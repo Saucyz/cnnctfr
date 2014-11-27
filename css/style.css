@@ -20,9 +20,8 @@ body {
 }
 #sses60
 {
-   	margin: 0 auto;/*If you don't want the menu center aligned, remove this line and above text-align:center*/	
+   	margin: 0 auto;	
 	font-size:0;
-	/*background:#fff url(bg.gif) bottom left;*/
 }
 #sses60 ul, #sses60 li {
     	display:inline;

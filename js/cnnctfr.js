@@ -1,4 +1,4 @@
-// CNNCTFR - Central Neural Network Computer That Forms Rows
+﻿// CNNCTFR - Central Neural Network Computer That Forms Rows
 // Nadim Kobeissi, 2013 - 2014
 // Revision 5
 
@@ -536,7 +536,7 @@ computerPlay.general = function(analysis) {
 }
 
 // -----------------------------------------------
-// MENUS
+// MENU
 // -----------------------------------------------
 
 var sse60 = function () {
@@ -580,14 +580,13 @@ var sse60 = function () {
             }
 
             for (i = 0; i < a.length; i++) {
-                if (i != k) {
                     a[i].onmouseover = function () {
                         sse60.setColors(this.getAttribute("i"), true);
                     }
                     a[i].onmouseout = function () {
                         sse60.setColors(this.getAttribute("i"), false);
                     };
-                }
+
                 if (i == k)
                     sse60.setColors(i, true);
                 else
@@ -609,6 +608,10 @@ var sse60 = function () {
         }
     };
 } ();
+
+sse60.test = function() {
+	cnnctfr.newGame()
+}
 
 // -----------------------------------------------
 // INITIALIZE AND START PROGRAM
