@@ -86,7 +86,9 @@ body {
 	margin: 0 auto;
 	width: 570px;/*570*/
 	height: 251px;/*451*/
+	padding-top: 60px;
 	font-size: 220px;
+	font-weight: bold;
 	color: #F4A340;
 	text-align: center
 }
