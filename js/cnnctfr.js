@@ -609,10 +609,6 @@ var sse60 = function () {
     };
 } ();
 
-sse60.test = function() {
-	cnnctfr.newGame()
-}
-
 // -----------------------------------------------
 // INITIALIZE AND START PROGRAM
 // -----------------------------------------------
