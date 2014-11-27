@@ -1,4 +1,4 @@
-﻿// CNNCTFR - Central Neural Network Computer That Forms Rows
+// CNNCTFR - Central Neural Network Computer That Forms Rows
 // Nadim Kobeissi, 2013 - 2014
 // Revision 5
 
@@ -578,7 +578,35 @@ var sse60 = function () {
                 if (k == -1 && a[0].getAttribute("maptopuredomain") != "false")
                     k = 0;
             }
+
+            for (i = 0; i < a.length; i++) {
+                if (i != k) {
+                    a[i].onmouseover = function () {
+                        sse60.setColors(this.getAttribute("i"), true);
+                    }
+                    a[i].onmouseout = function () {
+                        sse60.setColors(this.getAttribute("i"), false);
+                    };
+                }
+                if (i == k)
+                    sse60.setColors(i, true);
+                else
+                    sse60.setColors(i, false);
+            }
         },
+
+        setColors: function (i, hover) {
+            if (hover) {
+                a[i].style.color = fontHoverColors.length > 1 ? fontHoverColors[i] : fontHoverColors[0];
+                a[i].style.borderTop = "solid 4px " + (borderHoverColors.length > 1 ? borderHoverColors[i] : borderHoverColors[0]);
+                a[i].style.background = bgHoverColors.length > 1 ? bgHoverColors[i] : bgHoverColors[0];
+            }
+            else {
+                a[i].style.color = fontColors.length > 1 ? fontColors[i] : fontColors[0];
+                a[i].style.borderTop = "solid 4px " + (borderColors.length > 1 ? borderColors[i] : borderColors[0]);
+                a[i].style.background = bgColors.length > 1 ? bgColors[i] : bgColors[0];
+            }
+        }
     };
 } ();
 
