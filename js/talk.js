@@ -104,6 +104,9 @@ var phrases = {
 		'Is that your best?',
 		'Good, but not good enough.',
 		'We are perfectly matched... almost.'
+	],
+	'mute': [
+		''
 	]
 }
 

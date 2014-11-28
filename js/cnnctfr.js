@@ -26,7 +26,9 @@ cnnctfr.wins = {
 }
 
 cnnctfr.difficulty = 'Medium'
-cnnctfr.checkMUTE = 1
+
+// Tracks mute
+cnnctfr.checkMUTE = false
 
 // Keeps track of slots to delete when undoLastMove is called
 cnnctfr.undo = {
@@ -162,7 +164,7 @@ cnnctfr.newGame = function() {
 		}, 700)
 	}
 		window.setTimeout(function() {
-			if(cnnctfr.checkMUTE == 1) {
+			if(!cnnctfr.checkMUTE) {
 				talk.say('start')
 			}
 		}, 300)
@@ -181,7 +183,7 @@ cnnctfr.resetScore = function() {
 	})	
 }
 
-// Sets computer difficulty, also resets if 2 player mode was previously on
+// Sets computer difficulty, also resets if it was previously in 2 Player mode
 cnnctfr.setDifficulty = function(difficulty) {
 	cnnctfr.difficulty = difficulty
 	$('#difficulty').text(cnnctfr.difficulty)
@@ -191,13 +193,15 @@ cnnctfr.setDifficulty = function(difficulty) {
 	cnnctfr.secondHuman = false
 }
 
+// Toggles mute on and off, when muted computer won't speak and text disappears during a game.
 cnnctfr.toggleMute = function() {
-	if (cnnctfr.checkMUTE == 0) {
-		cnnctfr.checkMUTE = 1
+	if (!cnnctfr.checkMUTE) {
+		talk.say('mute')
 	}
-	if (cnnctfr.checkMUTE == 1) {
-		cnnctfr.checkMUTE = 0
+	else {
+		talk.say('start')
 	}
+	cnnctfr.checkMUTE = !cnnctfr.checkMUTE
 }
 
 // Sets computer's plays to be made my mouseclick for 2 Player mode, will reset if it was previously on computer player
@@ -303,12 +307,13 @@ var dropDisc = function(column, player, phrase) {
 		i++
 		if (i === empty.length) {
 			window.clearInterval(drop)
-			if(cnnctfr.checkMUTE == 1) {
+			if(!cnnctfr.checkMUTE) {
 				if (phrase) { 
 					talk.say(phrase) 
 				}
 			}
-			if (player === 'human') { //UDNAS
+			// Store the last slot dropped into for use in undoLastMove()
+			if (player === 'human') {
 				cnnctfr.undo.human.push(empty[i-1])
 			}
 			else {
@@ -383,7 +388,7 @@ var resetGame = function(winner) {
 			$('.human').text(cnnctfr.wins.human)
 			$('.draw').text(cnnctfr.wins.draw) // Displays draws
 			$('#wins').fadeIn(function() {
-			if(cnnctfr.checkMUTE == 1){
+			if(!cnnctfr.checkMUTE){
 				if (winner === 'computer') {
 					talk.say('win')
 				}
@@ -526,6 +531,7 @@ var computerPlay = function(analysis) {
 		}
 	}
 
+	// Hard difficulty always plays by these strategies
 	if (
 		computerPlay.definite(analysis, 'win')    ||
 		computerPlay.definite(analysis, 'block')  ||
