@@ -61,3 +61,19 @@ body {
 	color: #F4A340;
 	text-align: center
 }
+
+#menu {
+	margin: 0 auto;
+	width: 570px;/*570*/
+	height: 451px;/*451*/
+	font-size: 220px;
+	font-weight: bold;
+	display: none;
+}
+
+#menu .startbutton {
+	color: #F0314C;
+	text-align: center;
+	width: 270px;
+	height: 270px;
+}

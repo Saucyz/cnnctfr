@@ -22,6 +22,8 @@ cnnctfr.wins = {
 	draw:     0
 }
 
+cnnctfr.difficulty = 'easy'
+
 var row = [
 	'a', 'b', 'c', 'd',
 	'e', 'f', 'g'
@@ -283,7 +285,6 @@ var nextMove = function(player) {
 // Reset game, increase scoreboard
 // `winner` can be 'human', 'computer' or 'draw'.
 var resetGame = function(winner) {
-	//winner = 'draw' // Test
 	window.setTimeout(function() {
 		$('#board').fadeOut(function() {
 			$('.computer').text(cnnctfr.wins.computer)
@@ -303,10 +304,7 @@ var resetGame = function(winner) {
 					talk.say('undefeated')
 				}
 				window.setTimeout(function() {
-					/*if (winner === 'draw') {
-						cnnctfr.wins.draw++					
-					}
-					else*/cnnctfr.wins[winner]++//Changed to increment draw
+					cnnctfr.wins[winner]++
 					
 					$('.computer').text(cnnctfr.wins.computer)
 					$('.human').text(cnnctfr.wins.human)
@@ -400,6 +398,14 @@ var scoreMoves = function(combinations) {
 	return score
 }
 
+//Drop into a random free column
+var randmove = function() {
+	var freec = freeColumns()
+	freec = shuffle(freec)
+	dropDisc(freec[0], 'computer')
+	return;
+}
+
 // -----------------------------------------------
 // COMPUTER AI
 // -----------------------------------------------
@@ -411,6 +417,14 @@ var scoreMoves = function(combinations) {
 // 	'human': analyzeBoard('human')
 // }
 var computerPlay = function(analysis) {
+	//Check difficulty, at the moment only easy
+	if(cnnctfr.difficulty === 'easy') {
+		var randnum = Math.floor((Math.random() * 10) + 1)
+		if (randnum > 5) { // Half the time computer plays randomly
+			randmove()
+			return;
+		}
+	}
 	if (
 		computerPlay.definite(analysis, 'win')    ||
 		computerPlay.definite(analysis, 'block')  ||
