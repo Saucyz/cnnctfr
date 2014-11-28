@@ -148,11 +148,18 @@ cnnctfr.newGame = function() {
 
 cnnctfr.resetScore = function() {
 	cnnctfr.wins.human = cnnctfr.wins.computer = cnnctfr.wins.draw = 0;
+	$('.computer').text(cnnctfr.wins.computer)
+	$('.human').text(cnnctfr.wins.human)
+	$('.draw').text(cnnctfr.wins.draw)
 	$('#board').fadeOut( function() {
 		$('#wins').fadeOut()
 		$('#draw').fadeOut()
 		cnnctfr.newGame()
 	})	
+}
+
+cnnctfr.setDifficulty = function(difficulty) {
+	cnnctfr.difficulty = difficulty
 }
 
 // Return empty slots in a column
@@ -331,9 +338,6 @@ var resetGame = function(winner) {
 					$('#wins').fadeOut(function() {
 						$('#draw').fadeOut()
 						cnnctfr.newGame()
-						$('#board').fadeIn()
-						$('#wins').fadeIn() // Shows score sort of at the bottom, have to scroll
-						$('#draw').fadeIn()
 					})
 				}, 3400)
 			})
@@ -435,14 +439,21 @@ var randmove = function() {
 // 	'human': analyzeBoard('human')
 // }
 var computerPlay = function(analysis) {
+	var randnum = Math.floor((Math.random() * 10) + 1)
 	//Check difficulty, at the moment only easy
 	if(cnnctfr.difficulty === 'easy') {
-		var randnum = Math.floor((Math.random() * 10) + 1)
+		if (randnum > 2) { // Most of the time computer plays randomly
+			randmove()
+			return;
+		}
+	}
+	if(cnnctfr.difficulty === 'medium') {
 		if (randnum > 5) { // Half the time computer plays randomly
 			randmove()
 			return;
 		}
 	}
+
 	if (
 		computerPlay.definite(analysis, 'win')    ||
 		computerPlay.definite(analysis, 'block')  ||
