@@ -11,6 +11,8 @@ $(window).load(function() {
 
 cnnctfr.humanTurn = false
 
+cnnctfr.secondHuman = false
+
 cnnctfr.playerColors = {
 	human:    '#F0314C',
 	computer: '#4091F4'
@@ -22,7 +24,7 @@ cnnctfr.wins = {
 	draw:     0
 }
 
-cnnctfr.difficulty = 'Easy'
+cnnctfr.difficulty = 'Medium'
 
 var row = [
 	'a', 'b', 'c', 'd',
@@ -134,6 +136,9 @@ cnnctfr.newGame = function() {
 	}
 	else {
 		cnnctfr.humanTurn = false
+		if (cnnctfr.secondHuman) {
+			return
+		}
 		var analysis = {
 			'computer': analyzeBoard('computer'),
 			'human':    analyzeBoard('human')
@@ -162,6 +167,17 @@ cnnctfr.resetScore = function() {
 cnnctfr.setDifficulty = function(difficulty) {
 	cnnctfr.difficulty = difficulty
 	$('#difficulty').text(cnnctfr.difficulty)
+	if (cnnctfr.secondHuman) {
+		cnnctfr.resetScore()
+	}
+	cnnctfr.secondHuman = false
+}
+
+cnnctfr.twoPlayerMode = function() {
+	cnnctfr.difficulty = '2 Players'
+	$('#difficulty').text(cnnctfr.difficulty)
+	cnnctfr.resetScore()
+	cnnctfr.secondHuman = true
 }
 
 // Return empty slots in a column
@@ -276,7 +292,7 @@ var nextMove = function(player) {
 			console.log('COMPUTER: LOSE')
 			resetGame(player)
 		}
-		else {
+		else if (!cnnctfr.secondHuman) {
 			window.setTimeout(function() {
 				computerPlay(analysis)
 			}, 300 + Math.round(Math.random() * 300))
@@ -675,6 +691,7 @@ for (var r in row) {
 $('.slot').on('click touchend', function() {
 	var row    = $(this).attr('id')[0]
 	var column = $(this).attr('id')[1]
+	
 	if (cnnctfr.humanTurn && !cnnctfr.boardMatrix[row + column]) {
 		cnnctfr.humanTurn = false
 		console.log(
@@ -682,6 +699,10 @@ $('.slot').on('click touchend', function() {
 			testDrop(column).toUpperCase()
 		)
 		dropDisc(column, 'human')
+	}
+	else if (cnnctfr.secondHuman && !cnnctfr.boardMatrix[row + column]) {
+		dropDisc(column, 'computer')
+		cnnctfr.humanTurn = true
 	}
 })
 
