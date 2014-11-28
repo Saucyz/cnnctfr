@@ -133,9 +133,13 @@ cnnctfr.newGame = function() {
 	$('#draw').fadeIn()
 	if (Math.floor(Math.random()*2)) {
 		cnnctfr.humanTurn = true
+		$('.redturn').text('Red Turn')
+		$('.blueturn').text('')
 	}
 	else {
 		cnnctfr.humanTurn = false
+		$('.blueturn').text('Blue Turn')
+		$('.redturn').text('')
 		if (cnnctfr.secondHuman) {
 			return
 		}
@@ -152,6 +156,7 @@ cnnctfr.newGame = function() {
 	}, 300)
 }
 
+// Resets game entirely including the score
 cnnctfr.resetScore = function() {
 	cnnctfr.wins.human = cnnctfr.wins.computer = cnnctfr.wins.draw = 0;
 	$('.computer').text(cnnctfr.wins.computer)
@@ -164,6 +169,7 @@ cnnctfr.resetScore = function() {
 	})	
 }
 
+// Sets computer difficulty, also resets if 2 player mode was previously on
 cnnctfr.setDifficulty = function(difficulty) {
 	cnnctfr.difficulty = difficulty
 	$('#difficulty').text(cnnctfr.difficulty)
@@ -173,6 +179,7 @@ cnnctfr.setDifficulty = function(difficulty) {
 	cnnctfr.secondHuman = false
 }
 
+// Sets computer's plays to be made my mouseclick for 2 Player mode, will reset if it was previously on computer player
 cnnctfr.twoPlayerMode = function() {
 	cnnctfr.difficulty = '2 Players'
 	$('#difficulty').text(cnnctfr.difficulty)
@@ -287,6 +294,8 @@ var nextMove = function(player) {
 	}
 	var winner = null
 	if (player === 'human') {
+		$('.blueturn').text('Blue Turn')
+		$('.redturn').text('')
 		if (analysis['human']['four'].length) {
 			winner = 'human'
 			console.log('COMPUTER: LOSE')
@@ -299,6 +308,8 @@ var nextMove = function(player) {
 		}
 	}
 	else if (player === 'computer') {
+		$('.redturn').text('Red Turn')
+		$('.blueturn').text('')
 		if (analysis['computer']['four'].length) {
 			winner = 'computer'
 			console.log('COMPUTER: WIN')
@@ -317,7 +328,7 @@ var nextMove = function(player) {
 		}
 	}
 	else if (draw) {
-		resetGame(draw)
+		resetGame('draw')
 		return false
 	}
 }
@@ -458,7 +469,7 @@ var randmove = function() {
 // }
 var computerPlay = function(analysis) {
 	var randnum = Math.floor((Math.random() * 10) + 1)
-	//Check difficulty
+	// Check difficulty, adds randomness to lower difficulties
 	if(cnnctfr.difficulty === 'Easy') {
 		if (randnum > 2) { // Most of the time computer plays randomly
 			randmove()
@@ -693,16 +704,16 @@ $('.slot').on('click touchend', function() {
 	var column = $(this).attr('id')[1]
 	
 	if (cnnctfr.humanTurn && !cnnctfr.boardMatrix[row + column]) {
-		cnnctfr.humanTurn = false
 		console.log(
 			'HUMAN: PLAYING ' +
 			testDrop(column).toUpperCase()
 		)
 		dropDisc(column, 'human')
+		cnnctfr.humanTurn = false
 	}
+	// If 2 Player mode is on, uses mouse click for computer's drop instead (needs time between mouse clicks)
 	else if (cnnctfr.secondHuman && !cnnctfr.boardMatrix[row + column]) {
 		dropDisc(column, 'computer')
-		cnnctfr.humanTurn = true
 	}
 })
 
