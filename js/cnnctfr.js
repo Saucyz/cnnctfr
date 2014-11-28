@@ -26,6 +26,7 @@ cnnctfr.wins = {
 }
 
 cnnctfr.difficulty = 'Medium'
+cnnctfr.checkMUTE = 1
 
 // Keeps track of slots to delete when undoLastMove is called
 cnnctfr.undo = {
@@ -160,9 +161,11 @@ cnnctfr.newGame = function() {
 			computerPlay(analysis)
 		}, 700)
 	}
-	window.setTimeout(function() {
-		talk.say('start')
-	}, 300)
+		window.setTimeout(function() {
+			if(cnnctfr.checkMUTE == 1) {
+				talk.say('start')
+			}
+		}, 300)
 }
 
 // Resets game entirely including the score
@@ -186,6 +189,15 @@ cnnctfr.setDifficulty = function(difficulty) {
 		cnnctfr.resetScore()
 	}
 	cnnctfr.secondHuman = false
+}
+
+cnnctfr.toggleMute = function() {
+	if (cnnctfr.checkMUTE == 0) {
+		cnnctfr.checkMUTE = 1
+	}
+	if (cnnctfr.checkMUTE == 1) {
+		cnnctfr.checkMUTE = 0
+	}
 }
 
 // Sets computer's plays to be made my mouseclick for 2 Player mode, will reset if it was previously on computer player
@@ -291,13 +303,17 @@ var dropDisc = function(column, player, phrase) {
 		i++
 		if (i === empty.length) {
 			window.clearInterval(drop)
-			if (phrase) { talk.say(phrase) }
+			if(cnnctfr.checkMUTE == 1) {
+				if (phrase) { 
+					talk.say(phrase) 
+				}
+			}
 			if (player === 'human') { //UDNAS
 				cnnctfr.undo.human.push(empty[i-1])
 			}
 			else {
 				cnnctfr.undo.computer.push(empty[i-1])
-			}	
+			}
 			nextMove(player)
 		}
 	}, 53)
@@ -367,6 +383,7 @@ var resetGame = function(winner) {
 			$('.human').text(cnnctfr.wins.human)
 			$('.draw').text(cnnctfr.wins.draw) // Displays draws
 			$('#wins').fadeIn(function() {
+			if(cnnctfr.checkMUTE == 1){
 				if (winner === 'computer') {
 					talk.say('win')
 				}
@@ -379,6 +396,7 @@ var resetGame = function(winner) {
 				else if (!cnnctfr.wins.human && Math.floor(Math.random()*2)) {
 					talk.say('undefeated')
 				}
+			}
 				window.setTimeout(function() {
 					cnnctfr.wins[winner]++
 					
