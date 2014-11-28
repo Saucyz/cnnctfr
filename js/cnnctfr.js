@@ -11,6 +11,7 @@ $(window).load(function() {
 
 cnnctfr.humanTurn = false
 
+// Tracks whether or not in 2 Player mode
 cnnctfr.secondHuman = false
 
 cnnctfr.playerColors = {
@@ -25,6 +26,12 @@ cnnctfr.wins = {
 }
 
 cnnctfr.difficulty = 'Medium'
+
+// Keeps track of slots to delete when undoLastMove is called
+cnnctfr.undo = {
+	human:	[],
+	computer: []
+}
 
 var row = [
 	'a', 'b', 'c', 'd',
@@ -131,6 +138,8 @@ cnnctfr.newGame = function() {
 	$('#board').fadeIn()
 	$('#wins').fadeIn()
 	$('#draw').fadeIn()
+	cnnctfr.undo.human = []
+	cnnctfr.undo.computer = []
 	if (Math.floor(Math.random()*2)) {
 		cnnctfr.humanTurn = true
 		$('.redturn').text('Red Turn')
@@ -185,6 +194,14 @@ cnnctfr.twoPlayerMode = function() {
 	$('#difficulty').text(cnnctfr.difficulty)
 	cnnctfr.resetScore()
 	cnnctfr.secondHuman = true
+}
+
+// Removes last drops from computer and human iff: not 2 Player mode, human has moved, and it's the human's turn
+cnnctfr.undoLastMove = function() {
+	if (cnnctfr.secondHuman == false && cnnctfr.humanTurn && cnnctfr.undo.human.length !== 0) {
+		clearSlot(cnnctfr.undo.human.pop())
+		clearSlot(cnnctfr.undo.computer.pop())
+	}
 }
 
 // Return empty slots in a column
@@ -273,6 +290,12 @@ var dropDisc = function(column, player, phrase) {
 		if (i === empty.length) {
 			window.clearInterval(drop)
 			if (phrase) { talk.say(phrase) }
+			if (player === 'human') { //UDNAS
+				cnnctfr.undo.human.push(empty[i-1])
+			}
+			else {
+				cnnctfr.undo.computer.push(empty[i-1])
+			}	
 			nextMove(player)
 		}
 	}, 53)
