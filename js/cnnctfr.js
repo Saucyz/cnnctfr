@@ -190,15 +190,17 @@ cnnctfr.setDifficulty = function(difficulty) {
 
 // Sets computer's plays to be made my mouseclick for 2 Player mode, will reset if it was previously on computer player
 cnnctfr.twoPlayerMode = function() {
-	cnnctfr.difficulty = '2 Players'
-	$('#difficulty').text(cnnctfr.difficulty)
-	cnnctfr.resetScore()
-	cnnctfr.secondHuman = true
+	if (cnnctfr.humanTurn && !cnnctfr.secondHuman) {
+		cnnctfr.difficulty = '2 Players'
+		$('#difficulty').text(cnnctfr.difficulty)
+		cnnctfr.resetScore()
+		cnnctfr.secondHuman = true
+	}
 }
 
 // Removes last drops from computer and human iff: not 2 Player mode, human has moved, and it's the human's turn
 cnnctfr.undoLastMove = function() {
-	if (cnnctfr.secondHuman == false && cnnctfr.humanTurn && cnnctfr.undo.human.length !== 0) {
+	if (!cnnctfr.secondHuman && cnnctfr.humanTurn && cnnctfr.undo.human.length !== 0) {
 		clearSlot(cnnctfr.undo.human.pop())
 		clearSlot(cnnctfr.undo.computer.pop())
 	}
@@ -731,8 +733,8 @@ $('.slot').on('click touchend', function() {
 			'HUMAN: PLAYING ' +
 			testDrop(column).toUpperCase()
 		)
-		dropDisc(column, 'human')
 		cnnctfr.humanTurn = false
+		dropDisc(column, 'human')
 	}
 	// If 2 Player mode is on, uses mouse click for computer's drop instead (needs time between mouse clicks)
 	else if (cnnctfr.secondHuman && !cnnctfr.boardMatrix[row + column]) {
