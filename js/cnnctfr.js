@@ -140,6 +140,13 @@ cnnctfr.newGame = function() {
 	}, 300)
 }
 
+cnnctfr.resetScore = function() {
+	cnnctfr.wins.human = cnnctfr.wins.computer = cnnctfr.wins.draw = 0;
+	$('#wins').fadeOut()
+	$('#draw').fadeOut()
+	cnnctfr.newGame()
+}
+
 // Return empty slots in a column
 var emptySlots = function(column) {
 	var empty = []
@@ -308,14 +315,17 @@ var resetGame = function(winner) {
 					
 					$('.computer').text(cnnctfr.wins.computer)
 					$('.human').text(cnnctfr.wins.human)
-					$('#draw').fadeIn()
 					$('.draw').text(cnnctfr.wins.draw) // Displays draws
+					$('#draw').fadeIn()
+
 				}, 600)
 				window.setTimeout(function() {
 					$('#wins').fadeOut(function() {
+						$('#draw').fadeOut()
 						cnnctfr.newGame()
 						$('#board').fadeIn()
 						$('#wins').fadeIn() // Shows score sort of at the bottom, have to scroll
+						$('#draw').fadeIn()
 					})
 				}, 3400)
 			})
