@@ -59,11 +59,23 @@ body {
 	height: 70px;
 }
 
+#difficulty {
+	margin: 0 auto;
+	padding-top: 60px;
+	font-weight: bold;
+	font-family: coder;
+	font-smooth: never;
+	color: #4091F4;
+	font-size: 32px;
+	-webkit-font-smoothing: none;
+	text-align: center;
+}
+
 #wins {
 	margin: 0 auto;
-	width: 570px;/*570*/
-	padding-top: 60px;
-	height: 251px;/*451*/
+	width: 570px;
+	//padding-top: 60px;
+	height: 151px;
 	font-size: 220px;
 	font-weight: bold;
 	display: none;
@@ -81,29 +93,18 @@ body {
 	text-align: right;
 }
 
-#draw { /* Displays draws wins .   	text-align: center;*/
+#draw {
 	margin: 0 auto;
-	width: 570px;/*570*/
-	height: 251px;/*451*/
+	width: 270px;
+	height: 151px;
 	padding-top: 60px;
 	font-size: 220px;
 	font-weight: bold;
 	color: #F4A340;
-	text-align: center
-}
-
-#menu {
-	margin: 0 auto;
-	width: 570px;/*570*/
-	height: 451px;/*451*/
-	font-size: 220px;
-	font-weight: bold;
-	display: none;
-}
-
-#menu .startbutton {
-	color: #F0314C;
 	text-align: center;
-	width: 270px;
-	height: 270px;
+}
+
+#draw .draw {
+	color: #F4A340;
+	text-align: center;
 }

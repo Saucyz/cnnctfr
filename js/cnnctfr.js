@@ -22,7 +22,7 @@ cnnctfr.wins = {
 	draw:     0
 }
 
-cnnctfr.difficulty = 'easy'
+cnnctfr.difficulty = 'Easy'
 
 var row = [
 	'a', 'b', 'c', 'd',
@@ -125,6 +125,7 @@ cnnctfr.newGame = function() {
 	$('.computer').text(cnnctfr.wins.computer)
 	$('.human').text(cnnctfr.wins.human)
 	$('.draw').text(cnnctfr.wins.draw)
+	$('#difficulty').text(cnnctfr.difficulty)
 	$('#board').fadeIn()
 	$('#wins').fadeIn()
 	$('#draw').fadeIn()
@@ -160,6 +161,7 @@ cnnctfr.resetScore = function() {
 
 cnnctfr.setDifficulty = function(difficulty) {
 	cnnctfr.difficulty = difficulty
+	$('#difficulty').text(cnnctfr.difficulty)
 }
 
 // Return empty slots in a column
@@ -440,14 +442,14 @@ var randmove = function() {
 // }
 var computerPlay = function(analysis) {
 	var randnum = Math.floor((Math.random() * 10) + 1)
-	//Check difficulty, at the moment only easy
-	if(cnnctfr.difficulty === 'easy') {
+	//Check difficulty
+	if(cnnctfr.difficulty === 'Easy') {
 		if (randnum > 2) { // Most of the time computer plays randomly
 			randmove()
 			return;
 		}
 	}
-	if(cnnctfr.difficulty === 'medium') {
+	if(cnnctfr.difficulty === 'Medium') {
 		if (randnum > 5) { // Half the time computer plays randomly
 			randmove()
 			return;
