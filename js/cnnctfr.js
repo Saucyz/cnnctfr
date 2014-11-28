@@ -26,7 +26,7 @@ cnnctfr.wins = {
 }
 
 cnnctfr.difficulty = 'Medium'
-cnnctfr.checkMUTE = 1
+cnnctfr.checkMUTE = true
 
 // Keeps track of slots to delete when undoLastMove is called
 cnnctfr.undo = {
@@ -162,7 +162,7 @@ cnnctfr.newGame = function() {
 		}, 700)
 	}
 		window.setTimeout(function() {
-			if(cnnctfr.checkMUTE == 1) {
+			if(cnnctfr.checkMUTE) {
 				talk.say('start')
 			}
 		}, 300)
@@ -192,11 +192,11 @@ cnnctfr.setDifficulty = function(difficulty) {
 }
 
 cnnctfr.toggleMute = function() {
-	if (cnnctfr.checkMUTE == 0) {
-		cnnctfr.checkMUTE = 1
+	if (cnnctfr.checkMUTE) {
+		cnnctfr.checkMUTE = false
 	}
-	if (cnnctfr.checkMUTE == 1) {
-		cnnctfr.checkMUTE = 0
+	else if (!cnnctfr.checkMUTE) {
+		cnnctfr.checkMUTE = true
 	}
 }
 
@@ -303,7 +303,7 @@ var dropDisc = function(column, player, phrase) {
 		i++
 		if (i === empty.length) {
 			window.clearInterval(drop)
-			if(cnnctfr.checkMUTE == 1) {
+			if(cnnctfr.checkMUTE) {
 				if (phrase) { 
 					talk.say(phrase) 
 				}
@@ -383,7 +383,7 @@ var resetGame = function(winner) {
 			$('.human').text(cnnctfr.wins.human)
 			$('.draw').text(cnnctfr.wins.draw) // Displays draws
 			$('#wins').fadeIn(function() {
-			if(cnnctfr.checkMUTE == 1){
+			if(cnnctfr.checkMUTE){
 				if (winner === 'computer') {
 					talk.say('win')
 				}
