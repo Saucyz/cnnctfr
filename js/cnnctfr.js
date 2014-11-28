@@ -122,6 +122,12 @@ var shuffle = function(array) {
 cnnctfr.newGame = function() {
 	cnnctfr.boardMatrix = cnnctfr.blankBoardMatrix()
 	clearSlot()
+	$('.computer').text(cnnctfr.wins.computer)
+	$('.human').text(cnnctfr.wins.human)
+	$('.draw').text(cnnctfr.wins.draw)
+	$('#board').fadeIn()
+	$('#wins').fadeIn()
+	$('#draw').fadeIn()
 	if (Math.floor(Math.random()*2)) {
 		cnnctfr.humanTurn = true
 	}
@@ -142,9 +148,11 @@ cnnctfr.newGame = function() {
 
 cnnctfr.resetScore = function() {
 	cnnctfr.wins.human = cnnctfr.wins.computer = cnnctfr.wins.draw = 0;
-	$('#wins').fadeOut()
-	$('#draw').fadeOut()
-	cnnctfr.newGame()
+	$('#board').fadeOut( function() {
+		$('#wins').fadeOut()
+		$('#draw').fadeOut()
+		cnnctfr.newGame()
+	})	
 }
 
 // Return empty slots in a column
