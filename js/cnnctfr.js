@@ -25,6 +25,8 @@ cnnctfr.wins = {
 	draw:     0
 }
 
+// Tracks difficulty and mute. 
+// Initially set to medium difficulty and AI talks aloud
 cnnctfr.difficulty = 'Medium'
 
 // Tracks mute
@@ -192,6 +194,7 @@ cnnctfr.setDifficulty = function(difficulty) {
 	}
 	cnnctfr.secondHuman = false
 }
+
 
 // Toggles mute on and off, when muted computer won't speak and text disappears during a game.
 cnnctfr.toggleMute = function() {
