@@ -388,6 +388,7 @@ var resetGame = function(winner) {
 			$('.human').text(cnnctfr.wins.human)
 			$('.draw').text(cnnctfr.wins.draw) // Displays draws
 			$('#wins').fadeIn(function() {
+
 			if(!cnnctfr.checkMUTE){
 				if (winner === 'computer') {
 					talk.say('win')
